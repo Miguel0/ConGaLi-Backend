@@ -1,0 +1,28 @@
+{
+  "version": "0.0.1",
+  "description": "test",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "runDev": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miguel0/conwaysGame-Backend.git"
+  },
+  "keywords": [
+    "socket.io",
+    "game",
+    "node.js",
+    "real-time"
+  ],
+  "author": "Miguel Darío Isasmendi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Miguel0/conwaysGame-Backend/issues"
+  },
+  "homepage": "https://github.com/Miguel0/conwaysGame-Backend#readme",
+  "dependencies": {
+    "socket.io": "^1.7.3"
+  }
+}
