@@ -1,19 +1,19 @@
-
 const util = require('util');
 const server = require('http').createServer();
 const io = require('socket.io')(server);
 const process = require('process');
-const port = 3000;
+const config = require('./config/config.dev.js');
+	
+// Starting App
 
-io.on('connection', function(client){
-  client.on('event', function(data){});
-  client.on('disconnect', function(){});
-});
+const storage = require('./storage/init.js');
+require('./handlers/init.js')(io, storage);
+// Starting ws interface
 
 server.listen(
     3000,
     () => {
-        console.log(util.format('Listening as %s on %s on port %s', process.pid, 'localhost', port));
+        console.log(util.format('Listening as %s on %s on port %s', process.pid, config.hostName, config.port));
         console.log('This platform is ' + process.platform);
     }
 );
