@@ -8,7 +8,9 @@ function BoardHandlerConfigurator ( io, storageHandler, socket ) {
         this.boardTickHandler = setInterval(
             () => {
                 //TODO handle exceptions to avoid memory leaks
-                socket.broadcast.emit('refreshBoard', {});
+                this.board.stablishCellsNewGeneration();
+
+                socket.broadcast.emit('refreshBoard', this.board.toJSONObject());
             },
             board.refreshInterval);
 
@@ -34,9 +36,17 @@ function BoardHandlerConfigurator ( io, storageHandler, socket ) {
     function updateConfiguration() {
         
     }
-     
+
+    function createCell(data) {
+        this.board.createCellBy(data.user, data.x, data.y);
+    }
+
+    function killCell() {
+        this.board.KillCellBy(data.user, data.x, data.y);
+    }
+
     function createBoard(data) {
-        this.board = require('./model/Board.js');
+        this.board = require('./model/Board.js')();
         this.board.name = data;
 
         this.nameSpace = io.of(this.board.name);
@@ -49,6 +59,8 @@ function BoardHandlerConfigurator ( io, storageHandler, socket ) {
                 this.nameSpace.on('addUser', addUser);
                 this.nameSpace.on('removeUser', removeUser);
                 this.nameSpace.on('updateUser', updateUser);
+                this.nameSpace.on('createCell', createCell);
+                this.nameSpace.on('killCell', killCell);
             }
         );
     }
