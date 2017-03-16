@@ -8,7 +8,7 @@ function ConwaysGameHandlerConfigurator ( io, storageHandler, socket ) {
         for (let i = 0; i < this.game.boards.length; i++) {
             this.gameTickHandler[i] = setInterval(
                 () => {
-                    socket.broadcast.emit('refreshBoard', this.game.refreshBoard(boardId).toJSONObject());
+                    this.nameSpace.broadcast.emit('refreshBoard', this.game.refreshBoard(boardId).toJSONObject());
                 },
                 this.game.refreshInterval);
         }
