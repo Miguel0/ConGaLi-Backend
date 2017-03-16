@@ -4,10 +4,10 @@ function BlindCell() {
     this.color = '000000';
 
     function toJSONObject() {
-    	return {
-    		color: '#' + this.color,
-    		createdOn: this.createdOn.toISOString()
-    	};
+        return {
+            color: '#' + this.color,
+            createdOn: this.createdOn.toISOString()
+        };
     }
 }
 

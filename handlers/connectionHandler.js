@@ -5,7 +5,7 @@ function ConnectionHandlerConfigurator ( io, storageHandler ) {
     }
 
     function onConnection(socket) {
-        client.on('disconnect', onDisconnection);
+        socket.on('disconnect', onDisconnection);
     }
     
     io.on('connection', onConnection);
