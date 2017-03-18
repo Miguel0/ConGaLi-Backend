@@ -1,14 +1,18 @@
 function ConnectionHandlerConfigurator ( io, storageHandler ) {
 
-    function onDisconnection() {
-
+    function onDisconnection(socket, close) {
+    	console.log(`Socket with id #${socket.id} disconnected!!!!`)
     }
 
     function onConnection(socket) {
-        socket.on('disconnect', onDisconnection);
+        socket.on('disconnect', (close) => onDisconnection(socket, close))
+
+        require('./conwaysGameHandlerConfigurator.js')(io, storageHandler, socket);
+        
+        console.log(`Socket with id #${socket.id} connected!!!!`)
     }
     
-    io.on('connection', onConnection);
+    io.on('connection', onConnection)
 }
 
-module.exports = ConnectionHandlerConfigurator;
+module.exports = ConnectionHandlerConfigurator

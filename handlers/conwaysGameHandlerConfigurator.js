@@ -1,29 +1,46 @@
+const Exception = require('../utils/Exception')
+const ConwaysGame = require('../model/ConwaysGame.js')
+
 function ConwaysGameHandlerConfigurator ( io, storageHandler, socket ) {
-    this.game = null;
-    this.gameTickHandler = [];
-    this.socket = socket;
-    this.nameSpace = null;
+    this.game = null
+    this.users = {}
+    this.gameTickHandler = []
+    this.nameSpace = null
 
     function startGame(client, boardId) {
         for (let i = 0; i < this.game.boards.length; i++) {
             this.gameTickHandler[i] = setInterval(
                 () => {
-                    this.nameSpace.broadcast.emit('refreshBoard', this.game.refreshBoard(boardId).toJSONObject());
+                    this.nameSpace.broadcast.emit('refreshBoard', this.game.refreshBoard(boardId).toJSONObject())
                 },
-                this.game.refreshInterval);
+                this.game.refreshInterval)
         }
 
-        this.nameSpace.on('forceEnd', forceStopGame);
+        this.nameSpace.on('forceEnd', forceStopGame)
     }
 
     function forceStopGame(boardId) {
         for (let i = 0; i < this.game.boards.length; i++) {
-            clearInterval(this.gameTickHandler[i]);
+            clearInterval(this.gameTickHandler[i])
         }
     }
 
-    function addUser() {
-        
+    function addUser(socketId, userData) {
+        if (userData && !users[socketId]) {
+            if (users.find( user => user.id === socketId || user.name === userData.name)) {
+                throw new Exception(
+                    'error.game.userAlreadyExists.title',
+                    'error.game.userAlreadyExists.body',
+                    userData
+                )
+            }
+
+            users[socketId] = {
+                id: socketId,
+                name: userData.name,
+                color: userData.color
+            }
+        }
     }
 
     function removeUser() {
@@ -39,49 +56,41 @@ function ConwaysGameHandlerConfigurator ( io, storageHandler, socket ) {
     }
 
     function createCell(data) {
-        this.board.createCellBy(data.user, data.x, data.y);
+        this.board.createCellBy(data.user, data.x, data.y)
     }
 
     function killCell() {
-        this.board.KillCellBy(data.user, data.x, data.y);
+        this.board.KillCellBy(data.user, data.x, data.y)
     }
 
     function createGame(data) {
-        this.game.name = data.name;
+        this.game = new ConwaysGame()
+        this.game.name = data.gameName
+        this.addUser(socket.id, data.userData)
 
-        this.nameSpace = io.of(this.game.name);
-
-        this.socket.join(
-            this.nameSpace,
+        socket.join(
+            this.game.name,
             () => {
-                this.nameSpace.on('startGame', startGame);
-                this.nameSpace.on('updateConfiguration', updateConfiguration);
-                this.nameSpace.on('addUser', addUser);
-                this.nameSpace.on('removeUser', removeUser);
-                this.nameSpace.on('updateUser', updateUser);
+                socket.to(this.game.name).on('startGame', startGame)
+                socket.to(this.game.name).on('updateConfiguration', updateConfiguration)
+                socket.to(this.game.name).on('addUser', addUser)
+                socket.to(this.game.name).on('removeUser', removeUser)
+                socket.to(this.game.name).on('updateUser', updateUser)
             }
         );
+
+        console.log(`Game successfully created with data: ${data}`)
     }
 
     function createBoard(data) {
-        this.board = require('./model/Board.js')();
-        this.board.name = data;
+        this.board = this.game.createBoard()
 
-        this.nameSpace = io.of(this.game.name);
-
-        this.socket.join(
-            this.nameSpace,
-            () => {
-                this.nameSpace.on('startGame', startGame);
-                this.nameSpace.on('updateConfiguration', updateConfiguration);
-                this.nameSpace.on('addUser', addUser);
-                this.nameSpace.on('removeUser', removeUser);
-                this.nameSpace.on('updateUser', updateUser);
-                this.nameSpace.on('createCell', createCell);
-                this.nameSpace.on('killCell', killCell);
-            }
-        );
+        socket.to(this.game.name).on('updateUser', updateUser)
+        socket.to(this.game.name).on('createCell', createCell)
+        socket.to(this.game.name).on('killCell', killCell)
     }
+
+    socket.on('createGame', createGame)
 }
 
-module.exports = ConwaysGameHandlerConfigurator;
+module.exports = ConwaysGameHandlerConfigurator
