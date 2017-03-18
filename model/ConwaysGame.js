@@ -16,6 +16,10 @@ ConwaysGame.prototype.killCellBy = function (user, x, y) {
     this.removeCell(x, y)
 }
 
+ConwaysGame.prototype.createBoard = function () {
+    this.boards.push(new Board())
+}
+
 ConwaysGame.prototype.toJSONObject = function () {
     let json = {}
     json.createdOn = this.createdOn.toISOString()

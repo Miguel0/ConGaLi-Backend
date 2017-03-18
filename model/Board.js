@@ -1,4 +1,4 @@
-const Exception = require('./utils/Exception')
+const Exception = require('../utils/Exception')
 const ContextUnawareCell = require('./ContextUnawareCell')
 
 function Board () {
@@ -177,7 +177,7 @@ Board.prototype.toJSONObject = function () {
     let json = {}
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
-    json.cells = [][]
+    json.cells = [[]]
     json.maxBoardWidth = this.maxBoardWidth
     json.maxBoardHeight = this.maxBoardHeight
 
