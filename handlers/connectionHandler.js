@@ -1,3 +1,5 @@
+const GameHandlerConfigurator = require('./conwaysGameHandlerConfigurator.js')
+
 function ConnectionHandlerConfigurator ( io, storageHandler ) {
 
     function onDisconnection(socket, close) {
@@ -7,7 +9,7 @@ function ConnectionHandlerConfigurator ( io, storageHandler ) {
     function onConnection(socket) {
         socket.on('disconnect', (close) => onDisconnection(socket, close))
 
-        require('./conwaysGameHandlerConfigurator.js')(io, storageHandler, socket);
+        new GameHandlerConfigurator(io, storageHandler, socket)
         
         console.log(`Socket with id #${socket.id} connected!!!!`)
     }

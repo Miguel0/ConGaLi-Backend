@@ -1,13 +1,16 @@
-function ContextUnawareCell() {
-    // The default color is black.
-    this.createdOn = new Date()
-    this.color = '000000'
-}
+class ContextUnawareCell {
 
-ContextUnawareCell.prototype.toJSONObject = function () {
-    return {
-        color: '#' + this.color,
-        createdOn: this.createdOn.toISOString()
+    toJSONObject() {
+        return {
+            color: '#' + this.color,
+            createdOn: this.createdOn.toISOString()
+        }
+    }
+
+    constructor() {
+        // The default color is black.
+        this.createdOn = new Date()
+        this.color = '000000'
     }
 }
 module.exports = ContextUnawareCell

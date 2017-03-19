@@ -1,36 +1,55 @@
 const Board = require('./Board')
 
-function ConwaysGame () {
-    this.createdOn = new Date()
-    this.name = null
-    this.refreshInterval = 1000
-    this.boards = []
-    this.users = {}
-}
+class ConwaysGame {
+    addUser(userId, userData) {
+        if (userData && this.boards[0].users[userId]) {
+            if (this.boards[0].users.find( user => user.id === userId || user.name === userData.name)) {
+                throw new Exception(
+                    'error.game.userAlreadyExists.title',
+                    'error.game.userAlreadyExists.body',
+                    userData
+                )
+            }
 
-ConwaysGame.prototype.createCellBy = function (user, x, y) {
-    this.addCell(new ContextUnawareCell(), x, y)
-}
-
-ConwaysGame.prototype.killCellBy = function (user, x, y) {
-    this.removeCell(x, y)
-}
-
-ConwaysGame.prototype.createBoard = function () {
-    this.boards.push(new Board())
-}
-
-ConwaysGame.prototype.toJSONObject = function () {
-    let json = {}
-    json.createdOn = this.createdOn.toISOString()
-    json.name = this.name
-    json.boards = []
-
-    for (var i = 0; i < this.boards.length; i++) {
-        json.boards[i] = this.boards[i].toJSONObject()
+            this.boards[0].users[userId] = {
+                id: userId,
+                name: userData.name,
+                color: userData.color
+            }
+        }
+    }
+    createCellBy(user, x, y) {
+        this.addCell(new ContextUnawareCell(), x, y)
     }
 
-    return json
+    killCellBy(user, x, y) {
+        this.removeCell(x, y)
+    }
+
+    createBoard() {
+        this.boards.push(new Board())
+    }
+
+    toJSONObject() {
+        let json = {}
+        json.createdOn = this.createdOn.toISOString()
+        json.name = this.name
+        json.boards = []
+
+        for (var i = 0; i < this.boards.length; i++) {
+            json.boards[i] = this.boards[i].toJSONObject()
+        }
+
+        return json
+    }
+
+    constructor() {
+        this.createdOn = new Date()
+        this.name = null
+        this.refreshInterval = 1000
+        this.boards = []
+        this.users = {}
+    }
 }
 
 module.exports = ConwaysGame

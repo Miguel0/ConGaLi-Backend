@@ -1,5 +1,7 @@
+const ConnectionHandler = require('./connectionHandler.js')
+
 function HandlersConfigurator (io, storageHandler ) {
-    require('./connectionHandler.js')(io, storageHandler);
+    ConnectionHandler(io, storageHandler)
 }
 
 module.exports = HandlersConfigurator
