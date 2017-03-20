@@ -30,17 +30,17 @@ class ConnectionHandlerConfigurator {
         setTimeout(
             () => {
                 //TODO handle exceptions to avoid memory leaks
-                console.log(`Trying to remove data for socket id #${socketId} @ ${clientIP} being ${new Date()}!!!!`)
+                console.log(`Trying to remove data for socket id #${socketId} @ ${clientIP} being ${new Date().toISOString()}!!!!`)
 
                 let socketData = this.socketsConnected[socketId]
                 if (socketData && deleteOpTimeoutCreationDate > socketData.lastConnectedOn) {
                     delete this.socketsConnected[socketId]
-                    console.log(`Socket data #${JSON.stringify(socketData)} removed at ${new Date()}!!!!`)
+                    console.log(`Socket data #${JSON.stringify(socketData)} removed at ${new Date().toISOString()}!!!!`)
                 }
             },
             deletingSocketDataInterval)
 
-        console.log(`Socket with id #${socket.id} disconnected  @ ${clientIP} being ${new Date()}!!!!`)
+        console.log(`Socket with id #${socket.id} disconnected  @ ${clientIP} being ${deleteOpTimeoutCreationDate.toISOString()}!!!!`)
     }
 
     onConnection(socket, io, storageHandler) {
@@ -63,7 +63,7 @@ class ConnectionHandlerConfigurator {
             socketConnectionData = actualDate
         }
         
-        console.log(`Socket with id #${socketConnectionData.socketId} @ ${this.getSocketIp(socket)} connected!!!!`)
+        console.log(`Socket with id #${socketConnectionData.socketId} @ ${this.getSocketIp(socket)} connected being ${new Date().toISOString()}!!!!`)
     }
 }
 

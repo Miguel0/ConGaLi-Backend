@@ -9,7 +9,7 @@ class ConwaysGame {
         this.boards = []
         this.users = {}
     }
-    
+
     addUser(userId, userData) {
         if (userData && this.boards[0].users[userId]) {
             if (this.boards[0].users.find( user => user.id === userId || user.name === userData.name)) {
@@ -27,6 +27,7 @@ class ConwaysGame {
             }
         }
     }
+    
     createCellBy(user, x, y) {
         this.addCell(new ContextUnawareCell(), x, y)
     }

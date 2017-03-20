@@ -49,7 +49,7 @@ class ConwaysGameHandlerConfigurator {
         this.game.boards[0].createCellBy(data.user, data.x, data.y)
     }
 
-    killCell() {
+    killCell(data) {
         this.game.boards[0].KillCellBy(data.user, data.x, data.y)
     }
 
@@ -75,10 +75,12 @@ class ConwaysGameHandlerConfigurator {
                 socket.to(this.game.name).on('addUser', this.addUser)
                 socket.to(this.game.name).on('removeUser', this.removeUser)
                 socket.to(this.game.name).on('updateUser', this.updateUser)
+
+                console.log(`Game successfully created with data: ${JSON.stringify(data)}`)
+
+                socket.emit('gameCreated', this.game.name)
             }
         )
-
-        console.log(`Game successfully created with data: ${JSON.stringify(data)}`)
     }
 }
 
