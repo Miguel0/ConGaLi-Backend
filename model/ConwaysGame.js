@@ -1,6 +1,15 @@
 const Board = require('./Board')
 
 class ConwaysGame {
+
+    constructor() {
+        this.createdOn = new Date()
+        this.name = null
+        this.refreshInterval = 1000
+        this.boards = []
+        this.users = {}
+    }
+    
     addUser(userId, userData) {
         if (userData && this.boards[0].users[userId]) {
             if (this.boards[0].users.find( user => user.id === userId || user.name === userData.name)) {
@@ -41,14 +50,6 @@ class ConwaysGame {
         }
 
         return json
-    }
-
-    constructor() {
-        this.createdOn = new Date()
-        this.name = null
-        this.refreshInterval = 1000
-        this.boards = []
-        this.users = {}
     }
 }
 

@@ -3,6 +3,17 @@ const ContextUnawareCell = require('./ContextUnawareCell')
 
 class Board {
 
+    constructor() {
+        this.createdOn = new Date()
+        this.name = null
+        this.users = {}
+        this.boardCells = [[]]
+        this.maxBoardWidth = 20
+        this.maxBoardHeight = 20
+        // TODO implement this functionality for better debug and user experience.
+        this.log = []
+    }
+
     addCell(x, y) {
         checkValidPosition(x, y)
 
@@ -179,17 +190,6 @@ class Board {
 
         return json
     }
-
-    constructor() {
-        this.createdOn = new Date()
-        this.name = null
-        this.users = {}
-        this.boardCells = [[]]
-        this.maxBoardWidth = 20
-        this.maxBoardHeight = 20
-        // TODO implement this functionality for better debug and user experience.
-        this.log = []
-    }        
 }
 
 module.exports = Board

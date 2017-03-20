@@ -3,6 +3,13 @@ const ConwaysGame = require('../model/ConwaysGame.js')
 
 class ConwaysGameHandlerConfigurator {
 
+    constructor( io, storageHandler, socket ) {
+        this.game = null
+        this.gameTickHandler = []
+
+        socket.on('createGame', data => this.createGame(data, socket, io))
+    }
+
     startGame(client, boardId, io, socket) {
 
         for (let i = 0; i < this.game.boards.length; i++) {
@@ -72,13 +79,6 @@ class ConwaysGameHandlerConfigurator {
         )
 
         console.log(`Game successfully created with data: ${JSON.stringify(data)}`)
-    }
-
-    constructor( io, storageHandler, socket ) {
-        this.game = null
-        this.gameTickHandler = []
-
-        socket.on('createGame', data => this.createGame(data, socket, io))
     }
 }
 
