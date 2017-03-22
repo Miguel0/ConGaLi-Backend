@@ -1,4 +1,4 @@
-const Exception = require('../utils/Exception')
+const Exception = require('../exception/Exception')
 const ConwaysGame = require('../model/ConwaysGame.js')
 
 class ConwaysGameHandlerConfigurator {
@@ -8,22 +8,37 @@ class ConwaysGameHandlerConfigurator {
         this.gameTickHandler = []
 
         socket.on('createGame', data => this.createGame(data, socket, io))
+        socket.on('startGame', (data) => this.startGame(data, io, socket))
+        socket.on('forceEnd', this.forceStopGame)
     }
 
-    startGame(client, boardId, io, socket) {
+    checkValidRoomForUser(roomId, socket) {
+        // TODO see how to check using something like (socket.rooms.indexOf(data.boardId) > -1)
+        return true
+    }
+
+    startGame(data, io, socket) {
+        this.checkValidRoomForUser(data.boardId, socket)
+
+        console.log(`starting game for board ${data.boardId}`)
 
         for (let i = 0; i < this.game.boards.length; i++) {
             this.gameTickHandler[i] = setInterval(
                 () => {
-                    io.of(this.game.name).broadcast.emit('refreshBoard', this.game.refreshBoard(boardId).toJSONObject())
+                    console.log(`tick at: ${new Date().toISOString()}`)
+                    this.game.refreshBoard(data.boardId)
+
+                    io.to(this.game.name).emit('refreshBoard', this.game.toJSONObject())
                 },
                 this.game.refreshInterval)
         }
-
-        socket.on('forceEnd', forceStopGame)
     }
 
-    forceStopGame(boardId) {
+    release() {
+        this.forceStopGame()
+    }
+
+    forceStopGame(data) {
         for (let i = 0; i < this.game.boards.length; i++) {
             clearInterval(this.gameTickHandler[i])
         }
@@ -53,34 +68,28 @@ class ConwaysGameHandlerConfigurator {
         this.game.boards[0].KillCellBy(data.user, data.x, data.y)
     }
 
-    createBoard(socket, io) {
-        this.game.createBoard()
-
-        socket.to(this.game.name).on('updateUser', this.updateUser)
-        socket.to(this.game.name).on('createCell', this.createCell)
-        socket.to(this.game.name).on('killCell', this.killCell)
-    }
-
     createGame(data, socket, io) {
         this.game = new ConwaysGame()
         this.game.name = data.gameName
-        this.createBoard(socket, io)
+
+        if (data.refreshInterval) {
+            this.game.refreshInterval = parseInt(data.refreshInterval)
+        }
+
         this.addUser(socket.id, data.userData)
 
-        socket.join(
-            this.game.name,
-            () => {
-                socket.to(this.game.name).on('startGame', () => this.startGame(client, boardId, io, socket))
-                socket.to(this.game.name).on('updateConfiguratthis.ion', this.updateConfiguration)
-                socket.to(this.game.name).on('addUser', this.addUser)
-                socket.to(this.game.name).on('removeUser', this.removeUser)
-                socket.to(this.game.name).on('updateUser', this.updateUser)
+        socket.join(this.game.name, () => {
+            io.to(this.game.name).on('updateConfiguration', this.updateConfiguration)
+            io.to(this.game.name).on('addUser', this.addUser)
+            io.to(this.game.name).on('removeUser', this.removeUser)
+            io.to(this.game.name).on('updateUser', this.updateUser)
+            io.to(this.game.name).on('createCell', this.createCell)
+            io.to(this.game.name).on('killCell', this.killCell)
 
-                console.log(`Game successfully created with data: ${JSON.stringify(data)}`)
+            console.log(`Game successfully created with data: ${JSON.stringify(data)}`)
 
-                socket.emit('gameCreated', this.game.name)
-            }
-        )
+            io.to(socket.id).emit('gameCreated', data)
+        })
     }
 }
 

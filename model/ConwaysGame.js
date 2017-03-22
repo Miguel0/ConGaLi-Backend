@@ -8,6 +8,8 @@ class ConwaysGame {
         this.refreshInterval = 1000
         this.boards = []
         this.users = {}
+
+        this.createBoard()
     }
 
     addUser(userId, userData) {
@@ -38,6 +40,10 @@ class ConwaysGame {
 
     createBoard() {
         this.boards.push(new Board())
+    }
+
+    refreshBoard(boardId) {
+        this.boards[boardId].stablishCellsNewGeneration()
     }
 
     toJSONObject() {

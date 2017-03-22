@@ -1,4 +1,4 @@
-const Exception = require('../utils/Exception')
+const Exception = require('../exception/Exception')
 const ContextUnawareCell = require('./ContextUnawareCell')
 
 class Board {
@@ -83,8 +83,6 @@ class Board {
                 }
             }
         }
-
-        return possibleDeadCells
     }
 
     calculatePossibleDeadCellsPositions() {

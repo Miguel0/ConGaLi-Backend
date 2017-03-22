@@ -34,6 +34,9 @@ class ConnectionHandlerConfigurator {
 
                 let socketData = this.socketsConnected[socketId]
                 if (socketData && deleteOpTimeoutCreationDate > socketData.lastConnectedOn) {
+                    // Releasing resources
+                    socketData.gameHandler.release()
+
                     delete this.socketsConnected[socketId]
                     console.log(`Socket data #${JSON.stringify(socketData)} removed at ${new Date().toISOString()}!!!!`)
                 }
