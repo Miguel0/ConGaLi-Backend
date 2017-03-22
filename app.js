@@ -6,8 +6,8 @@ const config = require('./config/config.dev.js');
 	
 // Starting App
 
-const storage = require('./storage/init.js');
-require('./handlers/init.js')(io, storage);
+const storage = require('./src/storage/init.js');
+require('./src/handlers/init.js')(io, storage);
 // Starting ws interface
 
 server.listen(
