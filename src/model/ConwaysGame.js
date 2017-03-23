@@ -30,8 +30,9 @@ class ConwaysGame {
         }
     }
     
-    createCellBy(user, x, y) {
-        this.addCell(new ContextUnawareCell(), x, y)
+    createCellBy(boardId, data) {
+        let userData = {}
+        this.boards[boardId].createCellBy(userData, data.x, data.y)
     }
 
     killCellBy(user, x, y) {

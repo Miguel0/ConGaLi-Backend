@@ -8,7 +8,7 @@ class ConwaysGameHandlerConfigurator {
         this.gameTickHandler = []
 
         socket.on('createGame', data => this.createGame(data, socket, io))
-        socket.on('startGame', (data) => this.startGame(data, io, socket))
+        socket.on('startGame', data => this.startGame(data, io, socket))
         socket.on('forceEnd', this.forceStopGame)
     }
 
@@ -20,18 +20,21 @@ class ConwaysGameHandlerConfigurator {
     startGame(data, io, socket) {
         this.checkValidRoomForUser(data.boardId, socket)
 
-        console.log(`starting game for board ${data.boardId}`)
+        console.log(`${new Date().toISOString()} starting game for board ${data.boardId}`)
 
         for (let i = 0; i < this.game.boards.length; i++) {
             this.gameTickHandler[i] = setInterval(
                 () => {
-                    console.log(`tick at: ${new Date().toISOString()}`)
                     this.game.refreshBoard(data.boardId)
+                    let jsonData = this.game.toJSONObject()
+                    console.log(`${new Date().toISOString()} sending data table to client: ${JSON.stringify(jsonData)}`)
 
-                    io.to(this.game.name).emit('refreshBoard', this.game.toJSONObject())
+                    io.to(this.game.name).emit('refreshBoard', jsonData)
                 },
                 this.game.refreshInterval)
         }
+
+        console.log(`${new Date().toISOString()} game started for board ${data.boardId}`)
     }
 
     release() {
@@ -39,8 +42,10 @@ class ConwaysGameHandlerConfigurator {
     }
 
     forceStopGame(data) {
-        for (let i = 0; i < this.game.boards.length; i++) {
-            clearInterval(this.gameTickHandler[i])
+        if (this.game) {
+            for (let i = 0; i < this.game.boards.length; i++) {
+                clearInterval(this.gameTickHandler[i])
+            }
         }
     }
 
@@ -60,8 +65,9 @@ class ConwaysGameHandlerConfigurator {
         
     }
 
-    createCell(data) {
-        this.game.boards[0].createCellBy(data.user, data.x, data.y)
+    createCell(cellCreationData, socket) {
+        console.log('creating cell with ' + JSON.stringify(cellCreationData))
+        this.game.createCellBy(0, cellCreationData)
     }
 
     killCell(data) {
@@ -69,6 +75,7 @@ class ConwaysGameHandlerConfigurator {
     }
 
     createGame(data, socket, io) {
+
         this.game = new ConwaysGame()
         this.game.name = data.gameName
 
@@ -90,6 +97,12 @@ class ConwaysGameHandlerConfigurator {
 
             io.to(socket.id).emit('gameCreated', data)
         })
+
+        socket.on('createCell', (data) => {
+            console.log("Query: ", socket.handshake.query)
+            this.createCell(data, socket)
+            }
+        )
     }
 }
 
