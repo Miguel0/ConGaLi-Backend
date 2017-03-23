@@ -15,16 +15,17 @@ class Board {
         this.log = []
     }
 
-    addCell(cell, x, y) {
-        this.checkValidPosition(x, y)
+    addCell(cell, x, y, avoidException) {
+        if (this.checkValidPosition(x, y, avoidException)) {
 
-        if (!this.boardCells[x]) {
-            this.boardCells[x] = {}
+            if (!this.boardCells[x]) {
+                this.boardCells[x] = {}
+            }
+
+            console.log(`Adding Cells: ${JSON.stringify(cell)} at ${x}@${y}`)
+
+            this.boardCells[x][y] = cell
         }
-
-        console.log(`Adding Cells: ${JSON.stringify(cell)} at ${x}@${y}`)
-
-        this.boardCells[x][y] = cell
     }
 
     removeCell(x, y) {
@@ -34,13 +35,16 @@ class Board {
         delete this.boardCells[x][y]
     }
 
-    checkValidPosition(x, y) {
-        if (x > this.maxBoardWidth || x < 0 || y > this.maxBoardHeight || y < 0) {
+    checkValidPosition(x, y, avoidException) {
+        let invalidBoundsReceived = x > this.maxBoardWidth || x < 0 || y > this.maxBoardHeight || y < 0
+        if (invalidBoundsReceived && !avoidException) {
             throw new Exception(
                 'error.board.cellCantBeRemoved.title',
                 'error.board.cellCantBeRemoved.body'
             )
         }
+
+        return !invalidBoundsReceived
     }
 
     nearbyPositions(stringX, stringY) {
@@ -204,7 +208,7 @@ class Board {
 
         for (let i = 0; i < newCells.length; i++) {
             let newCellData = newCells[i]
-            this.addCell(newCellData.cell, newCellData.x, newCellData.y)
+            this.addCell(newCellData.cell, newCellData.x, newCellData.y, true)
         }
     }
 
