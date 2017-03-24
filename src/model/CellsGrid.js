@@ -37,8 +37,8 @@ class CellsGrid {
     let invalidBoundsReceived = x > this.maxCellsGridWidth || x < 0 || y > this.maxCellsGridHeight || y < 0
     if (invalidBoundsReceived && !avoidException) {
       throw new AppException(
-        'error.board.cellCantBeRemoved.title',
-        'error.board.cellCantBeRemoved.body'
+        'error.cellsGrid.cellCantBeRemoved.title',
+        'error.cellsGrid.cellCantBeRemoved.body'
       )
     }
 
@@ -115,28 +115,27 @@ class CellsGrid {
    */
   averageRGB (arrayOfColours) {
     // Keep helper stuff in closures
-    let reSegment = /[\da-z]{2}/gi
+    let hexRegex = /^[a-f\d]{6}$/gi
 
-    return arrayOfColours.reduce(
-      (totalString, elementString) => {
-        // Split into parts
-        let totalValue = totalString.match(reSegment)
-        let elementValue = elementString.match(reSegment)
-        let partialResult
-        let result = []
+    let arrayOfHexColours = arrayOfColours
+      .map(string => string.toLowerCase())
+      .filter(color => color.match(hexRegex))
+      .map(string => parseInt(string, 16))
 
-        // Average each set of hex numbers going via dec
-        // always rounds down
-        for (let i = totalValue.length; i;) {
-          partialResult = (parseInt(totalValue[--i], 16) + parseInt(elementValue[i], 16) >> 1).toString(16)
+    if (arrayOfHexColours.length !== arrayOfColours.length) {
+      throw new AppException(
+        'error.cellsGrid.malformedColor.title',
+        'error.cellsGrid.malformedColor.body',
+        arrayOfColours
+      )
+    }
 
-          // Add leading zero if only one character
-          result[i] = (`0${partialResult}`).slice(-2)
-        }
+    let result = arrayOfHexColours
+      .reduce((total, element) => total + element)
 
-        return result.join('')
-      }
-    )
+    result = result / arrayOfHexColours.length
+
+    return parseInt(result).toString(16)
   }
 
   createCellBy (user, x, y) {

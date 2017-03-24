@@ -1,6 +1,5 @@
 class ContextUnawareCell {
   constructor () {
-    // The default color is black.
     this.createdOn = new Date()
     this.color = '000000'
   }
