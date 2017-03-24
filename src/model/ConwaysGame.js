@@ -1,4 +1,4 @@
-const Board = require('./Board')
+const CellsGrid = require('./CellsGrid')
 const AppException = require('../exception/AppException')
 
 class ConwaysGame {
@@ -6,15 +6,15 @@ class ConwaysGame {
     this.createdOn = new Date()
     this.name = null
     this.refreshInterval = 1000
-    this.boards = []
+    this.cellsGrids = []
     this.users = {}
 
-    this.createBoard()
+    this.createCellsGrid()
   }
 
   addUser (userId, userData) {
-    if (userData && this.boards[0].users[userId]) {
-      if (this.boards[0].users.find(user => user.id === userId || user.name === userData.name)) {
+    if (userData && this.cellsGrids[0].users[userId]) {
+      if (this.cellsGrids[0].users.find(user => user.id === userId || user.name === userData.name)) {
         throw new AppException(
           'error.game.userAlreadyExists.title',
           'error.game.userAlreadyExists.body',
@@ -22,7 +22,7 @@ class ConwaysGame {
         )
       }
 
-      this.boards[0].users[userId] = {
+      this.cellsGrids[0].users[userId] = {
         id: userId,
         name: userData.name,
         color: userData.color
@@ -30,31 +30,31 @@ class ConwaysGame {
     }
   }
 
-  createCellBy (boardId, data) {
+  createCellBy (cellsGridId, data) {
     let userData = {}
-    this.boards[boardId].createCellBy(userData, data.x, data.y)
+    this.cellsGrids[cellsGridId].createCellBy(userData, data.x, data.y)
   }
 
   killCellBy (user, x, y) {
     this.removeCell(x, y)
   }
 
-  createBoard () {
-    this.boards.push(new Board())
+  createCellsGrid () {
+    this.cellsGrids.push(new CellsGrid())
   }
 
-  refreshBoard (boardId) {
-    this.boards[boardId].stablishCellsNewGeneration()
+  refreshCellsGrid (cellsGridId) {
+    this.cellsGrids[cellsGridId].stablishCellsNewGeneration()
   }
 
   toJSONObject () {
     let json = {}
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
-    json.boards = []
+    json.cellsGrids = []
 
-    for (let i = 0; i < this.boards.length; i++) {
-      json.boards[i] = this.boards[i].toJSONObject()
+    for (let i = 0; i < this.cellsGrids.length; i++) {
+      json.cellsGrids[i] = this.cellsGrids[i].toJSONObject()
     }
 
     return json

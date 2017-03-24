@@ -1,7 +1,7 @@
-let Board = require('../../../../src/model/Board')
+let Board = require('../../../../src/model/CellsGrid')
 let Cell = require('../../../../src/model/ContextUnawareCell')
 
-describe('Board', function() {
+describe('CellsGrid', function () {
   let board
   let cell
 
@@ -10,7 +10,9 @@ describe('Board', function() {
     cell = new Cell()
   });
 
-  it('should be able to be created', () => {
+  it('should be able to be created', function () {
+  	board = null
+  	cell = null
   });
 
 });

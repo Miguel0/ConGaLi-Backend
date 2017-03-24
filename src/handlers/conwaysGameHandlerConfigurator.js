@@ -11,28 +11,28 @@ class ConwaysGameHandlerConfigurator {
   }
 
   checkValidRoomForUser (roomId, socket) {
-    // TODO see how to check using something like (socket.rooms.indexOf(data.boardId) > -1)
+    // TODO see how to check using something like (socket.rooms.indexOf(data.cellsGridId) > -1)
     return true
   }
 
   startGame (data, io, socket) {
-    this.checkValidRoomForUser(data.boardId, socket)
+    this.checkValidRoomForUser(data.cellsGridId, socket)
 
-    console.log(`${new Date().toISOString()} starting game for board ${data.boardId}`)
+    console.log(`${new Date().toISOString()} starting game for board ${data.cellsGridId}`)
 
-    for (let i = 0; i < this.game.boards.length; i++) {
+    for (let i = 0; i < this.game.cellsGrids.length; i++) {
       this.gameTickHandler[i] = setInterval(
         () => {
-          this.game.refreshBoard(data.boardId)
+          this.game.refreshCellsGrid(data.cellsGridId)
           let jsonData = this.game.toJSONObject()
           console.log(`${new Date().toISOString()} sending data table to client: ${JSON.stringify(jsonData)}`)
 
-          io.to(this.game.name).emit('refreshBoard', jsonData)
+          io.to(this.game.name).emit('refreshCellsGrid', jsonData)
         },
         this.game.refreshInterval)
     }
 
-    console.log(`${new Date().toISOString()} game started for board ${data.boardId}`)
+    console.log(`${new Date().toISOString()} game started for board ${data.cellsGridId}`)
   }
 
   release () {
@@ -41,7 +41,7 @@ class ConwaysGameHandlerConfigurator {
 
   forceStopGame (data) {
     if (this.game) {
-      for (let i = 0; i < this.game.boards.length; i++) {
+      for (let i = 0; i < this.game.cellsGrids.length; i++) {
         clearInterval(this.gameTickHandler[i])
       }
     }
@@ -66,7 +66,7 @@ class ConwaysGameHandlerConfigurator {
   }
 
   killCell (data) {
-    this.game.boards[0].KillCellBy(data.user, data.x, data.y)
+    this.game.cellsGrids[0].KillCellBy(data.user, data.x, data.y)
   }
 
   createGame (data, socket, io) {

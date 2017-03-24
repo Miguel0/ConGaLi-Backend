@@ -1,14 +1,14 @@
 const AppException = require('../exception/AppException')
 const ContextUnawareCell = require('./ContextUnawareCell')
 
-class Board {
+class CellsGrid {
   constructor () {
     this.createdOn = new Date()
     this.name = null
-    this.boardCells = {}
+    this.cells = {}
     this.users = {}
-    this.maxBoardWidth = 3200
-    this.maxBoardHeight = 3200
+    this.maxCellsGridWidth = 3200
+    this.maxCellsGridHeight = 3200
     this.resolution = 10
     // TODO implement this functionality for better debug and user experience.
     this.log = []
@@ -16,13 +16,13 @@ class Board {
 
   addCell (cell, x, y, avoidException) {
     if (this.checkValidPosition(x, y, avoidException)) {
-      if (!this.boardCells[x]) {
-        this.boardCells[x] = {}
+      if (!this.cells[x]) {
+        this.cells[x] = {}
       }
 
       console.log(`Adding Cells: ${JSON.stringify(cell)} at ${x}@${y}`)
 
-      this.boardCells[x][y] = cell
+      this.cells[x][y] = cell
     }
   }
 
@@ -30,11 +30,11 @@ class Board {
     this.checkValidPosition(x, y)
 
     // TODO Review if this is the best approach memory-wise
-    delete this.boardCells[x][y]
+    delete this.cells[x][y]
   }
 
   checkValidPosition (x, y, avoidException) {
-    let invalidBoundsReceived = x > this.maxBoardWidth || x < 0 || y > this.maxBoardHeight || y < 0
+    let invalidBoundsReceived = x > this.maxCellsGridWidth || x < 0 || y > this.maxCellsGridHeight || y < 0
     if (invalidBoundsReceived && !avoidException) {
       throw new AppException(
         'error.board.cellCantBeRemoved.title',
@@ -73,7 +73,7 @@ class Board {
     for (let i = 0; i < positionsArray.length; i++) {
       let position = positionsArray[i]
 
-      let cell = this.boardCells[position.x] && this.boardCells[position.x][position.y]
+      let cell = this.cells[position.x] && this.cells[position.x][position.y]
 
       if (cell) {
         result.push(cell)
@@ -86,9 +86,9 @@ class Board {
   }
 
   forEachCell (aParticularFunction) {
-    for (let x in this.boardCells) {
-      for (let y in this.boardCells[x]) {
-        aParticularFunction.call(aParticularFunction, this.boardCells[x][y], x, y)
+    for (let x in this.cells) {
+      for (let y in this.cells[x]) {
+        aParticularFunction.call(aParticularFunction, this.cells[x][y], x, y)
       }
     }
   }
@@ -210,8 +210,8 @@ class Board {
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
     json.cells = {}
-    json.maxBoardWidth = this.maxBoardWidth
-    json.maxBoardHeight = this.maxBoardHeight
+    json.maxCellsGridWidth = this.maxCellsGridWidth
+    json.maxCellsGridHeight = this.maxCellsGridHeight
 
     this.forEachCell((cell, x, y) => {
       if (!json.cells[x]) {
@@ -228,4 +228,4 @@ class Board {
   }
 }
 
-module.exports = Board
+module.exports = CellsGrid
