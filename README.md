@@ -30,22 +30,21 @@ This particular implementation creates a Multiplayer app version of Game of Life
 - [ ] **\(Requirement enhancement)** _Implement test for WebSockets endpoints._
 - [ ] **\(Requirement enhancement)** _Get to a coverage of at least 70%._
 
-## Installation
+## Build Setup
 
-```
+``` bash
+# install dependencies
 npm install
-```
 
-## Cli Usage
-### Run
-``` 
+# serve at localhost:3000
 npm run app
-```
-### Test
-``` 
-npm test
-```
-### Coverage
-``` 
+
+# run unit tests
+npm run unit
+
+# run coverage
 npm coverage
+
+# run all tests
+npm test
 ```
