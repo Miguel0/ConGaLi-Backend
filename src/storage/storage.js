@@ -1,5 +1,4 @@
 function StorageHandler () {
-    
 }
 
-module.exports = StorageHandler;
+module.exports = StorageHandler

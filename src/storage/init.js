@@ -1,6 +1,6 @@
 function StorageConfigurator (config) {
-    const storageDriver = require('./storage.js')(config);
-    return storageDriver;
+  const storageDriver = require('./storage.js')(config)
+  return storageDriver
 }
 
-module.exports = StorageConfigurator;
+module.exports = StorageConfigurator

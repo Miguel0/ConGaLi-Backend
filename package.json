@@ -1,11 +1,22 @@
 {
   "version": "0.0.1",
-  "description": "test",
-  "main": "app.js",
+  "description": "Socket.io backend for Conway's game",
+  "author": "Miguel Darío Isasmendi",
+  "license": "MIT",
+  "private": true,
   "scripts": {
-    "test": "jasmine",
+    "unit": "jasmine",
     "coverage": "jasmine",
-    "runDev": "node app.js"
+    "dev": "node app.js",
+    "lint": "eslint --color --ext .js src"
+  },
+  "devDependencies": {
+    "eslint": "^3.18.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-friendly-formatter": "^2.0.7",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1",
+    "jasmine": "^2.5.3"
   },
   "repository": {
     "type": "git",
@@ -17,8 +28,6 @@
     "node.js",
     "real-time"
   ],
-  "author": "Miguel Darío Isasmendi",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Miguel0/conwaysGame-Backend/issues"
   },
@@ -26,7 +35,7 @@
   "dependencies": {
     "socket.io": "^1.7.3"
   },
-  "devDependencies": {
-    "jasmine": "^2.5.3"
+  "engines": {
+    "node": ">= 6.0.0"
   }
 }
