@@ -1,4 +1,4 @@
-const Exception = require('../exception/AppException')
+const AppException = require('../exception/AppException')
 const ContextUnawareCell = require('./ContextUnawareCell')
 
 class Board {
@@ -36,7 +36,7 @@ class Board {
   checkValidPosition (x, y, avoidException) {
     let invalidBoundsReceived = x > this.maxBoardWidth || x < 0 || y > this.maxBoardHeight || y < 0
     if (invalidBoundsReceived && !avoidException) {
-      throw new Exception(
+      throw new AppException(
         'error.board.cellCantBeRemoved.title',
         'error.board.cellCantBeRemoved.body'
       )

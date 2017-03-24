@@ -1,5 +1,5 @@
 const Board = require('./Board')
-const Exception = require('../exception/AppException')
+const AppException = require('../exception/AppException')
 
 class ConwaysGame {
   constructor () {
@@ -15,7 +15,7 @@ class ConwaysGame {
   addUser (userId, userData) {
     if (userData && this.boards[0].users[userId]) {
       if (this.boards[0].users.find(user => user.id === userId || user.name === userData.name)) {
-        throw new Exception(
+        throw new AppException(
           'error.game.userAlreadyExists.title',
           'error.game.userAlreadyExists.body',
           userData
