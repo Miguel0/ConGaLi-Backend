@@ -19,7 +19,7 @@ This particular implementation creates a Multiplayer Web app version of Game of 
 ## TODO list
 - [x] **\(Originally requested)** The game should tick automatically at a predefined interval, at say, 1 step per second.
 - [ ] **\(Originally requested)** This server allows multiple clients to share the same, synchronized world view.
-- [x] **\(Originally requested)** Each client is assigned a random color on initialization.
+- [ ] **\(Originally requested)** Each client is assigned a random color on initialization.
 - [ ] **\(Originally requested)** Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (You can use any mechanism to achieve this, such as polling, comet or WebSocket).
 - [ ] **\(Originally requested)** When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).
 - [x] **\(Requirement enhancement)** _Give the creator of the Grid Cell to config the tick interval upon creation._
@@ -37,16 +37,16 @@ This particular implementation creates a Multiplayer Web app version of Game of 
 npm install
 ```
 
-## Usage
-
-``` Run
+## Cli Usage
+### Run
+``` 
 npm run app
 ```
-
-``` Test
+### Test
+``` 
 npm test
 ```
-
-``` Coverage
+### Coverage
+``` 
 npm coverage
 ```
