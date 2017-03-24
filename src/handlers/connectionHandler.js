@@ -4,7 +4,7 @@ const useSocketByIp = false
 
 class ConnectionHandlerConfigurator {
   constructor (io, storageHandler) {
-    this.createOn = new Date()
+    this.createdOn = new Date()
     this.socketsConnected = {}
 
     io.on('connection', socket => this.onConnection(socket, io, storageHandler))
