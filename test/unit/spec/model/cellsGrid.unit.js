@@ -46,7 +46,7 @@ describe('CellsGrid', function () {
     })
   })
 
-  describe('Points around a given point calculation', function () {
+  describe('Checking validator function against point (x, y) over cellsGrid bounds', function () {
     it('should fail if there\'s no arguments', function () {
       expect(() => cellsGrid.checkValidPosition()).to.throw(AppException)
     })
@@ -82,9 +82,30 @@ describe('CellsGrid', function () {
     it('should throw an AppException if the height is greater than the maxHeight', function () {
       expect(() => cellsGrid.checkValidPosition(0, cellsGrid.maxHeight + 1)).to.throw(AppException)
     })
+  })
 
-    it('should throw an AppException if the height is greater than the maxHeight', function () {
-      expect(() => cellsGrid.checkValidPosition(0, cellsGrid.maxHeight + 1)).to.throw(AppException)
+  describe('Checking nearby valid points generator calculation', function () {
+    it('should fail if there\'s no arguments', function () {
+      expect(() => cellsGrid.nearbyPositions()).to.throw(AppException)
+    })
+
+    it('should throw an AppException if the arguments are empty', function () {
+      expect(() => cellsGrid.nearbyPositions('', '')).to.throw(AppException)
+    })
+
+    it('should throw an AppException if the arguments are null', function () {
+      expect(() => cellsGrid.nearbyPositions(null, null)).to.throw(AppException)
+    })
+
+    it('should return 3 elements with parameters for each one of the corners of the grid', function () {
+      expect(cellsGrid.nearbyPositions(cellsGrid.maxWidth, cellsGrid.maxHeight).length).to.be.equal(3)
+      expect(cellsGrid.nearbyPositions(cellsGrid.maxWidth, 0).length).to.be.equal(3)
+      expect(cellsGrid.nearbyPositions(0, cellsGrid.maxHeight).length).to.be.equal(3)
+      expect(cellsGrid.nearbyPositions(0, 0).length).to.be.equal(3)
+    })
+
+    it('should return 8 elements with parameters setted at 4@4', function () {
+      expect(cellsGrid.nearbyPositions(4, 4).length).to.be.equal(8)
     })
   })
 

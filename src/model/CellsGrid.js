@@ -49,6 +49,8 @@ class CellsGrid {
     let x = parseInt(stringX)
     let y = parseInt(stringY)
 
+    this.checkValidPosition(x, y)
+
     let positionsArray = [
       { x: x - this.resolution, y: y + this.resolution },
       { x: x - this.resolution, y: y },
