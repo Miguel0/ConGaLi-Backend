@@ -13,26 +13,23 @@ class ConwaysGame {
   }
 
   addUser (userId, userData) {
-    if (userData && this.cellsGrids[0].users[userId]) {
-      if (this.cellsGrids[0].users.find(user => user.id === userId || user.name === userData.name)) {
-        throw new AppException(
-          'error.game.userAlreadyExists.title',
-          'error.game.userAlreadyExists.body',
-          userData
-        )
-      }
+    if (this.users[userId]) {
+      throw new AppException(
+        'error.game.userAlreadyExists.title',
+        'error.game.userAlreadyExists.body',
+        userData
+      )
+    }
 
-      this.cellsGrids[0].users[userId] = {
-        id: userId,
-        name: userData.name,
-        color: userData.color
-      }
+    this.users[userId] = {
+      id: userId,
+      name: userData.name,
+      color: userData.color
     }
   }
 
-  createCellBy (cellsGridId, data) {
-    let userData = {}
-    this.cellsGrids[cellsGridId].createCellBy(userData, data.x, data.y)
+  createCellBy (userId, cellsGridId, data) {
+    this.cellsGrids[cellsGridId].createCellBy(this.users[userId], data.x, data.y)
   }
 
   killCellBy (user, x, y) {

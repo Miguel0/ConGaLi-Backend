@@ -28,7 +28,6 @@ describe('CellsGrid', function () {
       expect(cellsGrid).to.have.property('createdOn').and.not.be.null
       expect(cellsGrid).to.have.property('name').and.to.be.null
       expect(cellsGrid).to.have.property('cells').and.to.be.empty
-      expect(cellsGrid).to.have.property('users').and.to.be.empty
       expect(cellsGrid).to.have.property('maxWidth').and.to.be.equal(3200)
       expect(cellsGrid).to.have.property('maxHeight').and.to.be.equal(3200)
       expect(cellsGrid).to.have.property('resolution').and.to.be.equal(10)
@@ -104,8 +103,8 @@ describe('CellsGrid', function () {
       expect(cellsGrid.nearbyPositions(0, 0).length).to.be.equal(3)
     })
 
-    it('should return 8 elements with parameters setted at 4@4', function () {
-      expect(cellsGrid.nearbyPositions(4, 4).length).to.be.equal(8)
+    it('should return 8 elements with parameters setted at cellsGrid.resolution@cellsGrid.resolution', function () {
+      expect(cellsGrid.nearbyPositions(cellsGrid.resolution, cellsGrid.resolution).length).to.be.equal(8)
     })
   })
 
@@ -127,11 +126,11 @@ describe('CellsGrid', function () {
     })
 
     it('should return a the same first element on the array of length 1 received', function () {
-      expect(cellsGrid.averageRGB(['000000']).charAt(0)).to.not.be.equal('000000')
+      expect(cellsGrid.averageRGB(['000000'])).to.be.equal('000000')
     })
 
     it('should return the same if all the arguments are the same', function () {
-      expect(cellsGrid.averageRGB(['000000','000000'])).to.not.be.equal('000000')
+      expect(cellsGrid.averageRGB(['000000','000000'])).to.be.equal('000000')
     })
 
     it('should return the middle value for two opposite extreme values', function () {

@@ -62,7 +62,7 @@ class ConwaysGameHandlerConfigurator {
 
   createCell (cellCreationData, socket) {
     console.log('creating cell with ' + JSON.stringify(cellCreationData))
-    this.game.createCellBy(0, cellCreationData)
+    this.game.createCellBy(socket.id, 0, cellCreationData)
   }
 
   killCell (data) {
@@ -95,7 +95,7 @@ class ConwaysGameHandlerConfigurator {
     socket.on(
       'createCell',
       data => {
-        console.log(`Query: ${socket.handshake.query}`)
+        console.log(`Query: ${JSON.stringify(socket.handshake.query)}`)
         this.createCell(data, socket)
       }
     )

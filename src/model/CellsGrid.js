@@ -6,7 +6,6 @@ class CellsGrid {
     this.createdOn = new Date()
     this.name = null
     this.cells = {}
-    this.users = {}
     this.maxWidth = 3200
     this.maxHeight = 3200
     this.resolution = 10
@@ -64,7 +63,7 @@ class CellsGrid {
 
     positionsArray = positionsArray.filter(position => this.checkValidPosition(position.x, position.y, true))
 
-    console.log(`Nearby position of ${x}@${y} calculated: ${JSON.stringify(positionsArray)}`)
+    // console.log(`Nearby position of ${x}@${y} calculated: ${JSON.stringify(positionsArray)}`)
 
     return positionsArray
   }
@@ -137,13 +136,19 @@ class CellsGrid {
     let result = arrayOfHexColours
       .reduce((total, element) => total + element)
 
-    result = result / arrayOfHexColours.length
+    result = parseInt(result / arrayOfHexColours.length)
+    result = `000000${result.toString(16)}`.slice(-6)
 
-    return parseInt(result).toString(16)
+    console.log(`Processing color for: ${JSON.stringify(arrayOfHexColours)} led to: ${result}`)
+
+    return result
   }
 
   createCellBy (user, x, y) {
-    this.addCell(new ContextUnawareCell(), x, y)
+    let cell = new ContextUnawareCell()
+    cell.color = user.color
+
+    this.addCell(cell, x, y)
   }
 
   killCellBy (user, x, y) {
