@@ -7,8 +7,8 @@ class CellsGrid {
     this.name = null
     this.cells = {}
     this.users = {}
-    this.maxCellsGridWidth = 3200
-    this.maxCellsGridHeight = 3200
+    this.maxWidth = 3200
+    this.maxHeight = 3200
     this.resolution = 10
     // TODO implement this functionality for better debug and user experience.
     this.log = []
@@ -33,16 +33,16 @@ class CellsGrid {
     delete this.cells[x][y]
   }
 
-  checkValidPosition (x, y, avoidException) {
-    let invalidBoundsReceived = x > this.maxCellsGridWidth || x < 0 || y > this.maxCellsGridHeight || y < 0
-    if (invalidBoundsReceived && !avoidException) {
+  checkValidPosition (x, y, avoidThrowingException) {
+    let validBoundsReceived = (Array.prototype.slice.call(arguments).length > 0) && !isNaN(parseFloat(x)) && !isNaN(parseFloat(y)) && (x <= this.maxWidth && x >= 0) && (y <= this.maxHeight && y >= 0)
+    if (!validBoundsReceived && !avoidThrowingException) {
       throw new AppException(
         'error.cellsGrid.cellCantBeRemoved.title',
         'error.cellsGrid.cellCantBeRemoved.body'
       )
     }
 
-    return !invalidBoundsReceived
+    return validBoundsReceived
   }
 
   nearbyPositions (stringX, stringY) {
@@ -59,6 +59,8 @@ class CellsGrid {
       { x: x + this.resolution, y: y + this.resolution },
       { x: x + this.resolution, y: y - this.resolution }
     ]
+
+    positionsArray = positionsArray.filter(position => this.checkValidPosition(position.x, position.y, true))
 
     console.log(`Nearby position of ${x}@${y} calculated: ${JSON.stringify(positionsArray)}`)
 
@@ -209,8 +211,8 @@ class CellsGrid {
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
     json.cells = {}
-    json.maxCellsGridWidth = this.maxCellsGridWidth
-    json.maxCellsGridHeight = this.maxCellsGridHeight
+    json.maxWidth = this.maxWidth
+    json.maxHeight = this.maxHeight
 
     this.forEachCell((cell, x, y) => {
       if (!json.cells[x]) {

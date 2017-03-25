@@ -22,8 +22,10 @@ describe('ContextUnawareCell', function () {
     })
 
     it('should return a proper JSON representation', function () {
-      expect(cell.toJSONObject()).to.have.property('createdOn').and.to.be.a('string').and.to.match(TestUtils.getISOStringRegex())
-      expect(cell.toJSONObject()).to.have.property('color').and.to.be.equal('#000000')
+      let jsonObject = cell.toJSONObject()
+      
+      expect(jsonObject).to.have.property('createdOn').and.to.be.a('string').and.to.match(TestUtils.getISOStringRegex())
+      expect(jsonObject).to.have.property('color').and.to.be.equal('#000000')
     })
   })
 
