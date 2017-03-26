@@ -90,6 +90,7 @@ class ConwaysGameHandlerConfigurator {
       console.log(`Game successfully created with data: ${JSON.stringify(data)}`)
 
       io.to(socket.id).emit('gameCreated', data)
+      io.to(socket.id).emit('setTemplateCellsOptions', this.game.getPresetsConfiguration())
     })
 
     socket.on(
