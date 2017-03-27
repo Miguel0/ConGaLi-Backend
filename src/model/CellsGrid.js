@@ -39,6 +39,16 @@ class CellsGrid {
     delete this.cells[x][y]
   }
 
+  /**
+   * This will normalize the given coordinates to they possible positions in the grid given a raw position that doesn't have
+   * into account the resolution of the grid
+   */
+  normalizeGridPosition (rawPosition) {
+    return {
+      x: Math.round((rawPosition.x - (this.resolution / 2)) / this.resolution) * this.resolution,
+      y: Math.round((rawPosition.y - (this.resolution / 2)) / this.resolution) * this.resolution}
+  }
+
   checkValidPosition (x, y, avoidThrowingException) {
     let validBoundsReceived = (Array.prototype.slice.call(arguments).length > 0) && !isNaN(parseFloat(x)) && !isNaN(parseFloat(y)) && (x <= this.maxWidth && x >= 0) && (y <= this.maxHeight && y >= 0)
 
@@ -152,9 +162,9 @@ class CellsGrid {
     return result
   }
 
-  addCellsBy (user, positions) {
-
-    let validCells = positions
+  addCellsBy (user, rawPositions) {
+    let validCells = rawPositions
+      .map(position => this.normalizeGridPosition(position))
       .filter(position => this.checkValidPosition(position.x, position.y, true))
       .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
       .map(position => {
@@ -163,7 +173,7 @@ class CellsGrid {
         return { position: position, cell: cell }
       })
 
-    if (validCells.length === positions.length) {
+    if (validCells.length === rawPositions.length) {
       for (let i = 0; i < validCells.length; i++) {
         let cellConfig = validCells[i]
 
@@ -171,8 +181,8 @@ class CellsGrid {
           this.cells[cellConfig.position.x] = {}
         }
 
+        console.log(`Adding cell: ${JSON.stringify(cellConfig)}`)
         this.cells[cellConfig.position.x][cellConfig.position.y] = cellConfig.cell
-        JSON.stringify(this.cells)
       }
     } else {
       throw new AppException(
@@ -182,8 +192,8 @@ class CellsGrid {
     }
   }
 
-  killCellBy (user, x, y) {
-    this.removeCell(x, y)
+  killCellBy (user, position) {
+    this.removeCell(this.normalizeGridPosition(position))
   }
 
   automaticallyCreateNewCells () {
@@ -235,7 +245,7 @@ class CellsGrid {
     for (let i = 0; i < deadCellPositions.length; i++) {
       let deadCellPosition = deadCellPositions[i]
 
-      this.removeCell(deadCellPosition.x, deadCellPosition.y)
+      this.removeCell(deadCellPosition)
     }
 
     for (let i = 0; i < newCells.length; i++) {
@@ -251,6 +261,7 @@ class CellsGrid {
     json.cells = {}
     json.maxWidth = this.maxWidth
     json.maxHeight = this.maxHeight
+    json.resolution = this.resolution
 
     this.forEachCell((cell, x, y) => {
       if (!json.cells[x]) {
