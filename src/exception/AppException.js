@@ -4,6 +4,10 @@ class AppException {
     this.bodyKey = bodyKey
     this.arguments = extraArguments || {}
   }
+
+  toString () {
+  	return JSON.stringify(this)
+  }
 }
 
 module.exports = AppException

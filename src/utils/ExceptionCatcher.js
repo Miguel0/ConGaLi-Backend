@@ -1,30 +1,32 @@
 const AppException = require('../exception/AppException')
 
 class ExceptionCatcher {
-  constructor (socket, io) {
+  constructor (socket, io, gameName) {
     // TODO deal with the possibility to not knowing what socket will be calling this catcher
     this.socket = socket
     this.io = io
+    this.gameName = this.gameName
   }
 
-  wrappExecution (functionWrapped) {
-    let self = this
-
-    return clientData => {
-      try {
-        functionWrapped.apply(clientData, self.io, self.socket)
-      } catch (e) {
-        if (e instanceof AppException) {
-          // TODO deal with this eventualities in a mucho more fine grained manner
-          self.io.emit('appException', e)
-        } else {
-          console.log(JSON.stringify(e))
-        }
-      }
+  dealWithException (e) {
+    let exception = e
+    
+    if (!(exception instanceof AppException)) {
+      exception = new AppException(
+        'error.unexpectedError.title',
+        'error.unexpectedError.body',
+        e.toString()
+      )
     }
+
+    let receiver = this.io
+
+    if (this.gameName) {
+      receiver = receiver.to(this.gameName)
+    }
+
+    receiver.emit('appException', exception.toString())
   }
 }
 
-module.exports = (socket, io) => {
-  return new ExceptionCatcher(socket, io)
-}
+module.exports = ExceptionCatcher

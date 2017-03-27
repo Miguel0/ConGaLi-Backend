@@ -21,7 +21,14 @@ class CellsGrid {
 
       console.log(`Adding Cells: ${JSON.stringify(cell)} at ${x}@${y}`)
 
-      this.cells[x][y] = cell
+      if (this.cells[x][y]) {
+        throw new AppException(
+          'error.cellsGrid.cellCantBeOverride.title',
+          'error.cellsGrid.cellCantBeOverride.body'
+        )
+      } else {
+        this.cells[x][y] = cell
+      }
     }
   }
 
@@ -34,6 +41,7 @@ class CellsGrid {
 
   checkValidPosition (x, y, avoidThrowingException) {
     let validBoundsReceived = (Array.prototype.slice.call(arguments).length > 0) && !isNaN(parseFloat(x)) && !isNaN(parseFloat(y)) && (x <= this.maxWidth && x >= 0) && (y <= this.maxHeight && y >= 0)
+
     if (!validBoundsReceived && !avoidThrowingException) {
       throw new AppException(
         'error.cellsGrid.cellCantBeRemoved.title',
@@ -144,11 +152,34 @@ class CellsGrid {
     return result
   }
 
-  createCellBy (user, x, y) {
-    let cell = new ContextUnawareCell()
-    cell.color = user.color
+  addCellsBy (user, positions) {
 
-    this.addCell(cell, x, y)
+    let validCells = positions
+      .filter(position => this.checkValidPosition(position.x, position.y, true))
+      .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
+      .map(position => {
+        let cell = new ContextUnawareCell()
+        cell.color = user.color
+        return { position: position, cell: cell }
+      })
+
+    if (validCells.length === positions.length) {
+      for (let i = 0; i < validCells.length; i++) {
+        let cellConfig = validCells[i]
+
+        if (!this.cells[cellConfig.position.x]) {
+          this.cells[cellConfig.position.x] = {}
+        }
+
+        this.cells[cellConfig.position.x][cellConfig.position.y] = cellConfig.cell
+        JSON.stringify(this.cells)
+      }
+    } else {
+      throw new AppException(
+        'error.cellsGrid.cellCantBeOverride.title',
+        'error.cellsGrid.cellCantBeOverride.body'
+      )
+    }
   }
 
   killCellBy (user, x, y) {
