@@ -13,30 +13,31 @@ class CellsGrid {
     this.log = []
   }
 
-  addCell (cell, x, y, avoidException) {
-    if (this.checkValidPosition(x, y, avoidException)) {
-      if (!this.cells[x]) {
-        this.cells[x] = {}
+  addCell (cell, position, avoidException) {
+    if (this.checkValidPosition(position, avoidException)) {
+      if (!this.cells[position.x]) {
+        this.cells[position.x] = {}
       }
 
-      console.log(`Adding Cells: ${JSON.stringify(cell)} at ${x}@${y}`)
+      console.log(`Adding Cells: ${JSON.stringify(cell)} at ${JSON.stringify(position)}`)
 
-      if (this.cells[x][y]) {
+      if (this.cells[position.x][position.y]) {
         throw new AppException(
           'error.cellsGrid.cellCantBeOverride.title',
-          'error.cellsGrid.cellCantBeOverride.body'
+          'error.cellsGrid.cellCantBeOverride.body',
+          { cell: this.cells[position.x][position.y] }
         )
       } else {
-        this.cells[x][y] = cell
+        this.cells[position.x][position.y] = cell
       }
     }
   }
 
-  removeCell (x, y) {
-    this.checkValidPosition(x, y)
+  removeCell (position) {
+    this.checkValidPosition(position)
 
     // TODO Review if this is the best approach memory-wise
-    delete this.cells[x][y]
+    delete this.cells[position.x][position.y]
   }
 
   /**
@@ -49,14 +50,21 @@ class CellsGrid {
       y: Math.round((rawPosition.y - (this.resolution / 2)) / this.resolution) * this.resolution}
   }
 
-  checkValidPosition (x, y, avoidThrowingException) {
-    let validBoundsReceived = (Array.prototype.slice.call(arguments).length > 0) && !isNaN(parseFloat(x)) && !isNaN(parseFloat(y)) && (x <= this.maxWidth && x >= 0) && (y <= this.maxHeight && y >= 0)
+  checkValidPosition (position, avoidThrowingException) {
+    let validBoundsReceived = (Array.prototype.slice.call(arguments).length > 0) && position instanceof Object && !isNaN(parseFloat(position.x)) && !isNaN(parseFloat(position.y))
+    validBoundsReceived = validBoundsReceived && (position.x <= this.maxWidth && position.x >= 0) && (position.y <= this.maxHeight && position.y >= 0)
 
     if (!validBoundsReceived && !avoidThrowingException) {
-      throw new AppException(
+      let exception = new AppException(
         'error.cellsGrid.cellCantBeRemoved.title',
         'error.cellsGrid.cellCantBeRemoved.body'
       )
+
+      if (position) {
+        exception.arguments = { invalidPosition: { x: position.x, y: position.y } }
+      }
+
+      throw exception
     }
 
     return validBoundsReceived
@@ -66,7 +74,7 @@ class CellsGrid {
     let x = parseInt(stringX)
     let y = parseInt(stringY)
 
-    this.checkValidPosition(x, y)
+    this.checkValidPosition({ x: x, y: y })
 
     let positionsArray = [
       { x: x - this.resolution, y: y + this.resolution },
@@ -79,7 +87,7 @@ class CellsGrid {
       { x: x + this.resolution, y: y - this.resolution }
     ]
 
-    positionsArray = positionsArray.filter(position => this.checkValidPosition(position.x, position.y, true))
+    positionsArray = positionsArray.filter(position => this.checkValidPosition(position, true))
 
     // console.log(`Nearby position of ${x}@${y} calculated: ${JSON.stringify(positionsArray)}`)
 
@@ -165,7 +173,7 @@ class CellsGrid {
   addCellsBy (user, rawPositions) {
     let validCells = rawPositions
       .map(position => this.normalizeGridPosition(position))
-      .filter(position => this.checkValidPosition(position.x, position.y, true))
+      .filter(position => this.checkValidPosition(position, true))
       .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
       .map(position => {
         let cell = new ContextUnawareCell()
@@ -187,7 +195,8 @@ class CellsGrid {
     } else {
       throw new AppException(
         'error.cellsGrid.cellCantBeOverride.title',
-        'error.cellsGrid.cellCantBeOverride.body'
+        'error.cellsGrid.cellCantBeOverride.body',
+        { originalAttributes: rawPositions, validCells: validCells }
       )
     }
   }
@@ -203,8 +212,10 @@ class CellsGrid {
     // TODO investigate a better way to deal with this use case.
     let newCellsMapping = {}
 
+    // getting the cells that are around the already existing cells
     this.forEachCell((cell, x, y) => {
       let nearPositions = this.nearbyPositions(x, y)
+        .filter( position => !this.cells[position.x] || !this.cells[position.x][position.y] )
 
       for (let i = 0; i < nearPositions.length; i++) {
         let position = nearPositions[i]
@@ -237,7 +248,7 @@ class CellsGrid {
 
   stablishCellsNewGeneration () {
     let newCells = this.automaticallyCreateNewCells()
-    console.log(`new Cells created: ${JSON.stringify(newCells)}`)
+    console.log(`new Cells about to be added: ${JSON.stringify(newCells)}`)
 
     let deadCellPositions = this.calculatePossibleDeadCellsPositions()
     console.log(`Cells about to die: ${JSON.stringify(deadCellPositions)}`)
@@ -250,7 +261,7 @@ class CellsGrid {
 
     for (let i = 0; i < newCells.length; i++) {
       let newCellData = newCells[i]
-      this.addCell(newCellData.cell, newCellData.x, newCellData.y, true)
+      this.addCell(newCellData.cell, newCellData, true)
     }
   }
 

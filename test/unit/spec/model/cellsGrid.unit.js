@@ -51,35 +51,35 @@ describe('CellsGrid', function () {
     })
 
     it('should throw an AppException if the arguments are empty', function () {
-      expect(() => cellsGrid.checkValidPosition('', '')).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition('')).to.throw(AppException)
     })
 
     it('should throw an AppException if the arguments are null', function () {
-      expect(() => cellsGrid.checkValidPosition(null, null)).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition(null)).to.throw(AppException)
     })
 
     it('should return false if the arguments are null', function () {
-      expect(cellsGrid.checkValidPosition(null, null, true)).to.be.false
+      expect(cellsGrid.checkValidPosition(null, true)).to.be.false
     })
 
     it('should return false if the arguments are empty', function () {
-      expect(cellsGrid.checkValidPosition('', '', true)).to.be.false
+      expect(cellsGrid.checkValidPosition('', true)).to.be.false
     })
 
     it('should not throw an AppException if the arguments are the same as the maxHeight and maxWidth', function () {
-      expect(() => cellsGrid.checkValidPosition(cellsGrid.maxWidth, cellsGrid.maxHeight)).to.not.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition({ x: cellsGrid.maxWidth, y: cellsGrid.maxHeight })).to.not.throw(AppException)
     })
 
     it('should not throw an AppException if the arguments are both equal to 0', function () {
-      expect(() => cellsGrid.checkValidPosition(0, 0)).to.not.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition({x: 0, y: 0})).to.not.throw(AppException)
     })
 
     it('should throw an AppException if the width is greater than the maxWidth', function () {
-      expect(() => cellsGrid.checkValidPosition(cellsGrid.maxWidth + 1, 0)).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition({x: (cellsGrid.maxWidth + 1), y: 0})).to.throw(AppException)
     })
 
     it('should throw an AppException if the height is greater than the maxHeight', function () {
-      expect(() => cellsGrid.checkValidPosition(0, cellsGrid.maxHeight + 1)).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition({x: 0, y: (cellsGrid.maxHeight + 1)})).to.throw(AppException)
     })
   })
 
