@@ -245,8 +245,10 @@ class ConwaysGame {
   toJSONObject () {
     let json = this.getDescriptiveJSONObject()
 
+    json.cellsGrids = []
+
     for (let i = 0; i < this.cellsGrids.length; i++) {
-      json.cellsGrids[i] = this.cellsGrids[i].toJSONObject()
+      json.cellsGrids.push(this.cellsGrids[i].toJSONObject())
     }
 
     return json
