@@ -215,7 +215,7 @@ class CellsGrid {
     // getting the cells that are around the already existing cells
     this.forEachCell((cell, x, y) => {
       let nearPositions = this.nearbyPositions(x, y)
-        .filter( position => !this.cells[position.x] || !this.cells[position.x][position.y] )
+        .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
 
       for (let i = 0; i < nearPositions.length; i++) {
         let position = nearPositions[i]

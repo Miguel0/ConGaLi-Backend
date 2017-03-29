@@ -4,7 +4,7 @@ class GeneralCommunicationHandler {
   }
 
   configureSocketUponConnection (socket) {
-    socket.on('getAvailableGames', () =>  socket.emit('receiveAvailableGames', this.retrieveAvailableGamesDescription()))
+    socket.on('getAvailableGames', () => socket.emit('receiveAvailableGames', this.retrieveAvailableGamesDescription()))
   }
 
   retrieveAvailableGamesDescription () {
