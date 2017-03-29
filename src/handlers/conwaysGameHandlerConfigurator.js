@@ -3,7 +3,7 @@ const ConwaysGame = require('../model/ConwaysGame.js')
 const ExceptionCatcher = require('../utils/ExceptionCatcher')
 
 class ConwaysGameHandlerConfigurator {
-  constructor (io, storageHandler, socket) {
+  constructor (io, socket) {
     this.game = null
     this.gameTickHandler = []
     this.exceptionCatcher = new ExceptionCatcher(this.sendErrorToClient.bind(this))

@@ -139,8 +139,9 @@ const PRESETS_CONFIGURATIONS = [
 ]
 
 class ConwaysGame {
-  constructor () {
+  constructor (ownerUserId) {
     this.createdOn = new Date()
+    this.ownerSocketId = ownerUserId
     this.name = null
     this.refreshInterval = 1000
     this.cellsGrids = []
@@ -227,6 +228,7 @@ class ConwaysGame {
     let json = {}
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
+    json.ownerSocketId = this.ownerSocketId
     json.users = []
 
     for (let user in this.users) {
@@ -241,10 +243,7 @@ class ConwaysGame {
   }
 
   toJSONObject () {
-    let json = {}
-    json.createdOn = this.createdOn.toISOString()
-    json.name = this.name
-    json.cellsGrids = []
+    let json = this.getDescriptiveJSONObject()
 
     for (let i = 0; i < this.cellsGrids.length; i++) {
       json.cellsGrids[i] = this.cellsGrids[i].toJSONObject()

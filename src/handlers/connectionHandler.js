@@ -3,11 +3,15 @@ const deletingSocketDataInterval = 10000
 const useSocketByIp = false
 
 class ConnectionHandlerConfigurator {
-  constructor (io, storageHandler) {
+  constructor (io, generalCommunicationHandler, storageHandler) {
     this.createdOn = new Date()
     this.socketsConnected = {}
+    this.storageHandler = storageHandler
+    this.generalCommunicationHandler = generalCommunicationHandler
 
-    io.on('connection', socket => this.onConnection(socket, io, storageHandler))
+    generalCommunicationHandler.connectionHandler = this
+
+    io.on('connection', socket => this.onConnection(socket, io))
   }
 
   getSocketIp (socket) {
@@ -46,7 +50,7 @@ class ConnectionHandlerConfigurator {
     console.log(`Socket with id #${socket.id} disconnected  @ ${clientIP} being ${deleteOpTimeoutCreationDate.toISOString()}!!!!`)
   }
 
-  onConnection (socket, io, storageHandler) {
+  onConnection (socket, io) {
     socket.on('disconnect', close => this.onDisconnection(socket, close))
 
     let socketConnectionData = this.socketsConnected[this.getSocketConnectionIdentifier(socket)]
@@ -57,10 +61,12 @@ class ConnectionHandlerConfigurator {
         socketId: socket.id,
         createdOn: actualDate,
         lastConnectedOn: actualDate,
-        gameHandler: new GameHandlerConfigurator(io, storageHandler, socket)
+        gameHandler: new GameHandlerConfigurator(io, socket)
       }
 
       this.socketsConnected[this.getSocketConnectionIdentifier(socket)] = socketConnectionData
+
+      this.generalCommunicationHandler.configureSocketUponConnection(socket)
     } else {
       socketConnectionData = actualDate
     }
