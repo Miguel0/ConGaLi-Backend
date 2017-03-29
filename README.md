@@ -18,9 +18,9 @@ This particular implementation creates a Multiplayer app version of Game of Life
 ## TODO list
 - [x] **\(Originally requested)** The game should tick automatically at a predefined interval, at say, 1 step per second.
 - [ ] **\(Originally requested)** This server allows multiple clients to share the same, synchronized world view.
-- [ ] **\(Originally requested)** Each client is assigned a random color on initialization.
-- [ ] **\(Originally requested)** Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (You can use any mechanism to achieve this, such as polling, comet or WebSocket).
-- [ ] **\(Originally requested)** When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).
+- [x] **\(Originally requested)** Each client is assigned a random color on initialization.
+- [x] **\(Originally requested)** Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (You can use any mechanism to achieve this, such as polling, comet or WebSocket).
+- [x] **\(Originally requested)** When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).
 - [x] **\(Requirement enhancement)** _Give the creator of the Grid Cell to config the tick interval upon creation._
 - [ ] **\(Requirement enhancement)** _Implement some kind of users authentication._
 - [ ] **\(Requirement enhancement)** _Implement some kind of storage for users data._
