@@ -1,14 +1,20 @@
-const Promise = require('bluebird')
-const ConwaysGame = require('../model/ConwaysGame.js')
-const ExceptionCatcher = require('../utils/ExceptionCatcher')
+const ExceptionCatcher = require('../exception/ExceptionCatcher')
+const ConwaysGame = require('../domain/model/ConwaysGame.js')
+const logger = require('log4js').getLogger('Conway\'s Game Handler')
 
 class ConwaysGameHandlerConfigurator {
-  constructor (io, socket) {
-    this.game = null
+  constructor (io, businessLogicManagersHolder) {
+    this.io = io
     this.gameTickHandler = []
     this.exceptionCatcher = new ExceptionCatcher(this.sendErrorToClient.bind(this))
-    this.io = io
+    this.conwaysGameBusinessLogicManager = businessLogicManagersHolder.ConwaysGameBusinessLogicManager
 
+    io.on(
+      'connection',
+      socket => this.configureSocketUponConnection(socket, io))
+  }
+
+  configureSocketUponConnection (socket, io) {
     socket.on('createGame', data => this.createGame(data, socket))
     socket.on('startGame', data => this.startGame(data, socket))
     socket.on('getTemplateCellsOptions', () => this.sendTemplateCellsOptionsToSocket(socket))
@@ -16,7 +22,7 @@ class ConwaysGameHandlerConfigurator {
   }
 
   getGameChannel () {
-    return this.game ? this.io.to(this.game.name) : this.io
+    return this.io.to(this.game.name)
   }
 
   sendErrorToClient (appException) {
@@ -25,7 +31,7 @@ class ConwaysGameHandlerConfigurator {
 
   sendGridRefreshToClient () {
     let jsonData = this.game.toJSONObject()
-    console.log(`${new Date().toISOString()} sending data table to client: ${JSON.stringify(jsonData)}`)
+    logger.debug(`Sending data table to client: ${JSON.stringify(jsonData)}`)
 
     this.getGameChannel().emit('refreshCellsGrid', jsonData)
   }
@@ -38,7 +44,7 @@ class ConwaysGameHandlerConfigurator {
   startGame (data, socket) {
     this.checkValidRoomForUser(data.cellsGridId, socket)
 
-    console.log(`${new Date().toISOString()} starting game for board ${data.cellsGridId}`)
+    logger.debug(`Starting game for board ${data.cellsGridId}`)
 
     for (let i = 0; i < this.game.cellsGrids.length; i++) {
       this.gameTickHandler[i] = setInterval(
@@ -52,7 +58,7 @@ class ConwaysGameHandlerConfigurator {
         this.game.refreshInterval)
     }
 
-    console.log(`${new Date().toISOString()} game started for board ${data.cellsGridId}`)
+    logger.debug(`Game started for board ${data.cellsGridId}`)
   }
 
   release () {
@@ -81,11 +87,11 @@ class ConwaysGameHandlerConfigurator {
   }
 
   createCell (cellCreationData, socket) {
-    console.log('Receive cell creation data from client: ' + JSON.stringify(cellCreationData))
+    logger.debug('Receive cell creation data from client: ' + JSON.stringify(cellCreationData))
 
     let cellRawData = cellCreationData.eventPosition
 
-    console.log('creating cell with data: ' + JSON.stringify(cellRawData))
+    logger.debug('creating cell with data: ' + JSON.stringify(cellRawData))
 
     this.game.createCellsByAsync(socket.id, 0, [cellRawData])
       .then(this.sendGridRefreshToClient.bind(this))
@@ -93,7 +99,7 @@ class ConwaysGameHandlerConfigurator {
   }
 
   createTemplate (templateCreationData, socket) {
-    console.log('creating template with ' + JSON.stringify(templateCreationData))
+    logger.debug('creating template with ' + JSON.stringify(templateCreationData))
 
     this.game.createCellsOfTemplateByAsync(socket.id, 0, templateCreationData)
       .then(this.sendGridRefreshToClient.bind(this))
@@ -114,7 +120,7 @@ class ConwaysGameHandlerConfigurator {
   createGame (data, socket) {
     this.exceptionCatcher.gameName = data.gameName
 
-    this.game = Promise.promisifyAll(new ConwaysGame())
+    this.game = Promise.promisifyAll(new ConwaysGame(socket.id))
     this.game.name = data.gameName
 
     if (data.refreshInterval) {
@@ -135,7 +141,7 @@ class ConwaysGameHandlerConfigurator {
       gameChannel.on('removeUser', this.removeUser)
       gameChannel.on('updateUser', this.updateUser)
 
-      console.log(`Game successfully created with data: ${JSON.stringify(data)}`)
+      logger.debug(`Game successfully created with data: ${JSON.stringify(data)}`)
 
       this.io.to(socket.id).emit('gameCreated', data)
       this.sendGridRefreshToClient()
@@ -145,19 +151,19 @@ class ConwaysGameHandlerConfigurator {
     socket.on(
       'createCell',
       data => {
-        console.log(`Query: ${JSON.stringify(socket.handshake.query)}`)
+        logger.debug(`Query: ${JSON.stringify(socket.handshake.query)}`)
         this.createCell(data, socket)
       }
     ).on(
       'createTemplate',
       data => {
-        console.log(`Query: ${JSON.stringify(socket.handshake.query)}`)
+        logger.debug(`Query: ${JSON.stringify(socket.handshake.query)}`)
         this.createTemplate(data, socket)
       }
     ).on(
       'killCell',
       data => {
-        console.log(`Query: ${JSON.stringify(socket.handshake.query)}`)
+        logger.debug(`Query: ${JSON.stringify(socket.handshake.query)}`)
         this.killCell(data, socket)
       }
     )

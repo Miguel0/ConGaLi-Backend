@@ -1,17 +1,15 @@
-const GameHandlerConfigurator = require('./conwaysGameHandlerConfigurator.js')
+const logger = require('log4js').getLogger('Connection Handler')
 const deletingSocketDataInterval = 10000
 const useSocketByIp = false
 
 class ConnectionHandlerConfigurator {
-  constructor (io, generalCommunicationHandler, storageHandler) {
+  constructor (io, businessLogicManagersHolder) {
     this.createdOn = new Date()
     this.socketsConnected = {}
-    this.storageHandler = storageHandler
-    this.generalCommunicationHandler = generalCommunicationHandler
 
-    generalCommunicationHandler.connectionHandler = this
-
-    io.on('connection', socket => this.onConnection(socket, io))
+    io.on(
+      'connection',
+      socket => this.configureSocketUponConnection(socket, io))
   }
 
   getSocketIp (socket) {
@@ -34,23 +32,22 @@ class ConnectionHandlerConfigurator {
     setTimeout(
       () => {
         // TODO handle exceptions to avoid memory leaks
-        console.log(`Trying to remove data for socket id #${socketId} @ ${clientIP} being ${new Date().toISOString()}!!!!`)
+        logger.debug(`Trying to remove data for socket id #${socketId} @ ${clientIP} being ${new Date().toISOString()}!!!!`)
 
         let socketData = this.socketsConnected[socketId]
         if (socketData && deleteOpTimeoutCreationDate > socketData.lastConnectedOn) {
-          // Releasing resources
-          socketData.gameHandler.release()
+          // TODO RELEASE ASSOCIATED RESOURCES
 
           delete this.socketsConnected[socketId]
-          console.log(`Socket data #${JSON.stringify(socketData)} removed at ${new Date().toISOString()}!!!!`)
+          logger.debug(`Socket data #${JSON.stringify(socketData.toString())} removed at ${new Date().toISOString()}!!!!`)
         }
       },
       deletingSocketDataInterval)
 
-    console.log(`Socket with id #${socket.id} disconnected  @ ${clientIP} being ${deleteOpTimeoutCreationDate.toISOString()}!!!!`)
+    logger.debug(`Socket with id #${socket.id} disconnected  @ ${clientIP} being ${deleteOpTimeoutCreationDate.toISOString()}!!!!`)
   }
 
-  onConnection (socket, io) {
+  configureSocketUponConnection (socket, io) {
     socket.on('disconnect', close => this.onDisconnection(socket, close))
 
     let socketConnectionData = this.socketsConnected[this.getSocketConnectionIdentifier(socket)]
@@ -60,18 +57,15 @@ class ConnectionHandlerConfigurator {
       socketConnectionData = {
         socketId: socket.id,
         createdOn: actualDate,
-        lastConnectedOn: actualDate,
-        gameHandler: new GameHandlerConfigurator(io, socket)
+        lastConnectedOn: actualDate
       }
 
       this.socketsConnected[this.getSocketConnectionIdentifier(socket)] = socketConnectionData
-
-      this.generalCommunicationHandler.configureSocketUponConnection(socket)
     } else {
       socketConnectionData = actualDate
     }
 
-    console.log(`Socket with id #${socketConnectionData.socketId} @ ${this.getSocketIp(socket)} connected being ${new Date().toISOString()}!!!!`)
+    logger.debug(`Socket with id #${socketConnectionData.socketId} @ ${this.getSocketIp(socket)} connected being ${new Date().toISOString()}!!!!`)
   }
 }
 

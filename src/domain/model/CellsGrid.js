@@ -1,4 +1,4 @@
-const AppException = require('../exception/AppException')
+const AppException = require('../../exception/AppException')
 const ContextUnawareCell = require('./ContextUnawareCell')
 
 class CellsGrid {
@@ -9,8 +9,6 @@ class CellsGrid {
     this.maxWidth = 3200
     this.maxHeight = 3200
     this.resolution = 10
-    // TODO implement this functionality for better debug and user experience.
-    this.log = []
   }
 
   addCell (cell, position, avoidException) {

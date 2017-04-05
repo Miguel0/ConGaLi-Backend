@@ -3,8 +3,8 @@ const expect = chai.expect
 
 const TestUtils = require('../../helpers/TestUtils')
 const AppException = require('../../../../src/exception/AppException')
-const CellsGrid = require('../../../../src/model/CellsGrid')
-const Cell = require('../../../../src/model/ContextUnawareCell')
+const CellsGrid = require('../../../../src/domain/model/CellsGrid')
+const Cell = require('../../../../src/domain/model/ContextUnawareCell')
 
 describe('CellsGrid', function () {
   let cellsGrid

@@ -1,5 +1,5 @@
 const CellsGrid = require('./CellsGrid')
-const AppException = require('../exception/AppException')
+const AppException = require('../../exception/AppException')
 const PRESETS_CONFIGURATIONS = [
   {
     title: 'Still lifes',

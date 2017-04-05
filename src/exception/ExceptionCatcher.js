@@ -1,4 +1,5 @@
-const AppException = require('../exception/AppException')
+const AppException = require('./AppException')
+const logger = require('log4js').getLogger('ExceptionCatcher')
 
 class ExceptionCatcher {
   constructor (errorBroadcastFunction) {
@@ -12,16 +13,16 @@ class ExceptionCatcher {
       exception = new AppException(
         'error.unexpectedError.title',
         'error.unexpectedError.body',
-        e.toString()
+        JSON.stringify(e)
       )
 
-      console.trace()
-      console.error(e.stack)
+      logger.error('Exception captured stacktrace:', e)
+      logger.error('Exception captured stacktrace:', e.stack)
     }
 
-    console.error(JSON.stringify(exception))
+    logger.error(JSON.stringify(exception))
 
-    this.broadcastFunction.apply(exception)
+    this.broadcastFunction.apply(this.broadcastFunction, exception)
   }
 }
 

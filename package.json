@@ -39,6 +39,7 @@
   "homepage": "https://github.com/Miguel0/conwaysGame-Backend#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
+    "log4js": "^1.1.1",
     "socket.io": "^1.7.3"
   },
   "engines": {

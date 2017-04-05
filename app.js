@@ -1,19 +1,17 @@
-const util = require('util');
-const server = require('http').createServer();
-const io = require('socket.io')(server);
-const process = require('process');
-const config = require('./config/config.dev.js');
-	
-// Starting App
+const server = require('http').createServer()
+const io = require('socket.io')(server)
+const process = require('process')
+const config = require('./config/config.dev.js')
+const logger = require('log4js').getLogger('Main App')
 
-const storage = require('./src/storage/init.js');
-require('./src/handlers/init.js')(io, storage);
-// Starting ws interface
+logger.info('Starting App...')
+
+require('./src/handler/init.js')(io)
 
 server.listen(
     3000,
     () => {
-        console.log(util.format('Listening as %s on %s on port %s', process.pid, config.hostName, config.port));
-        console.log('This platform is ' + process.platform);
+        logger.info(`Listening with PID ${process.pid} on ${config.hostName} on port ${config.port}`)
+        logger.info(`This platform is ${process.platform}`)
     }
 );

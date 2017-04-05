@@ -1,7 +1,7 @@
 const chai = require('chai')
 const expect = chai.expect
 
-const Cell = require('../../../../src/model/ContextUnawareCell')
+const Cell = require('../../../../src/domain/model/ContextUnawareCell')
 const TestUtils = require('../../helpers/TestUtils')
 
 describe('ContextUnawareCell', function () {
