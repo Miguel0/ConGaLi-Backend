@@ -1,6 +1,6 @@
-# Conway's Game Backend
+# ConGali Backend
 
-[Conway’s Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) is a famous simulation that demonstrates cellular automaton. It is modeled as a grid with 4 simple rules:
+ConGaLi is an implementation of Conway's Game of Life [Conway’s Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) is a famous simulation that demonstrates cellular automaton. It is modeled as a grid with 4 simple rules:
 
 1. **Any live cell with fewer than two live neighbours dies, as if caused by under-population.**
 2. **Any live cell with two or three live neighbours lives on to the next generation.**
