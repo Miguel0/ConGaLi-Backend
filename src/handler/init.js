@@ -1,7 +1,7 @@
 const ConnectionHandler = require('./ConnectionHandler')
 const GeneralCommunicationHandler = require('./GeneralCommunicationHandler')
 const UserSessionConnectionHandler = require('./UserSessionConnectionHandler')
-const GameHandlerConfigurator = require('./conwaysGameHandler')
+const GameHandlerConfigurator = require('./ConwaysGameHandler')
 const businessLogicManagersHolder = require('../domain/manager/businessLogicManagersHolder')
 const logger = require('log4js').getLogger('Socket Event Handler')
 
