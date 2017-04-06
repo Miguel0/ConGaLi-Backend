@@ -9,6 +9,7 @@ class ConwaysGameHandlerConfigurator {
     this.gameTickHandler = {}
     this.exceptionCatcher = new ExceptionCatcher(this.sendErrorToClient.bind(this))
     this.conwaysGameBusinessLogicManager = businessLogicManagersHolder.ConwaysGameBusinessLogicManager
+    this.userBusinessLogicManager = businessLogicManagersHolder.UserBusinessLogicManager
 
     io.on(
       'connection',
@@ -135,7 +136,8 @@ class ConwaysGameHandlerConfigurator {
   }
 
   createGame (data, socket) {
-    let game = this.conwaysGameBusinessLogicManager.createGame(data, data.user.id)
+    let user = this.userBusinessLogicManager.getUserById(data.user.id)
+    let game = this.conwaysGameBusinessLogicManager.createGame(data, user)
     logger.debug(`Wiring socket with the propper events for the channel ${game.getRoomId()}`)
 
     socket.join(

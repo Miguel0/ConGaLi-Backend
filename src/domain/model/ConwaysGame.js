@@ -2,15 +2,16 @@ const CellsGrid = require('./CellsGrid')
 const AppException = require('../../exception/AppException')
 
 class ConwaysGame {
-  constructor (ownerUserId) {
+  constructor (user) {
     this.createdOn = new Date()
-    this.ownerSocketId = ownerUserId
+    this.ownerUserId = user.id
     this.name = null
     this.refreshInterval = 1000
     this.cellsGrids = []
     this.users = {}
     this.presetConfigurations = []
 
+    this.addUser(user)
     this.createCellsGrid()
   }
 
@@ -18,19 +19,19 @@ class ConwaysGame {
     return this.users[userId]
   }
 
-  addUser (userId, userData) {
-    if (this.users[userId]) {
+  addUser (user) {
+    if (this.users[user.id]) {
       throw new AppException(
         'error.game.userAlreadyExists.title',
         'error.game.userAlreadyExists.body',
-        userData
+        user
       )
     }
 
-    this.users[userId] = {
-      id: userId,
-      name: userData.name,
-      color: userData.color
+    this.users[user.id] = {
+      id: user.id,
+      name: user.name,
+      color: user.color
     }
   }
 
@@ -106,7 +107,7 @@ class ConwaysGame {
     let json = {}
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
-    json.ownerSocketId = this.ownerSocketId
+    json.ownerUserId = this.ownerUserId
     json.users = []
 
     for (let user in this.users) {

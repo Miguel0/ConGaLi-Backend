@@ -75,8 +75,8 @@ class ConwaysGameService {
     return this.game.getPresetsConfiguration()
   }
 
-  createGame (data, userId) {
-    let game = new ConwaysGame(userId)
+  createGame (data, user) {
+    let game = new ConwaysGame(user)
     game.name = data.gameName
     game.prestConfigurations = this.storageDAO.getCellsTemplates()
 
@@ -87,12 +87,11 @@ class ConwaysGameService {
     // TODO have to improve this in the near future
     if (data.resolution) {
       let resolution = parseInt(data.resolution)
+
       for (let i = 0; i < game.cellsGrids.length; i++) {
         game.cellsGrids[i].resolution = resolution
       }
     }
-
-    game.addUser(data.userData)
 
     return this.storageDAO.saveGame(game)
   }
