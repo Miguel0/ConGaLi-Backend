@@ -16,6 +16,7 @@ class User {
 
     json.id = this.id
     json.name = this.name
+    json.createdOn = this.createdOn
 
     return json
   }

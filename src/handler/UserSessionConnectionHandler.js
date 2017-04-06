@@ -42,7 +42,7 @@ class UserHandlerConfigurator {
       this.openSessions[socket.id] = { userId: user.id }
 
       logger.debug(`Sending signUp confirmation signal to client with data: ${JSON.stringify(user)}...`)
-      socket.emit('signedUp', user)
+      socket.emit('signedUp', user.asJSONObject())
     } else {
       let exception = new AppException(
         'error.signUp.session.alreadyStarted.title',
@@ -66,7 +66,7 @@ class UserHandlerConfigurator {
         this.openSessions[socket.id] = { userId: user.id }
 
         logger.debug(`Sending logIn confirmation signal to client with data: ${JSON.stringify(user)}...`)
-        socket.emit('loggedIn', user)
+        socket.emit('loggedIn', user.asJSONObject())
       } else {
         let exception = new AppException(
           'error.logIn.session.wrongUserOrPassword.title',
