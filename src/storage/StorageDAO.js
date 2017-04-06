@@ -223,7 +223,7 @@ class StorageDAO {
   saveGame (game) {
     game.id = this.gamesByUserId[game.ownerUserId].length
 
-    if (this.gamesByUserId[game.ownerUserId].find(storedGame => storedGame.name === game.name && storedGame.ownerUserId === game.ownerUserId)) {
+    if (this.getGameWithName(game.name, game.ownerUserId)) {
       throw new AppException(
         'error.game.alreadyExists.title',
         'error.user.alreadyExists.body'
@@ -231,10 +231,16 @@ class StorageDAO {
     }
 
     this.gamesByUserId[game.ownerUserId].push(game)
+
+    return game
   }
 
-  getGamesWithName (name, userId) {
-    return this.gamesByUserId[userId].filter(storedGame => storedGame.name === name)
+  getGameWithName (name, userId) {
+    return this.gamesByUserId[userId].filter(storedGame => storedGame.name === name)[0]
+  }
+
+  getGameForUserId (gameId, userId) {
+    return this.gamesByUserId[userId][gameId]
   }
 
   getGamesForUserId (userId) {
@@ -245,6 +251,10 @@ class StorageDAO {
     for (let i = 0; i < this.gamesByUserId[userId].length; i++) {
       eachFunction.call(eachFunction, this.gamesByUserId[userId][i])
     }
+  }
+
+  getCellsTemplates () {
+    return this.cellsTemplates.slice(0)
   }
 }
 

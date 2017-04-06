@@ -34,33 +34,35 @@ class ConwaysGameService {
     return game
   }
 
-  forceStopGame (data) {
-    if (this.game) {
-      for (let i = 0; i < this.game.cellsGrids.length; i++) {
-        clearInterval(this.gameTickHandler[i])
-      }
-    }
+  getGamesForUserId (ownerUserId) {
+    return this.storageDAO.getGamesForUserId(ownerUserId)
   }
 
-  addUser (gameId, ownerUserId, userData) {
-    this.game.addUser(userData)
+  getGameForUserId (gameId, ownerUserId) {
+    return this.storageDAO.getGameForUserId(gameId, ownerUserId)
+  }
+
+  addUserToGame (gameId, ownerUserId, userData) {
+    let game = this.storageDAO.getGameForUserId(gameId, ownerUserId)
+
+    game.addUser(userData)
   }
 
   removeUser (gameId, ownerUserId, userData) {
   }
 
   createCell (gameId, userId, cellCreationData) {
-    logger.log('Receive cell creation data from client: ' + JSON.stringify(cellCreationData))
+    logger.debug('Receive cell creation data from client: ' + JSON.stringify(cellCreationData))
 
     let cellRawData = cellCreationData.eventPosition
 
-    console.log('creating cell with data: ' + JSON.stringify(cellRawData))
+    logger.debug('creating cell with data: ' + JSON.stringify(cellRawData))
 
     this.game.createCellsByAsync(userId, 0, [cellRawData])
   }
 
   createTemplate (gameId, userId, templateCreationData) {
-    console.log('creating template with ' + JSON.stringify(templateCreationData))
+    logger.debug('creating template with ' + JSON.stringify(templateCreationData))
 
     this.game.createCellsOfTemplateByAsync(userId, 0, templateCreationData)
   }
@@ -74,22 +76,25 @@ class ConwaysGameService {
   }
 
   createGame (data, userId) {
-    let userData = data.userData
     let game = new ConwaysGame(userId)
-    this.game.name = data.gameName
+    game.name = data.gameName
+    game.prestConfigurations = this.storageDAO.getCellsTemplates()
 
     if (data.refreshInterval) {
-      this.game.refreshInterval = parseInt(data.refreshInterval)
+      game.refreshInterval = parseInt(data.refreshInterval)
     }
 
     // TODO have to improve this in the near future
     if (data.resolution) {
-      this.game.cellsGrids[0].resolution = parseInt(data.resolution)
+      let resolution = parseInt(data.resolution)
+      for (let i = 0; i < game.cellsGrids.length; i++) {
+        game.cellsGrids[i].resolution = resolution
+      }
     }
 
-    this.addUser(userId, userData)
+    game.addUser(data.userData)
 
-    return game
+    return this.storageDAO.saveGame(game)
   }
 }
 
