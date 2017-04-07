@@ -174,9 +174,7 @@ class CellsGrid {
       .filter(position => this.checkValidPosition(position, true))
       .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
       .map(position => {
-        let cell = new ContextUnawareCell()
-        cell.color = user.color
-        return { position: position, cell: cell }
+        return { position: position, cell: new ContextUnawareCell(user) }
       })
 
     if (validCells.length === rawPositions.length) {

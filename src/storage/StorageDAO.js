@@ -2,6 +2,8 @@ const TemplateGroup = require('../domain/model/TemplateGroup')
 const CellsTemplateDefinition = require('../domain/model/CellsTemplateDefinition')
 const AppException = require('../exception/AppException')
 
+const logger = require('log4js').getLogger('Storage DAO')
+
 class StorageDAO {
   constructor () {
     this.createdOn = new Date()
@@ -198,6 +200,8 @@ class StorageDAO {
   }
 
   saveUser (user) {
+    logger.debug(`Checking user: ${JSON.stringify(user)}`)
+
     if (this.getUserByName(user.name)) {
       throw new AppException(
         'error.user.alreadyExists.title',
@@ -207,6 +211,7 @@ class StorageDAO {
       user.id = this.users.length
     }
 
+    logger.debug(`Saving user: ${JSON.stringify(user)}`)
     this.users.push(user)
     this.gamesByUserId[user.id] = []
     return user
@@ -221,6 +226,7 @@ class StorageDAO {
   }
 
   saveGame (game) {
+    logger.debug(`Checking game: ${JSON.stringify(game)}`)
     game.id = this.gamesByUserId[game.ownerUserId].length
 
     if (this.getGameWithName(game.name, game.ownerUserId)) {
@@ -230,6 +236,7 @@ class StorageDAO {
       )
     }
 
+    logger.debug(`Saving game: ${JSON.stringify(game)}`)
     this.gamesByUserId[game.ownerUserId].push(game)
 
     return game
@@ -240,6 +247,8 @@ class StorageDAO {
   }
 
   getGameForUserId (gameId, userId) {
+    logger.debug(`Retrieving game with id: ${gameId} for owner: ${userId}`)
+
     return this.gamesByUserId[userId][gameId]
   }
 

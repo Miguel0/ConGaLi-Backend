@@ -53,6 +53,7 @@ class ConwaysGameHandlerConfigurator {
   }
 
   startGame (data, socket) {
+    logger.debug(`Received request for game start with arguments #${JSON.stringify(data)}`)
     let game = this.conwaysGameBusinessLogicManager.getGameForUserId(data.game.id, data.game.ownerId)
     this.checkValidRoomForUser(game, data.user.id)
 
@@ -100,17 +101,16 @@ class ConwaysGameHandlerConfigurator {
   }
 
   createCell (cellCreationData, socket) {
+    logger.debug(`Just received cell creation data from client: ${JSON.stringify(cellCreationData)}`)
+    
     let game = this.conwaysGameBusinessLogicManager.getGameForUserId(cellCreationData.game.id, cellCreationData.game.ownerId)
-
-    logger.debug('Receive cell creation data from client: ' + JSON.stringify(cellCreationData))
 
     let cellRawData = cellCreationData.eventPosition
 
-    logger.debug('creating cell with data: ' + JSON.stringify(cellRawData))
+    logger.debug(`creating cell with data: ${JSON.stringify(cellRawData)}`)
 
-    game.createCellsByAsync(socket.id, 0, [cellRawData])
-      .then(this.sendGridRefreshToClient.bind(this))
-      .catch(this.exceptionCatcher.dealWithException.bind(this.exceptionCatcher))
+    game.createCellsBy(cellCreationData.user.id, 0, [cellRawData])
+    this.sendGridRefreshToClient(game)
   }
 
   createTemplate (templateCreationData, socket) {
@@ -118,9 +118,8 @@ class ConwaysGameHandlerConfigurator {
 
     logger.debug('creating template with ' + JSON.stringify(templateCreationData))
 
-    game.createCellsOfTemplateByAsync(socket.id, 0, templateCreationData)
-      .then(this.sendGridRefreshToClient.bind(this))
-      .catch(this.exceptionCatcher.dealWithException.bind(this.exceptionCatcher))
+    game.createCellsOfTemplateBy(cellCreationData.game.user.id, 0, templateCreationData)
+    this.sendGridRefreshToClient(game)
   }
 
   killCell (cellAssasinationData, socket) {
@@ -137,7 +136,7 @@ class ConwaysGameHandlerConfigurator {
 
   createGame (data, socket) {
     let user = this.userBusinessLogicManager.getUserById(data.user.id)
-    let game = this.conwaysGameBusinessLogicManager.createGame(data, user)
+    let game = this.conwaysGameBusinessLogicManager.createGame(data, {id: user.id, name: user.name, color: data.user.color})
     logger.debug(`Wiring socket with the propper events for the channel ${game.getRoomId()}`)
 
     socket.join(
@@ -153,7 +152,8 @@ class ConwaysGameHandlerConfigurator {
 
         logger.debug(`Sending replies to the owner of the game at socket #${socket.id}`)
 
-        this.io.to(socket.id).emit('gameCreated', data)
+        this.io.to(socket.id).emit('gameCreated', game.getDescriptiveJSONObject())
+
         this.sendGridRefreshToClient(game)
         this.sendTemplateCellsOptionsToSocket(game)
       }

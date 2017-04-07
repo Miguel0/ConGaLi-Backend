@@ -41,7 +41,7 @@ class UserHandlerConfigurator {
       let user = this.userBusinessLogicManager.createUser(data)
       this.openSessions[socket.id] = { userId: user.id }
 
-      logger.debug(`Sending signUp confirmation signal to client with data: ${JSON.stringify(user)}...`)
+      logger.debug(`Sending signUp confirmation signal to client with data: ${JSON.stringify(user.asJSONObject())}...`)
       socket.emit('signedUp', user.asJSONObject())
     } else {
       let exception = new AppException(
@@ -65,7 +65,7 @@ class UserHandlerConfigurator {
       if (user && user.password === data.password) {
         this.openSessions[socket.id] = { userId: user.id }
 
-        logger.debug(`Sending logIn confirmation signal to client with data: ${JSON.stringify(user)}...`)
+        logger.debug(`Sending logIn confirmation signal to client with data: ${JSON.stringify(user.asJSONObject())}...`)
         socket.emit('loggedIn', user.asJSONObject())
       } else {
         let exception = new AppException(

@@ -1,12 +1,13 @@
 class ContextUnawareCell {
-  constructor () {
+  constructor (owner) {
     this.createdOn = new Date()
-    this.color = '000000'
+    this.owner = owner
+    this.color = null
   }
 
   toJSONObject () {
     return {
-      color: '#' + this.color,
+      color: '#' + (this.color || this.owner.color),
       createdOn: this.createdOn.toISOString()
     }
   }

@@ -28,19 +28,14 @@ class ConwaysGame {
       )
     }
 
-    this.users[user.id] = {
-      id: user.id,
-      name: user.name,
-      color: user.color
-    }
+    this.users[user.id] = user
   }
 
-  createCellsBy (userId, cellsGridId, rawPoints, done) {
+  createCellsBy (userId, cellsGridId, rawPoints) {
     this.cellsGrids[cellsGridId].addCellsBy(this.users[userId], rawPoints)
-    return done()
   }
 
-  createCellsOfTemplateBy (userId, cellsGridId, templateCreationData, done) {
+  createCellsOfTemplateBy (userId, cellsGridId, templateCreationData) {
     let templateGroups = this.getPresetsConfiguration()
     let template
 
@@ -66,12 +61,12 @@ class ConwaysGame {
 
       console.log(`Offsetting points from ${JSON.stringify(template.points)} to ${JSON.stringify(offsettedPoints)}`)
 
-      return this.createCellsBy(userId, 0, offsettedPoints, done)
+      return this.createCellsBy(userId, 0, offsettedPoints)
     } else {
-      return done(new AppException(
+      throw new AppException(
         'error.gridTemplate.wrongCellsTemplate.title',
         'error.gridTemplate.wrongCellsTemplate.body'
-      ))
+      )
     }
   }
 
@@ -107,11 +102,12 @@ class ConwaysGame {
     let json = {}
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
+    json.id = this.id
     json.ownerUserId = this.ownerUserId
     json.users = []
 
     for (let user in this.users) {
-      json.users.push({
+      json.users.push( {
         id: user.id,
         name: user.name,
         color: user.color

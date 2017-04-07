@@ -5,6 +5,7 @@ class User {
     this.name = ''
     this.email = ''
     this.password = ''
+    this.color = null
   }
 
   checkIntegrity () {
