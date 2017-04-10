@@ -31,7 +31,6 @@ describe('CellsGrid', function () {
       expect(cellsGrid).to.have.property('maxWidth').and.to.be.equal(3200)
       expect(cellsGrid).to.have.property('maxHeight').and.to.be.equal(3200)
       expect(cellsGrid).to.have.property('resolution').and.to.be.equal(10)
-      expect(cellsGrid).to.have.property('log').and.to.be.empty
     })
 
     it('should return a proper JSON representation', function () {
@@ -42,6 +41,8 @@ describe('CellsGrid', function () {
       expect(jsonObject).to.have.property('cells').and.to.be.empty
       expect(jsonObject).to.have.property('maxWidth').and.to.be.equal(3200)
       expect(jsonObject).to.have.property('maxHeight').and.to.be.equal(3200)
+      expect(jsonObject).to.have.property('resolution').and.to.be.equal(10)
+      expect(Object.keys(jsonObject)).lengthOf(6)
     })
   })
 

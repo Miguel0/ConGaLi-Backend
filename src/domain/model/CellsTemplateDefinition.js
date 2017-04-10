@@ -5,15 +5,16 @@ class CellsTemplateDefinition {
     this.imgSrc = ''
     this.attribution = ''
     this.points = []
+    this.details = null
   }
 
-  asJSONObject () {
+  toJSONObject () {
     let json = {}
 
     json.name = this.name
     json.imgSrc = this.imgSrc
     json.attribution = this.attribution
-    json.points = this.points
+    json.points = this.points.slice(0)
 
     if (this.details) {
       json.details = this.details

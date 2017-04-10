@@ -163,8 +163,6 @@ class CellsGrid {
     result = parseInt(result / arrayOfHexColours.length)
     result = `000000${result.toString(16)}`.slice(-6)
 
-    console.log(`Processing color for: ${JSON.stringify(arrayOfHexColours)} led to: ${result}`)
-
     return result
   }
 

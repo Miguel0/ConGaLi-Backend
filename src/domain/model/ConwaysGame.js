@@ -100,7 +100,7 @@ class ConwaysGame {
   }
 
   getPresetConfigurations () {
-    return this.presetConfigurations
+    return this.presetConfigurations.map( templateGroup => templateGroup.toJSONObject())
   }
 
   getDescriptiveJSONObject () {

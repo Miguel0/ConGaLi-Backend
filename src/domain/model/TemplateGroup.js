@@ -5,11 +5,11 @@ class TemplateGroup {
     this.templates = []
   }
 
-  asJSONObject () {
+  toJSONObject () {
     let json = {}
 
     json.name = this.name
-    json.templates = this.templates
+    json.templates = this.templates.map( template => template.toJSONObject())
 
     return json
   }
