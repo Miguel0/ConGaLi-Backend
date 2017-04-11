@@ -102,7 +102,7 @@ class ConwaysGameHandlerConfigurator {
 
   createCell (cellCreationData, socket) {
     logger.debug(`Just received cell creation data from client: ${JSON.stringify(cellCreationData)}`)
-    
+
     let game = this.conwaysGameBusinessLogicManager.getGameForUserId(cellCreationData.game.id, cellCreationData.game.ownerId)
 
     let cellRawData = cellCreationData.eventPosition
@@ -118,7 +118,7 @@ class ConwaysGameHandlerConfigurator {
 
     logger.debug('creating template with ' + JSON.stringify(templateCreationData))
 
-    game.createCellsOfTemplateBy(cellCreationData.game.user.id, 0, templateCreationData)
+    game.createCellsOfTemplateBy(templateCreationData.game.user.id, 0, templateCreationData)
     this.sendGridRefreshToClient(game)
   }
 

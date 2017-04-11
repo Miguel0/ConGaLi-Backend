@@ -9,7 +9,7 @@ class TemplateGroup {
     let json = {}
 
     json.name = this.name
-    json.templates = this.templates.map( template => template.toJSONObject())
+    json.templates = this.templates.map(template => template.toJSONObject())
 
     return json
   }

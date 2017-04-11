@@ -95,7 +95,7 @@ class ConwaysGame {
   }
 
   getPresetConfigurations () {
-    return this.presetConfigurations.map( templateGroup => templateGroup.toJSONObject())
+    return this.presetConfigurations.map(templateGroup => templateGroup.toJSONObject())
   }
 
   getDescriptiveJSONObject () {
@@ -107,7 +107,7 @@ class ConwaysGame {
     json.users = []
 
     for (let user in this.users) {
-      json.users.push( {
+      json.users.push({
         id: user.id,
         name: user.name,
         color: user.color
