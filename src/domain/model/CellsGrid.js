@@ -1,6 +1,12 @@
 const AppException = require('../../exception/AppException')
 const ContextUnawareCell = require('./ContextUnawareCell')
 
+/**
+ * Cells grid provides the basic behavior to add and remove cells inside itself, and is the responsible of checking the consistency
+ * of them regarding their boundaries and the resolution (the dimension of each cell inside) among other attributes.
+ * 
+ * Also it provides methods to create the new generation of cells within.
+ */
 class CellsGrid {
   constructor () {
     this.createdOn = new Date()
@@ -162,8 +168,6 @@ class CellsGrid {
 
     result = parseInt(result / arrayOfHexColours.length)
     result = `000000${result.toString(16)}`.slice(-6)
-
-    console.log(`Processing color for: ${JSON.stringify(arrayOfHexColours)} led to: ${result}`)
 
     return result
   }

@@ -26,6 +26,7 @@ describe('ContextUnawareCell', function () {
       
       expect(jsonObject).to.have.property('createdOn').and.to.be.a('string').and.to.match(TestUtils.getISOStringRegex())
       expect(jsonObject).to.have.property('color').and.to.be.equal('#000000')
+      expect(Object.keys(jsonObject)).lengthOf(2)
     })
   })
 

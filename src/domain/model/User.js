@@ -1,3 +1,8 @@
+/**
+ * This is a simple implementation of the user of the game. It lacks the security measure of encripting the password,
+ * But it has the responsibility of knowing how to check it's own integrity and to create the JSON object that will
+ * be handed to the potential game users.
+ */
 class User {
   constructor (data) {
     this.createdOn = new Date()
@@ -12,7 +17,7 @@ class User {
     // TODO check integrity here
   }
 
-  asJSONObject () {
+  toJSONObject () {
     let json = {}
 
     json.id = this.id
