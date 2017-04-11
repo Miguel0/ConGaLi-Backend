@@ -5,9 +5,13 @@ class ContextUnawareCell {
     this.color = null
   }
 
+  getColor () {
+    return this.color || this.owner.color
+  }
+
   toJSONObject () {
     return {
-      color: '#' + (this.color || this.owner.color),
+      color: `#${this.getColor()}`,
       createdOn: this.createdOn.toISOString()
     }
   }

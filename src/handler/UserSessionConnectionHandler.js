@@ -41,8 +41,8 @@ class UserHandlerConfigurator {
       let user = this.userBusinessLogicManager.createUser(data)
       this.openSessions[socket.id] = { userId: user.id }
 
-      logger.debug(`Sending signUp confirmation signal to client with data: ${JSON.stringify(user.asJSONObject())}...`)
-      socket.emit('signedUp', user.asJSONObject())
+      logger.debug(`Sending signUp confirmation signal to client with data: ${JSON.stringify(user.toJSONObject())}...`)
+      socket.emit('signedUp', user.toJSONObject())
     } else {
       let exception = new AppException(
         'error.signUp.session.alreadyStarted.title',
@@ -65,8 +65,8 @@ class UserHandlerConfigurator {
       if (user && user.password === data.password) {
         this.openSessions[socket.id] = { userId: user.id }
 
-        logger.debug(`Sending logIn confirmation signal to client with data: ${JSON.stringify(user.asJSONObject())}...`)
-        socket.emit('loggedIn', user.asJSONObject())
+        logger.debug(`Sending logIn confirmation signal to client with data: ${JSON.stringify(user.toJSONObject())}...`)
+        socket.emit('loggedIn', user.toJSONObject())
       } else {
         let exception = new AppException(
           'error.logIn.session.wrongUserOrPassword.title',

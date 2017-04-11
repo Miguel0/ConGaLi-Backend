@@ -32,19 +32,19 @@ class ConnectionHandlerConfigurator {
     setTimeout(
       () => {
         // TODO handle exceptions to avoid memory leaks
-        logger.debug(`Trying to remove data for socket id #${socketId} @ ${clientIP} being ${new Date().toISOString()}!!!!`)
+        logger.debug(`Trying to remove data for socket id #${socketId} @ ${clientIP}`)
 
         let socketData = this.socketsConnected[socketId]
         if (socketData && deleteOpTimeoutCreationDate > socketData.lastConnectedOn) {
           // TODO RELEASE ASSOCIATED RESOURCES
 
           delete this.socketsConnected[socketId]
-          logger.debug(`Socket data #${JSON.stringify(socketData.toString())} removed at ${new Date().toISOString()}!!!!`)
+          logger.debug(`Socket data #${JSON.stringify(socketData.toString())} removed!!!!`)
         }
       },
       deletingSocketDataInterval)
 
-    logger.debug(`Socket with id #${socket.id} disconnected  @ ${clientIP} being ${deleteOpTimeoutCreationDate.toISOString()}!!!!`)
+    logger.debug(`Socket with id #${socket.id} disconnected  @ ${clientIP}!!!!`)
   }
 
   configureSocketUponConnection (socket, io) {
@@ -65,7 +65,7 @@ class ConnectionHandlerConfigurator {
       socketConnectionData = actualDate
     }
 
-    logger.debug(`Socket with id #${socketConnectionData.socketId} @ ${this.getSocketIp(socket)} connected being ${new Date().toISOString()}!!!!`)
+    logger.debug(`Socket with id #${socketConnectionData.socketId} @ ${this.getSocketIp(socket)} connected`)
   }
 }
 

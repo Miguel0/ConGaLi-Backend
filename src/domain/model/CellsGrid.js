@@ -236,7 +236,7 @@ class CellsGrid {
 
         if (nearCells.length === 3) {
           let newCell = new ContextUnawareCell()
-          newCell.color = this.averageRGB(nearCells.map(cell => { return cell.color }))
+          newCell.color = this.averageRGB(nearCells.map(cell => { return cell.getColor() }))
 
           newCells.push({ x: x, y: y, cell: newCell })
         }

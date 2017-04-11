@@ -31,7 +31,7 @@ describe('ContextUnawareCell', function () {
       let jsonObject = cell.toJSONObject()
       
       expect(jsonObject).to.have.property('createdOn').and.to.be.a('string').and.to.match(TestUtils.getISOStringRegex())
-      expect(jsonObject).to.have.property('color').and.to.be.equal('#null')
+      expect(jsonObject).to.have.property('color').and.to.be.equal(`#${cell.getColor()}`)
       expect(Object.keys(jsonObject)).lengthOf(2)
     })
   })
@@ -40,12 +40,14 @@ describe('ContextUnawareCell', function () {
     it('should return a proper JSON representation with User with not null color', function () {
       cell.owner.color = 'FFFFFF'
      
-      expect(cell.toJSONObject()).to.have.property('color').and.to.be.equal('#' + cell.owner.color)
+      expect(cell.toJSONObject()).to.have.property('color').and.to.be.equal(`#${cell.getColor()}`)
+      expect(cell.toJSONObject()).to.have.property('color').and.to.be.equal(`#${cell.owner.color}`)
     })
 
     it('should return a proper JSON representation with it\'s own color', function () {
       cell.color = '000000'
-      expect(cell.toJSONObject()).to.have.property('color').and.to.be.equal('#' + cell.color)
+      expect(cell.toJSONObject()).to.have.property('color').and.to.be.equal(`#${cell.getColor()}`)
+      expect(cell.toJSONObject()).to.have.property('color').and.to.be.equal(`#${cell.color}`)
     })
   })
 

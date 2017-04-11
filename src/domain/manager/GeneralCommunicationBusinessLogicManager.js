@@ -15,8 +15,7 @@ class GeneralCommunicationService {
     let games = []
     logger.debug(`searching game definitions for user id: ${userId}`)
 
-    this.storageDAO.forEachGameOfUser(userId,
-      game => games.push(game.getDescriptiveJSONObject()))
+    this.storageDAO.forEachGame(game => games.push(game.getDescriptiveJSONObject()))
 
     logger.debug(`games calculated:${JSON.stringify(games)}`)
     return games
