@@ -4,7 +4,7 @@ const AppException = require('../../exception/AppException')
 class ConwaysGame {
   constructor (user) {
     this.createdOn = new Date()
-    this.ownerUserId = user.id
+    this.ownerId = user.id
     this.name = null
     this.refreshInterval = 1000
     this.cellsGrids = []
@@ -71,7 +71,7 @@ class ConwaysGame {
   }
 
   getRoomId () {
-    return `${this.name}@${this.ownerUserId}`
+    return `${this.name}@${this.ownerId}`
   }
 
   killCellBy (user, points) {
@@ -103,7 +103,7 @@ class ConwaysGame {
     json.createdOn = this.createdOn.toISOString()
     json.name = this.name
     json.id = this.id
-    json.ownerUserId = this.ownerUserId
+    json.ownerId = this.ownerId
     json.users = []
 
     for (let user in this.users) {

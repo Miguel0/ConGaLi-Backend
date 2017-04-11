@@ -227,9 +227,9 @@ class StorageDAO {
 
   saveGame (game) {
     logger.debug(`Checking game: ${JSON.stringify(game)}`)
-    game.id = this.gamesByUserId[game.ownerUserId].length
+    game.id = this.gamesByUserId[game.ownerId].length
 
-    if (this.getGameWithName(game.name, game.ownerUserId)) {
+    if (this.getGameWithName(game.name, game.ownerId)) {
       throw new AppException(
         'error.game.alreadyExists.title',
         'error.user.alreadyExists.body'
@@ -237,7 +237,7 @@ class StorageDAO {
     }
 
     logger.debug(`Saving game: ${JSON.stringify(game)}`)
-    this.gamesByUserId[game.ownerUserId].push(game)
+    this.gamesByUserId[game.ownerId].push(game)
 
     return game
   }
