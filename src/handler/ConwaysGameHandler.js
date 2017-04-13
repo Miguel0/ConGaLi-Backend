@@ -91,7 +91,8 @@ class ConwaysGameHandlerConfigurator {
     let game = this.conwaysGameBusinessLogicManager.getGameForUserId(data.game.id, data.game.ownerId)
     game.addUser(this.userBusinessLogicManager.getUserById(data.user.id))
 
-    socket.emit('joinedToGame', data)
+
+    this.doJoinRoom(socket, game, (socket, game) => socket.emit('joinedToGame', data))
   }
 
   removeUser () {
@@ -121,7 +122,7 @@ class ConwaysGameHandlerConfigurator {
 
     logger.debug('creating template with ' + JSON.stringify(templateCreationData))
 
-    game.createCellsOfTemplateBy(templateCreationData.game.user.id, 0, templateCreationData)
+    game.createCellsOfTemplateBy(templateCreationData.user.id, 0, templateCreationData)
     this.sendGridRefreshToClient(game)
   }
 
@@ -140,8 +141,12 @@ class ConwaysGameHandlerConfigurator {
   createGame (socket, data) {
     let user = this.userBusinessLogicManager.getUserById(data.user.id)
     let game = this.conwaysGameBusinessLogicManager.createGame(data, {id: user.id, name: user.name, color: data.user.color})
-    logger.debug(`Wiring socket with the propper events for the channel ${game.getRoomId()}`)
+    
+    this.doJoinRoom(socket, game, (socket, game) => this.io.to(socket.id).emit('gameCreated', game.getDescriptiveJSONObject()))
+  }
 
+  doJoinRoom (socket, game, clientEventSender) {
+    logger.debug(`Wiring socket with the propper events for the channel ${game.getRoomId()}`)
     socket.join(
       game.getRoomId(),
       () => {
@@ -154,7 +159,7 @@ class ConwaysGameHandlerConfigurator {
 
         logger.debug(`Sending replies to the owner of the game at socket #${socket.id}`)
 
-        this.io.to(socket.id).emit('gameCreated', game.getDescriptiveJSONObject())
+        clientEventSender.call(this, socket, game)
 
         this.sendGridRefreshToClient(game)
         this.sendTemplateCellsOptionsToSocket(game)
