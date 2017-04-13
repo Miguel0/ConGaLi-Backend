@@ -78,7 +78,7 @@ class ConwaysGameService {
   createGame (data, user) {
     let game = new ConwaysGame(user)
     game.name = data.name
-    game.prestConfigurations = this.storageDAO.getCellsTemplates()
+    game.presetConfigurations = this.storageDAO.getCellsTemplates()
 
     if (data.refreshInterval) {
       game.refreshInterval = parseInt(data.refreshInterval)

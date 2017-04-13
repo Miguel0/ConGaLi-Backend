@@ -2,6 +2,8 @@ class AppException {
   constructor (titleKey, bodyKey, extraArguments) {
     this.titleKey = titleKey
     this.bodyKey = bodyKey
+    this.scope = null
+    this.level = null
 
     if (extraArguments) {
       this.arguments = extraArguments

@@ -88,11 +88,15 @@ class ConwaysGameHandlerConfigurator {
   }
 
   joinGame (socket, data) {
+    logger.debug(`Joining to game with data sent by client: ${JSON.stringify(data)}`)
     let game = this.conwaysGameBusinessLogicManager.getGameForUserId(data.game.id, data.game.ownerId)
     game.addUser(this.userBusinessLogicManager.getUserById(data.user.id))
 
 
-    this.doJoinRoom(socket, game, (socket, game) => socket.emit('joinedToGame', data))
+    this.doJoinRoom(socket, game, (socket, game) => {
+      logger.debug(`Sending the signal for joining a game with data: ${JSON.stringify(data)}`)
+      socket.emit('joinedToGame', data)
+    })
   }
 
   removeUser () {
@@ -111,16 +115,16 @@ class ConwaysGameHandlerConfigurator {
 
     let cellRawData = cellCreationData.eventPosition
 
-    logger.debug(`creating cell with data: ${JSON.stringify(cellRawData)}`)
+    logger.debug(`Creating cell with data: ${JSON.stringify(cellRawData)}`)
 
     game.createCellsBy(cellCreationData.user.id, 0, [cellRawData])
     this.sendGridRefreshToClient(game)
   }
 
   createTemplate (socket, templateCreationData) {
-    let game = this.conwaysGameBusinessLogicManager.getGameForUserId(templateCreationData.game.id, templateCreationData.game.ownerId)
+    logger.debug(`Creating template with ${JSON.stringify(templateCreationData)}`)
 
-    logger.debug('creating template with ' + JSON.stringify(templateCreationData))
+    let game = this.conwaysGameBusinessLogicManager.getGameForUserId(templateCreationData.game.id, templateCreationData.game.ownerId)
 
     game.createCellsOfTemplateBy(templateCreationData.user.id, 0, templateCreationData)
     this.sendGridRefreshToClient(game)
@@ -139,10 +143,15 @@ class ConwaysGameHandlerConfigurator {
   }
 
   createGame (socket, data) {
+    logger.debug(`Just received game creation data from client: ${JSON.stringify(data)}`)
     let user = this.userBusinessLogicManager.getUserById(data.user.id)
     let game = this.conwaysGameBusinessLogicManager.createGame(data, {id: user.id, name: user.name, color: data.user.color})
     
-    this.doJoinRoom(socket, game, (socket, game) => this.io.to(socket.id).emit('gameCreated', game.getDescriptiveJSONObject()))
+    this.doJoinRoom(socket, game, (socket, game) => {
+      let gameData = game.getDescriptiveJSONObject()
+      logger.debug(`Sending the signal for game created with data: ${JSON.stringify(gameData)}`)
+      this.io.to(socket.id).emit('gameCreated', gameData)
+    })
   }
 
   doJoinRoom (socket, game, clientEventSender) {
