@@ -142,4 +142,28 @@ describe('CellsGrid', function () {
       expect(cellsGrid.averageRGB(['3cfAA0','FFFFFF', '7a0058'])).to.be.equal('9253a7')
     })
   })
+
+  describe('Position normalization', function () {
+    it('should throw exception upon nonexistent/faltsy resolution', function () {
+      cellsGrid.resolution = null
+      expect(() => cellsGrid.normalizeGridPosition({x: 0, y: 0})).to.throw(AppException)
+    })
+
+    it('should throw exception upon negative resolution', function () {
+      cellsGrid.resolution = -1
+      expect(() => cellsGrid.normalizeGridPosition({x: 0, y: 0})).to.throw(AppException)
+    })
+
+    it('should normalize negative zero to unsigned zero', function () {
+      cellsGrid.resolution = 1
+      expect(cellsGrid.normalizeGridPosition({x: 0, y: 0})).to.be.deep.equal({x: 0, y: 0})
+    })
+
+    it('should throw exception upon wrong/nonexistent/faltsy resolution', function () {
+      cellsGrid.resolution = 1
+      expect(cellsGrid.normalizeGridPosition({x: 150, y: -150})).to.be.deep.equal({x: 150, y: -150})
+      expect(cellsGrid.normalizeGridPosition({x: -150, y: 150})).to.be.deep.equal({x: -150, y: 150})
+      expect(cellsGrid.normalizeGridPosition({x: -150, y: -150})).to.be.deep.equal({x: -150, y: -150})
+    })
+  })
 })

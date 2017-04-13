@@ -49,9 +49,27 @@ class CellsGrid {
    * into account the resolution of the grid
    */
   normalizeGridPosition (rawPosition) {
-    return {
+    if (!this.resolution || this.resolution < 0) {
+      throw new AppException(
+        'error.cellsGrid.wrong.resolution.title',
+        'error.cellsGrid.wrong.resolution.body'
+      )
+    }
+
+    let returnValue = {
       x: Math.round((rawPosition.x - (this.resolution / 2)) / this.resolution) * this.resolution,
-      y: Math.round((rawPosition.y - (this.resolution / 2)) / this.resolution) * this.resolution}
+      y: Math.round((rawPosition.y - (this.resolution / 2)) / this.resolution) * this.resolution
+    }
+
+    if (returnValue.x === +0) {
+      returnValue.x = 0
+    }
+
+    if (returnValue.y === +0) {
+      returnValue.y = 0
+    }
+
+    return returnValue
   }
 
   checkValidPosition (position, avoidThrowingException) {
