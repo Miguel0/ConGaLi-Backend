@@ -90,7 +90,8 @@ class ConwaysGameHandlerConfigurator {
   joinGame (socket, data) {
     logger.debug(`Joining to game with data sent by client: ${JSON.stringify(data)}`)
     let game = this.conwaysGameBusinessLogicManager.getGameForUserId(data.game.id, data.game.ownerId)
-    game.addUser(this.userBusinessLogicManager.getUserById(data.user.id))
+    let user = this.userBusinessLogicManager.getUserById(data.user.id)
+    game.addUser({id: user.id, name: user.name, color: data.user.color})
 
 
     this.doJoinRoom(socket, game, (socket, game) => {
