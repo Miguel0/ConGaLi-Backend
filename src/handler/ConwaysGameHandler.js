@@ -93,7 +93,6 @@ class ConwaysGameHandlerConfigurator {
     let user = this.userBusinessLogicManager.getUserById(data.user.id)
     game.addUser({id: user.id, name: user.name, color: data.user.color})
 
-
     this.doJoinRoom(socket, game, (socket, game) => {
       logger.debug(`Sending the signal for joining a game with data: ${JSON.stringify(data)}`)
       socket.emit('joinedToGame', data)
@@ -147,7 +146,7 @@ class ConwaysGameHandlerConfigurator {
     logger.debug(`Just received game creation data from client: ${JSON.stringify(data)}`)
     let user = this.userBusinessLogicManager.getUserById(data.user.id)
     let game = this.conwaysGameBusinessLogicManager.createGame(data, {id: user.id, name: user.name, color: data.user.color})
-    
+
     this.doJoinRoom(socket, game, (socket, game) => {
       let gameData = game.getDescriptiveJSONObject()
       logger.debug(`Sending the signal for game created with data: ${JSON.stringify(gameData)}`)

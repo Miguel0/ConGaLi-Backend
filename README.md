@@ -29,6 +29,7 @@ This particular implementation creates a Multiplayer app version of Game of Life
 - [ ] **\(Requirement enhancement)** _Implement test for Models._
 - [ ] **\(Requirement enhancement)** _Implement test for WebSockets endpoints._
 - [ ] **\(Requirement enhancement)** _Get to a coverage of at least 70%._
+- [ ] **\(Requirement enhancement)** _Add more automates from places like [Eric Weisstein's treasure trove](http://www.ericweisstein.com/encyclopedias/life/)
 
 ## Build Setup
 
