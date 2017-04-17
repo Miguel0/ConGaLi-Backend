@@ -32,7 +32,6 @@ Schema example:
       $exceptionBuilder: function
     }
   }
-
 }
 */
 class JSONObjectValidator {

@@ -3,6 +3,7 @@ const expect = chai.expect
 
 const TestUtils = require('../../helpers/TestUtils')
 const AppException = require('../../../../src/exception/AppException')
+const User = require('../../../../src/domain/model/User')
 const CellsGrid = require('../../../../src/domain/model/CellsGrid')
 const Cell = require('../../../../src/domain/model/ContextUnawareCell')
 
@@ -48,15 +49,24 @@ describe('CellsGrid', function () {
 
   describe('Checking validator function against point (x, y) over cellsGrid bounds', function () {
     it('should fail if there\'s no arguments', function () {
-      expect(() => cellsGrid.checkValidPosition()).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition())
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should throw an AppException if the arguments are empty', function () {
-      expect(() => cellsGrid.checkValidPosition('')).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition(''))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should throw an AppException if the arguments are null', function () {
-      expect(() => cellsGrid.checkValidPosition(null)).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition(null))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should return false if the arguments are null', function () {
@@ -76,11 +86,17 @@ describe('CellsGrid', function () {
     })
 
     it('should throw an AppException if the width is greater than the maxWidth', function () {
-      expect(() => cellsGrid.checkValidPosition({x: (cellsGrid.maxWidth + 1), y: 0})).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition({x: (cellsGrid.maxWidth + 1), y: 0}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should throw an AppException if the height is greater than the maxHeight', function () {
-      expect(() => cellsGrid.checkValidPosition({x: 0, y: (cellsGrid.maxHeight + 1)})).to.throw(AppException)
+      expect(() => cellsGrid.checkValidPosition({x: 0, y: (cellsGrid.maxHeight + 1)}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
     })
   })
 
@@ -164,6 +180,164 @@ describe('CellsGrid', function () {
       expect(cellsGrid.normalizeGridPosition({x: 150, y: -150})).to.be.deep.equal({x: 150, y: -150})
       expect(cellsGrid.normalizeGridPosition({x: -150, y: 150})).to.be.deep.equal({x: -150, y: 150})
       expect(cellsGrid.normalizeGridPosition({x: -150, y: -150})).to.be.deep.equal({x: -150, y: -150})
+    })
+  })
+
+  describe('Cells blind addition', function () {
+    it('shouldn\'t fail if there\'s no arguments', function () {
+      expect(() => cellsGrid.doAddCells())
+        .to.not.throw(AppException)
+    })
+
+    it('should fail if there\'s no position', function () {
+      expect(() => cellsGrid.doAddCells({cell: new Cell()}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+    })
+
+    it('should fail if there\'s invalid position', function () {
+      expect(() => cellsGrid.doAddCells({cell: new Cell(), position: {x: -1, y: -1}}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+    })
+
+    it('should add new cell', function () {
+      let cell =  new Cell()
+
+      expect(() => cellsGrid.doAddCells({cell: cell, position: {x: 0, y: 0}}))
+        .to.not.throw(AppException)
+      expect(cellsGrid.cells[0][0]).to.be.equal(cell)
+    })
+
+    it('should throw exception upon cell override', function () {
+      cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}})
+
+      expect(() => cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellCantBeOverride.title')
+    })
+
+    it('should return a proper JSON representation', function () {
+      let user = new User()
+      user.color = 'FFFFFF'
+
+      cellsGrid.doAddCells({cell: new Cell(user), position: {x: 0, y: 2}}, {cell: new Cell(user), position: {x: 0, y: 3}}, {cell: new Cell(user), position: {x: 1, y: 4}})
+
+      let jsonObject = cellsGrid.toJSONObject()
+
+      expect(jsonObject).to.have.property('cells').and.to.have.all.keys(['0', '1'])
+      expect(jsonObject.cells[0]).and.to.have.all.keys(['2', '3'])
+      expect(jsonObject.cells[0][1]).to.be.faltsy
+      expect(jsonObject.cells[0][2]).to.have.property('color').and.to.equal('#FFFFFF')
+      expect(jsonObject.cells[0][2]).to.have.property('createdOn').and.to.match(TestUtils.getISOStringRegex())
+      expect(jsonObject.cells[0][2]).to.have.property('gridPosition').and.to.be.deep.equal({ x: '0', y: '2' })
+    })
+  })
+
+  describe('Cells user addition', function () {
+    it('shouldn\'t fail if there\'s no arguments', function () {
+      let functionToValidate = () => cellsGrid.addCellsBy(new User())
+
+      expect(functionToValidate).to.not.throw(AppException)
+      expect(functionToValidate).to.not.throw(Error)
+    })
+
+    it('shouldn\'t fail if there\'s no positions', function () {
+      let functionToValidate = () => cellsGrid.addCellsBy(new User())
+
+      expect(functionToValidate).to.not.throw(AppException)
+      expect(functionToValidate).to.not.throw(Error)
+    })
+
+    it('shouldn\'t fail if receives an empty array of positions', function () {
+      let functionToValidate = () => cellsGrid.addCellsBy(new User(), [])
+
+      expect(functionToValidate).to.not.throw(AppException)
+      expect(functionToValidate).to.not.throw(Error)
+    })
+
+    it('should fail if there\'s invalid position', function () {
+      expect(() => cellsGrid.addCellsBy(new User(), [{x: -1, y: -1}]))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+    })
+
+    it('should add new cell', function () {
+      expect(() => cellsGrid.addCellsBy(new User(), [{x: 0, y: 0}]))
+        .to.not.throw(AppException)
+      expect(cellsGrid.cells[0][0]).to.be.not.null
+    })
+
+    it('should throw exception upon cell override', function () {
+      cellsGrid.addCellsBy(new User(), [{x: 0, y: 0}])
+
+      expect(() => cellsGrid.addCellsBy(new User(), [{x: 0, y: 0}]))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellCantBeOverride.title')
+    })
+  })
+
+  describe('Cells iteration', function () {
+    it('shouldn\'t iterate over empty cellsGrid', function () {
+      let count = 0
+
+      cellsGrid.forEachCell(cell => count++)
+      expect(count).to.be.equal(0)
+    })
+
+    it('should iterate single element cells holder', function () {
+      let count = 0
+      
+      cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}})
+      cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 1}})
+      
+      cellsGrid.forEachCell(cell => count++)
+      expect(count).to.be.equal(2)
+    })
+  })
+
+  describe('blind removal', function () {
+    it('shouldn\'t fail if there\'s no arguments', function () {
+      expect(() => cellsGrid.removeCells())
+        .to.not.throw(AppException)
+    })
+
+    it('should fail if there\'s no position', function () {
+      expect(() => cellsGrid.removeCells({position: null}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+    })
+
+    it('should fail if there\'s invalid position', function () {
+      expect(() => cellsGrid.removeCells({position: {x: -1, y: -1}}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+    })
+
+    it('should remove existent cell', function () {
+      cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}})
+
+      expect(() => cellsGrid.removeCells({position: {x: 0, y: 0}}))
+        .to.not.throw(AppException)
+
+      let count = 0
+      cellsGrid.forEachCell( cell => {console.log(JSON.stringify(cell)); count++})
+
+      expect(count).to.be.equal(0)
+    })
+
+    it('should throw exception upon non existent cell removal', function () {
+      expect(() => cellsGrid.removeCells({position: {x: 0, y: 0}}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.canNotRemoveCellThatDoesNotExists.title')
     })
   })
 })
