@@ -1,57 +1,31 @@
-/**
-Schema example:
+const AppException = require('../exception/AppException')
 
-{
-  $strict: true,
-  stringAttribute: {
-    $optional: false,
-    $exceptionMessage: stringOrFunction
-    $exceptionBuilder: function,
-    $type: 'string',
-    $childsDef: {
-      ...
-    },
-    $maxLength: {
-      $value: numberOrFunction,
-      $exceptionMessage: stringOrFunction
-      $exceptionBuilder: function
-    },
-    $minLength: {
-      $value: numberOrFunction,
-      $exceptionMessage: stringOrFunction
-      $exceptionBuilder: function
-    },
-    $in: {
-      $value: arrayOrFunction,
-      $exceptionMessage: stringOrFunction
-      $exceptionBuilder: function
-    },
-    $contains: {
-      $value: objectOrFunctionOrRegex,
-      $exceptionMessage: stringOrFunction
-      $exceptionBuilder: function
-    }
-  }
-
-}
-*/
 class JSONObjectValidator {
-  constructor (options, objectToValidate, validationSchema) {
+  constructor (objectToValidate, validationSchema, options) {
     this.objectToValidate = objectToValidate || null
     this.validationSchema = validationSchema || null
     this.initOptions(options)
   }
 
   initOptions (options) {
-    this.options = options || this.options || { throwsException: true, customAttributesPrefix: '$', defaultExceptionMessage: 'ValidationError!!!' }
-    this.options.exceptionBuilder = this.buildExceptionFor
+    this.options = options || this.options || {}
+    this.options.throwsException = this.options.throwsException || true
+    this.options.customAttributesPrefix = this.options.customAttributesPrefix || '$'
+    this.options.defaultExceptionTitle = this.options.defaultExceptionTitle || 'Validation Error'
+    this.options.defaultExceptionBody = this.options.defaultExceptionBody || 'Validation Error'
+    this.options.exceptionBuilder = this.options.exceptionBuilder || this.buildExceptionFor
   }
 
-  buildExceptionFor () {
+  buildExceptionFor (exceptionArguments) {
+    exceptionArguments.titleKey = exceptionArguments.titleKey || this.options.defaultExceptionTitle
+    exceptionArguments.bodyKey = exceptionArguments.bodyKey || this.options.defaultExceptionBody
 
+    return new AppException(exceptionArguments)
   }
 
   validate () {
+    let contextArguments = { actualPath: '', parentValidationObject: null, parentValidationSchema: null }
+
     try {
       this.doValidateSchema(this.validationSchema)
 
@@ -61,54 +35,117 @@ class JSONObjectValidator {
 
       this.initOptions()
 
-      this.doValidate(this.objectToValidate, this.validationSchema, {actualPath: ''})
+      this.doValidate(this.objectToValidate, this.validationSchema, contextArguments)
     } catch (e) {
-      this.exceptionBuilder.apply(this, e)
-    }
-  }
+      if (this.options.throwsException) {
+        throw this.options.exceptionBuilder.call(this, {e: e, extraArguments: contextArguments})
+      }
 
-  doValidateSchema (schema) {
-    // TODO validate schema in depth
-    if (!schema) {
-      throw new Error('Should have validationSchema')
+      return false
     }
     return true
   }
 
-  checkType (objectToValidate, schemaDefinedType) {
+  doValidateSchema (schema) {
+    // TODO validate schema in depth
+    if (!schema || Object.keys(schema).length === 0) {
+      throw new Error('Should have validationSchema')
+    }
+  }
+
+  extractTypeFromObject (value) {
+    if (value instanceof Object || typeof value === 'object') {
+      return 'object'
+    }
+
+    if (value instanceof String || typeof value === 'string') {
+      return 'string'
+    }
+
+    if (value instanceof Boolean || typeof value === 'boolean') {
+      return 'boolean'
+    }
+
+    if (!isNaN(value)) {
+      return 'number'
+    }
+
+    if (Array.isArray(value)) {
+      return 'array'
+    }
+  }
+
+  hasValidType (objectToValidate, type) {
+    let checkTypeMap = {}
+
+    checkTypeMap.object = value => value instanceof Object || typeof value === 'object'
+    checkTypeMap[Object] = checkTypeMap.object
+
+    checkTypeMap.string = value => value instanceof String || typeof value === 'string'
+    checkTypeMap[String] = checkTypeMap.string
+
+    checkTypeMap.boolean = value => value instanceof Boolean || typeof value === 'boolean'
+    checkTypeMap[Boolean] = checkTypeMap.string
+
+    checkTypeMap.number = value => !isNaN(value)
+    checkTypeMap[Number] = checkTypeMap.number
+
+    checkTypeMap.array = value => Array.isArray(value)
+    checkTypeMap[Array] = checkTypeMap.array
+
+    console.log(`testing type for: ${JSON.stringify(objectToValidate)} to match: ${JSON.stringify(type || 'object')}`)
+    return checkTypeMap[type || 'object'].call(this, objectToValidate)
   }
 
   doValidate (objectToValidate, validationSchema, genericArguments) {
-    // TODO check if the object has optional attributes
+    console.log(objectToValidate)
+    console.log(validationSchema)
+    genericArguments.validatedObject = objectToValidate
+    genericArguments.validatedSchema = validationSchema
 
+    let actualPath = genericArguments.actualPath
+    let schemaDefinedType = validationSchema[`${this.options.customAttributesPrefix}type`] || [String, Boolean, Number, Array].find(type => type === validationSchema)
+    let domainAttributeKeys = Object.keys(validationSchema).filter(key => key.indexOf(this.options.customAttributesPrefix) !== 0)
+
+    // TODO check if the object has optional attributes
     if (!objectToValidate && !validationSchema.optional) {
       throw {
-        'message': validationSchema[`${this.options.customAttributesPrefix}exceptionMessage`],
-        'validatedObject': objectToValidate,
-        'validatedSchema': validationSchema,
-        'genericArguments': genericArguments
+        'titlekey': validationSchema[`${this.options.customAttributesPrefix}titleKey`] || `Attribute at "${actualPath}" does not exists as it\'s defined on ${JSON.stringify(genericArguments.parentValidationSchema)}`,
+        'bodyKey': validationSchema[`${this.options.customAttributesPrefix}bodyKey`]
       }
     }
 
-    let actualPath = genericArguments.actualPath
-    let schemaDefinedType = validationSchema[`${this.options.customAttributesPrefix}type`]
+    if (!this.hasValidType(objectToValidate, schemaDefinedType)) {
+      throw {
+        'titlekey': 'Object has invalid type',
+        'bodyKey': `Type validation failed between schema\'s: ${JSON.stringify(schemaDefinedType)} and json object\'s type: ${objectToValidate}`
+      }
+    }
 
-    this.checkType(objectToValidate, schemaDefinedType)
+    if (validationSchema.strict !== false && domainAttributeKeys.length !== Object.keys(objectToValidate).length) {
+      throw {
+        'titlekey': 'Strict keys length validation failed',
+        'bodyKey': `Strict keys length validation failed between schema\'s keys: ${JSON.stringify(domainAttributeKeys)} and json object\'s keys: ${JSON.stringify(Object.keys(objectToValidate))}`
+      }
+    }
 
     // Starting child validation
 
-    if (schemaDefinedType === 'array' || schemaDefinedType === Array) {
+    if (this.hasValidType(objectToValidate, 'array')) {
       let childsDef = validationSchema[`${this.options.customAttributesPrefix}childsDef`]
 
       for (let j = 0; j < objectToValidate.length; j++) {
+        genericArguments.parentValidationObject = objectToValidate
+        genericArguments.parentValidationSchema = childsDef
         genericArguments.actualPath = `${actualPath}.${j}`
 
         this.doValidate(objectToValidate[j], childsDef, genericArguments)
       }
-    } else {
-      let domainAttributeKeys = Object.keys(validationSchema).filter(key => key.indexOf(this.options.customAttributesPrefix) !== 0)
-
+    } else if (this.hasValidType(objectToValidate, 'object')) {
       for (let j = 0; j < domainAttributeKeys.length; j++) {
+        genericArguments.parentValidationObject = objectToValidate
+        genericArguments.parentValidationSchema = validationSchema
+
         let domainAttributeKey = domainAttributeKeys[j]
         let objectValue = objectToValidate[domainAttributeKey]
 

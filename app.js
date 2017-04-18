@@ -9,7 +9,7 @@ logger.info('Starting App...')
 require('./src/handler/init.js')(io)
 
 server.listen(
-    3000,
+    config.port,
     () => {
         logger.info(`Listening with PID ${process.pid} on ${config.hostName} on port ${config.port}`)
         logger.info(`This platform is ${process.platform}`)

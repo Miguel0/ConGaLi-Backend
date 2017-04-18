@@ -1,6 +1,5 @@
 const logger = require('log4js').getLogger('Connection Handler')
-const deletingSocketDataInterval = 10000
-const useSocketByIp = false
+const config = require()
 
 class ConnectionHandlerConfigurator {
   constructor (io, businessLogicManagersHolder) {
@@ -17,7 +16,7 @@ class ConnectionHandlerConfigurator {
   }
 
   getSocketConnectionIdentifier (socket) {
-    if (!useSocketByIp) {
+    if (!config.handler.connection.useSocketByIp) {
       return socket.id
     } else {
       return this.getSocketIp(socket)
@@ -42,7 +41,7 @@ class ConnectionHandlerConfigurator {
           logger.debug(`Socket data #${JSON.stringify(socketData.toString())} removed!!!!`)
         }
       },
-      deletingSocketDataInterval)
+      config.handler.connection.deletingSocketDataInterval)
 
     logger.debug(`Socket with id #${socket.id} disconnected  @ ${clientIP}!!!!`)
   }
