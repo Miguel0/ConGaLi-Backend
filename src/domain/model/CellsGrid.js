@@ -17,31 +17,25 @@ class CellsGrid {
     this.resolution = 10
   }
 
-  addCell (cell, position, avoidException) {
-    if (this.checkValidPosition(position, avoidException)) {
-      if (!this.cells[position.x]) {
-        this.cells[position.x] = {}
-      }
+  removeCells (...cellsConfig) {
+    cellsConfig
+      .forEach(config => this.checkValidPosition(config.position))
 
-      console.log(`Adding Cells: ${JSON.stringify(cell)} at ${JSON.stringify(position)}`)
+    let validCellsConfig = cellsConfig
+      .filter(cellConfig => this.cells[cellConfig.position.x] && this.cells[cellConfig.position.x][cellConfig.position.y])
 
-      if (this.cells[position.x][position.y]) {
-        throw new AppException(
-          'error.cellsGrid.cellCantBeOverride.title',
-          'error.cellsGrid.cellCantBeOverride.body',
-          { cell: this.cells[position.x][position.y] }
-        )
-      } else {
-        this.cells[position.x][position.y] = cell
-      }
+    if (validCellsConfig.length === cellsConfig.length) {
+      cellsConfig.forEach(cellConfig => {
+        // TODO Review if this is the best approach memory-wise
+        delete this.cells[cellConfig.position.x][cellConfig.position.y]
+      })
+    } else {
+      throw new AppException(
+        'error.cellsGrid.canNotRemoveCellThatDoesNotExists.title',
+        'error.cellsGrid.canNotRemoveCellThatDoesNotExists.body',
+        { cellsConfig: cellsConfig, validCellsConfig: validCellsConfig }
+      )
     }
-  }
-
-  removeCell (position) {
-    this.checkValidPosition(position)
-
-    // TODO Review if this is the best approach memory-wise
-    delete this.cells[position.x][position.y]
   }
 
   /**
@@ -78,8 +72,8 @@ class CellsGrid {
 
     if (!validBoundsReceived && !avoidThrowingException) {
       let exception = new AppException(
-        'error.cellsGrid.cellCantBeRemoved.title',
-        'error.cellsGrid.cellCantBeRemoved.body'
+        'error.cellsGrid.cellAtInvalidPosition.title',
+        'error.cellsGrid.cellAtInvalidPosition.body'
       )
 
       if (position) {
@@ -190,37 +184,46 @@ class CellsGrid {
     return result
   }
 
-  addCellsBy (user, rawPositions) {
-    let validCells = rawPositions
-      .map(position => this.normalizeGridPosition(position))
-      .filter(position => this.checkValidPosition(position, true))
-      .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
-      .map(position => {
-        return { position: position, cell: new ContextUnawareCell(user) }
-      })
+  doAddCells (...cellsConfig) {
+    cellsConfig
+      .forEach(config => this.checkValidPosition(config.position))
 
-    if (validCells.length === rawPositions.length) {
-      for (let i = 0; i < validCells.length; i++) {
-        let cellConfig = validCells[i]
+    let validCellsConfig = cellsConfig
+      .filter(cellConfig => !this.cells[cellConfig.position.x] || !this.cells[cellConfig.position.x][cellConfig.position.y])
 
+    if (validCellsConfig.length === cellsConfig.length) {
+      cellsConfig.forEach(cellConfig => {
         if (!this.cells[cellConfig.position.x]) {
           this.cells[cellConfig.position.x] = {}
         }
 
-        console.log(`Adding cell: ${JSON.stringify(cellConfig)}`)
         this.cells[cellConfig.position.x][cellConfig.position.y] = cellConfig.cell
-      }
+      })
     } else {
       throw new AppException(
         'error.cellsGrid.cellCantBeOverride.title',
         'error.cellsGrid.cellCantBeOverride.body',
-        { originalAttributes: rawPositions, validCells: validCells }
+        { cellsConfig: cellsConfig, validCellsConfig: validCellsConfig }
       )
     }
   }
 
+  addCellsBy (user, rawPositions) {
+    if (rawPositions) {
+      let validCells = rawPositions
+        .map(position => this.normalizeGridPosition(position))
+        .map(position => {
+          return { position: position, cell: new ContextUnawareCell(user) }
+        })
+
+      if (validCells.length === rawPositions.length && validCells.length > 0) {
+        this.doAddCells(...validCells)
+      }
+    }
+  }
+
   killCellBy (user, position) {
-    this.removeCell(this.normalizeGridPosition(position))
+    this.removeCells({position: this.normalizeGridPosition(position)})
   }
 
   automaticallyCreateNewCells () {
@@ -256,7 +259,7 @@ class CellsGrid {
           let newCell = new ContextUnawareCell()
           newCell.color = this.averageRGB(nearCells.map(cell => { return cell.getColor() }))
 
-          newCells.push({ x: x, y: y, cell: newCell })
+          newCells.push({ position: {x: x, y: y}, cell: newCell })
         }
       }
     }
@@ -271,16 +274,9 @@ class CellsGrid {
     let deadCellPositions = this.calculatePossibleDeadCellsPositions()
     console.log(`Cells about to die: ${JSON.stringify(deadCellPositions)}`)
 
-    for (let i = 0; i < deadCellPositions.length; i++) {
-      let deadCellPosition = deadCellPositions[i]
+    deadCellPositions.forEach(deadCellPosition => this.removeCell(deadCellPosition))
 
-      this.removeCell(deadCellPosition)
-    }
-
-    for (let i = 0; i < newCells.length; i++) {
-      let newCellData = newCells[i]
-      this.addCell(newCellData.cell, newCellData, true)
-    }
+    this.this.doAddCells(newCells)
   }
 
   toJSONObject () {

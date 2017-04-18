@@ -1,5 +1,41 @@
 const AppException = require('../exception/AppException')
 
+/**
+Schema example:
+
+{
+  $strict: true,
+  stringAttribute: {
+    $optional: false,
+    $exceptionMessage: stringOrFunction
+    $exceptionBuilder: function,
+    $type: 'string',
+    $childsDef: {
+      ...
+    },
+    $maxLength: {
+      $value: numberOrFunction,
+      $exceptionMessage: stringOrFunction
+      $exceptionBuilder: function
+    },
+    $minLength: {
+      $value: numberOrFunction,
+      $exceptionMessage: stringOrFunction
+      $exceptionBuilder: function
+    },
+    $in: {
+      $value: arrayOrFunction,
+      $exceptionMessage: stringOrFunction
+      $exceptionBuilder: function
+    },
+    $contains: {
+      $value: objectOrFunctionOrRegex,
+      $exceptionMessage: stringOrFunction
+      $exceptionBuilder: function
+    }
+  }
+}
+*/
 class JSONObjectValidator {
   constructor (objectToValidate, validationSchema, options) {
     this.objectToValidate = objectToValidate || null
@@ -110,7 +146,7 @@ class JSONObjectValidator {
     // TODO check if the object has optional attributes
     if (!objectToValidate && !validationSchema.optional) {
       throw {
-        'titlekey': validationSchema[`${this.options.customAttributesPrefix}titleKey`] || `Attribute at "${actualPath}" does not exists as it\'s defined on ${JSON.stringify(genericArguments.parentValidationSchema)}`,
+        'titlekey': validationSchema[`${this.options.customAttributesPrefix}titleKey`] || `Attribute at "${actualPath}" does not exists as it's defined on ${JSON.stringify(genericArguments.parentValidationSchema)}`,
         'bodyKey': validationSchema[`${this.options.customAttributesPrefix}bodyKey`]
       }
     }
@@ -118,14 +154,14 @@ class JSONObjectValidator {
     if (!this.hasValidType(objectToValidate, schemaDefinedType)) {
       throw {
         'titlekey': 'Object has invalid type',
-        'bodyKey': `Type validation failed between schema\'s: ${JSON.stringify(schemaDefinedType)} and json object\'s type: ${objectToValidate}`
+        'bodyKey': `Type validation failed between schema's: ${JSON.stringify(schemaDefinedType)} and json object's type: ${objectToValidate}`
       }
     }
 
     if (validationSchema.strict !== false && domainAttributeKeys.length !== Object.keys(objectToValidate).length) {
       throw {
         'titlekey': 'Strict keys length validation failed',
-        'bodyKey': `Strict keys length validation failed between schema\'s keys: ${JSON.stringify(domainAttributeKeys)} and json object\'s keys: ${JSON.stringify(Object.keys(objectToValidate))}`
+        'bodyKey': `Strict keys length validation failed between schema's keys: ${JSON.stringify(domainAttributeKeys)} and json object's keys: ${JSON.stringify(Object.keys(objectToValidate))}`
       }
     }
 

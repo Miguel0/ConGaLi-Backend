@@ -1,6 +1,6 @@
 class AppException {
   constructor (titleKey, bodyKey, extraArguments) {
-    let configHolder = {extraArguments: JSON.parse(JSON.stringify({value:extraArguments})).value}
+    let configHolder = {extraArguments: JSON.parse(JSON.stringify({value: extraArguments})).value}
 
     if (!bodyKey && !extraArguments) {
       configHolder = titleKey

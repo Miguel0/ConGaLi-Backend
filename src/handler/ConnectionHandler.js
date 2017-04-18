@@ -1,5 +1,5 @@
 const logger = require('log4js').getLogger('Connection Handler')
-const config = require()
+const config = require('../../config/config.dev')
 
 class ConnectionHandlerConfigurator {
   constructor (io, businessLogicManagersHolder) {

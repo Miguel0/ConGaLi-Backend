@@ -1,5 +1,5 @@
 const AppException = require('../exception/AppException')
-const DefaultCellsTemplatesConfig = require('./defaultCellsTemplatesConfig')
+const DefaultCellsTemplatesConfig = require('./defaultCellsTemplatesConfigurations')
 
 const logger = require('log4js').getLogger('Storage DAO')
 
