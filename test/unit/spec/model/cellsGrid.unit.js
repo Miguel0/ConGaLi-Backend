@@ -8,7 +8,7 @@ const CellsGrid = require('../../../../src/domain/model/CellsGrid')
 const Cell = require('../../../../src/domain/model/ContextUnawareCell')
 
 describe('CellsGrid', function () {
-  let cellsGrid
+  let cellsGrid = null
 
   beforeEach(() => {
     try {
@@ -252,30 +252,32 @@ describe('CellsGrid', function () {
       expect(functionToValidate).to.not.throw(Error)
     })
 
-    it('shouldn\'t fail if receives an empty array of positions', function () {
-      let functionToValidate = () => cellsGrid.addCellsBy(new User(), [])
-
-      expect(functionToValidate).to.not.throw(AppException)
-      expect(functionToValidate).to.not.throw(Error)
-    })
-
     it('should fail if there\'s invalid position', function () {
-      expect(() => cellsGrid.addCellsBy(new User(), [{x: -1, y: -1}]))
+      expect(() => cellsGrid.addCellsBy(new User(), {x: -1, y: -1}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
         .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should add new cell', function () {
-      expect(() => cellsGrid.addCellsBy(new User(), [{x: 0, y: 0}]))
+      expect(() => cellsGrid.addCellsBy(new User(), {x: 0, y: 0}))
         .to.not.throw(AppException)
       expect(cellsGrid.cells[0][0]).to.be.not.null
     })
 
-    it('should throw exception upon cell override', function () {
-      cellsGrid.addCellsBy(new User(), [{x: 0, y: 0}])
+    it('should throw exception upon cell override by repeated indexes', function () {
+      cellsGrid.addCellsBy(new User(), {x: 0, y: 0})
 
-      expect(() => cellsGrid.addCellsBy(new User(), [{x: 0, y: 0}]))
+      expect(() => cellsGrid.addCellsBy(new User(), {x: 0, y: 0}, {x: 0, y: 0}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellCantBeOverride.title')
+    })
+
+    it('should throw exception upon cell override', function () {
+      cellsGrid.addCellsBy(new User(), {x: 0, y: 0})
+
+      expect(() => cellsGrid.addCellsBy(new User(), {x: 0, y: 0}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
         .and.to.be.equal('error.cellsGrid.cellCantBeOverride.title')
@@ -293,16 +295,15 @@ describe('CellsGrid', function () {
     it('should iterate single element cells holder', function () {
       let count = 0
       
-      cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}})
-      cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 1}})
+      cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}}, {cell: new Cell(), position: {x: 0, y: 1}})
       
       cellsGrid.forEachCell(cell => count++)
       expect(count).to.be.equal(2)
     })
   })
 
-  describe('blind removal', function () {
-    it('shouldn\'t fail if there\'s no arguments', function () {
+  describe('blind cell removal', function () {
+    it('shouldn\'t fail if there are no arguments', function () {
       expect(() => cellsGrid.removeCells())
         .to.not.throw(AppException)
     })
@@ -328,7 +329,7 @@ describe('CellsGrid', function () {
         .to.not.throw(AppException)
 
       let count = 0
-      cellsGrid.forEachCell( cell => {console.log(JSON.stringify(cell)); count++})
+      cellsGrid.forEachCell(cell => count++)
 
       expect(count).to.be.equal(0)
     })
@@ -338,6 +339,203 @@ describe('CellsGrid', function () {
         .to.throw(AppException)
         .and.to.have.property('titleKey')
         .and.to.be.equal('error.cellsGrid.canNotRemoveCellThatDoesNotExists.title')
+    })
+  })
+
+  describe('user cell removal', function () {
+    it('shouldn\'t fail if there are no arguments', function () {
+      expect(() => cellsGrid.killCellsBy())
+        .to.not.throw(AppException)
+    })
+
+    it('should not fail if there are no positions', function () {
+      expect(() => cellsGrid.killCellsBy(new User()))
+        .to.not.throw(AppException)
+    })
+
+    it('should fail if there\'s invalid position', function () {
+      expect(() => cellsGrid.killCellsBy(new User(), {x: -10, y: -10}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+    })
+
+    it('should remove existent cell', function () {
+      cellsGrid.doAddCells({cell: new Cell(), position: {x: 10, y: 10}})
+
+      expect(() => cellsGrid.killCellsBy(new User(), {x: 10, y: 10}))
+        .to.not.throw(AppException)
+
+      let count = 0
+      cellsGrid.forEachCell(cell => count++)
+
+      expect(count).to.be.equal(0)
+    })
+
+    it('should throw exception upon non existent cell removal', function () {
+      expect(() => cellsGrid.killCellsBy(new User(), {x: 16, y: 16}))
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.cellsGrid.canNotRemoveCellThatDoesNotExists.title')
+    })
+  })
+
+  describe('Nearby cells calculation', function () {
+    it('should throw an exception upon bad arguments', function () {
+      let functionToCall = () => cellsGrid.nearbyCellsOfPosition()
+
+      expect(() => cellsGrid.nearbyCellsOfPosition())
+        .to.throw(AppException)
+      expect(() => cellsGrid.nearbyCellsOfPosition(0))
+        .to.throw(AppException)
+      expect(() => cellsGrid.nearbyCellsOfPosition(null, 0))
+        .to.throw(AppException)
+    })
+
+    it('should return an empty array if there are no cells in the grid', function () {
+      expect(cellsGrid.nearbyCellsOfPosition(0, 0))
+        .to.be.lengthOf(0)
+    })
+
+    it('should return an empty array if there aren\'t any elements around a cell', function () {
+      cellsGrid.addCellsBy(new User(), {x: 0, y: 0})
+
+      expect(cellsGrid.nearbyCellsOfPosition(0, 0))
+        .to.be.lengthOf(0)
+    })
+
+    it('should return an empty array if there aren\'t any elements nearby a cell', function () {
+      cellsGrid.addCellsBy(new User(), {x: 16, y: 16})
+
+      expect(cellsGrid.nearbyCellsOfPosition(10, 10))
+        .to.be.lengthOf(0)
+    })
+
+    it('should return an array with all the cells around a particular position with a cell', function () {
+      cellsGrid.addCellsBy(
+        new User(),
+        {x: 10, y: 10},
+        {x: 10, y: 20},
+        {x: 10, y: 30},
+        {x: 20, y: 10},
+        {x: 20, y: 20},
+        {x: 20, y: 30},
+        {x: 30, y: 10},
+        {x: 30, y: 20},
+        {x: 30, y: 30})
+
+      expect(cellsGrid.nearbyCellsOfPosition(20, 20))
+        .to.be.lengthOf(8)
+    })
+
+    it('should return an array with all the cells around a particular position without a cell', function () {
+      cellsGrid.addCellsBy(
+        new User(),
+        {x: 10, y: 10},
+        {x: 10, y: 20},
+        {x: 10, y: 30},
+        {x: 20, y: 10},
+        {x: 20, y: 30},
+        {x: 30, y: 10},
+        {x: 30, y: 20},
+        {x: 30, y: 30})
+
+      expect(cellsGrid.nearbyCellsOfPosition(20, 20))
+        .to.be.lengthOf(8)
+    })
+  })
+
+  describe('Possible dead cells calculation', function () {
+    it('should return an empty array if there are no cells in the grid', function () {
+      expect(cellsGrid.calculatePossibleDeadCellsPositions())
+        .to.be.lengthOf(0)
+    })
+
+    it('cells should die given under population', function () {
+      cellsGrid.addCellsBy(new User(), {x: 10, y: 10})
+
+      expect(cellsGrid.calculatePossibleDeadCellsPositions())
+        .to.be.lengthOf(1)
+
+      cellsGrid.addCellsBy(new User(), {x: 20, y: 20})
+
+      expect(cellsGrid.calculatePossibleDeadCellsPositions())
+        .to.be.lengthOf(2)
+    })
+
+    it('no cell should be suggested for removal', function () {
+      cellsGrid.addCellsBy(new User(),
+          {x: 20, y: 10},
+          {x: 30, y: 10},
+          {x: 10, y: 20},
+          {x: 40, y: 20},
+          {x: 20, y: 30},
+          {x: 30, y: 30})
+
+      expect(cellsGrid.calculatePossibleDeadCellsPositions())
+        .to.be.lengthOf(0)
+    })
+
+    it('cells should die given over population', function () {
+      cellsGrid.addCellsBy(
+        new User(),
+          {x: 10, y: 10},
+          {x: 10, y: 20},
+          {x: 10, y: 30},
+          {x: 20, y: 20},
+          {x: 30, y: 20})
+
+      expect(cellsGrid.calculatePossibleDeadCellsPositions())
+        .to.be.lengthOf(2)
+    })
+  })
+
+  describe('Automatic new cells creation calculation', function () {
+    it('should return an empty array if there are no cells in the grid', function () {
+      expect(cellsGrid.automaticallyCreateNewCells())
+        .to.be.lengthOf(0)
+    })
+
+    it('cells should be created given three neighbours', function () {
+      let user = new User()
+      user.color = 'FFFFFF'
+
+      cellsGrid.addCellsBy(user, {x: 10, y: 10})
+
+      expect(cellsGrid.automaticallyCreateNewCells())
+        .to.be.lengthOf(0)
+
+      cellsGrid.addCellsBy(user, {x: 20, y: 10})
+
+      expect(cellsGrid.automaticallyCreateNewCells())
+        .to.be.lengthOf(0)
+    })
+
+    it('cells should be created given three neighbours', function () {
+      let user = new User()
+      user.color = 'FFFFFF'
+
+      cellsGrid.addCellsBy(user,
+        {x: 10, y: 10},
+        {x: 20, y: 20},
+        {x: 20, y: 10})
+
+      expect(cellsGrid.automaticallyCreateNewCells())
+        .to.be.lengthOf(1)
+    })
+
+    it('cells shouldn\'t be created given over population', function () {
+      let user = new User()
+      user.color = 'FFFFFF'
+
+      cellsGrid.addCellsBy(user,
+        {x: 10, y: 10},
+        {x: 20, y: 20},
+        {x: 20, y: 10},
+        {x: 10, y: 20})
+
+      expect(cellsGrid.automaticallyCreateNewCells())
+        .to.be.lengthOf(0)
     })
   })
 })

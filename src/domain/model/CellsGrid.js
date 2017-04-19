@@ -86,6 +86,10 @@ class CellsGrid {
     return validBoundsReceived
   }
 
+  /**
+  * This function expects normalized position index for both x and y axis, and returns an array
+  * with the normalized positions around that point that have cells on the grid.
+  */
   nearbyPositions (stringX, stringY) {
     let x = parseInt(stringX)
     let y = parseInt(stringY)
@@ -105,11 +109,13 @@ class CellsGrid {
 
     positionsArray = positionsArray.filter(position => this.checkValidPosition(position, true))
 
-    // console.log(`Nearby position of ${x}@${y} calculated: ${JSON.stringify(positionsArray)}`)
-
     return positionsArray
   }
 
+  /**
+  * This function expects normalized position index for both x and y axis, and returns an array
+  * with the cells around that point on the grid.
+  */
   nearbyCellsOfPosition (stringX, stringY) {
     let positionsArray = this.nearbyPositions(stringX, stringY)
 
@@ -124,8 +130,6 @@ class CellsGrid {
         result.push(cell)
       }
     }
-
-    console.log(`Nearby cells of cell (${stringX}@${stringY}) calculated: ${JSON.stringify(result)}`)
 
     return result
   }
@@ -208,22 +212,22 @@ class CellsGrid {
     }
   }
 
-  addCellsBy (user, rawPositions) {
-    if (rawPositions) {
-      let validCells = rawPositions
-        .map(position => this.normalizeGridPosition(position))
-        .map(position => {
-          return { position: position, cell: new ContextUnawareCell(user) }
-        })
+  addCellsBy (user, ...rawPositions) {
+    let validCells = rawPositions
+      .map(position => this.normalizeGridPosition(position))
+      .map(position => {
+        return { position: position, cell: new ContextUnawareCell(user) }
+      })
 
-      if (validCells.length === rawPositions.length && validCells.length > 0) {
-        this.doAddCells(...validCells)
-      }
+    if (validCells.length === rawPositions.length && validCells.length > 0) {
+      this.doAddCells(...validCells)
     }
   }
 
-  killCellBy (user, position) {
-    this.removeCells({position: this.normalizeGridPosition(position)})
+  killCellsBy (user, ...positions) {
+    this.removeCells.apply(this, positions.map(aPosition => {
+      return {position: this.normalizeGridPosition(aPosition)}
+    }))
   }
 
   automaticallyCreateNewCells () {
@@ -237,18 +241,14 @@ class CellsGrid {
     this.forEachCell((cell, x, y) => {
       let nearPositions = this.nearbyPositions(x, y)
         .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
-
-      for (let i = 0; i < nearPositions.length; i++) {
-        let position = nearPositions[i]
-
-        if (!(position.x === parseInt(x) && position.y === parseInt(y))) {
+        .filter(position => !(position.x === parseInt(x) && position.y === parseInt(y)))
+        .forEach(position => {
           if (!newCellsMapping[position.x]) {
             newCellsMapping[position.x] = {}
           }
 
           newCellsMapping[position.x][position.y] = position
-        }
-      }
+        })
     })
 
     for (let x in newCellsMapping) {

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "node --inspect app.js",
     "app": "node app.js",
+    "lint_test": "eslint-mocha --eslint-args='--color --ext .js test' --mocha-args='--recursive test'",
     "lint": "eslint --color --ext .js src",
     "check-coverage": "istanbul check-coverage ./coverage/coverage.json",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./test/unit/spec --recursive",
@@ -18,6 +19,7 @@
     "eslint": "^3.18.0",
     "eslint-config-standard": "^7.1.0",
     "eslint-friendly-formatter": "^2.0.7",
+    "eslint-mocha": "^0.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^2.1.1",
     "istanbul": "^0.4.5",
