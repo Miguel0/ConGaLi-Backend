@@ -538,4 +538,81 @@ describe('CellsGrid', function () {
         .to.be.lengthOf(0)
     })
   })
+
+  describe('Automatic new generation calculation', function () {
+    it('should return an empty array if there are no cells in the grid', function () {
+
+      cellsGrid.stablishCellsNewGeneration()
+
+      let count = 0
+      cellsGrid.forEachCell(cell => count++)
+
+      expect(count).to.be.equal(0)
+    })
+
+    it('cells should not be left alive given under population', function () {
+      let user = new User()
+      user.color = 'FFFFFF'
+
+      cellsGrid.addCellsBy(user, {x: 10, y: 10})
+
+      cellsGrid.stablishCellsNewGeneration()
+
+      let count = 0
+      cellsGrid.forEachCell(cell => count++)
+
+      expect(count).to.be.equal(0)
+
+      cellsGrid.addCellsBy(user, {x: 10, y: 10}, {x: 20, y: 20})
+
+      cellsGrid.stablishCellsNewGeneration()
+
+      count = 0
+      cellsGrid.forEachCell(cell => count++)
+
+      expect(count).to.be.equal(0)
+    })
+
+    it('cells should be created given three neighbours', function () {
+      let user = new User()
+      user.color = 'FFFFFF'
+
+      cellsGrid.addCellsBy(user,
+        {x: 10, y: 10},
+        {x: 10, y: 20},
+        {x: 10, y: 30})
+
+      cellsGrid.stablishCellsNewGeneration()
+      
+      let count = 0
+      cellsGrid.forEachCell(cell => count++)
+
+      expect(count).to.be.equal(3)
+
+      cellsGrid.stablishCellsNewGeneration()
+      
+      count = 0
+      cellsGrid.forEachCell(cell => count++)
+
+      expect(count).to.be.equal(3)
+    })
+
+    it('cells shouldn\'t be created given over population', function () {
+      let user = new User()
+      user.color = 'FFFFFF'
+
+      cellsGrid.addCellsBy(user,
+        {x: 10, y: 10},
+        {x: 10, y: 20},
+        {x: 10, y: 30},
+        {x: 20, y: 20})
+
+      cellsGrid.stablishCellsNewGeneration()
+      
+      let count = 0
+      cellsGrid.forEachCell(cell => count++)
+
+      expect(count).to.be.equal(7)
+    })
+  })
 })

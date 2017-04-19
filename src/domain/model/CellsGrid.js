@@ -71,16 +71,17 @@ class CellsGrid {
     validBoundsReceived = validBoundsReceived && (position.x <= this.maxWidth && position.x >= 0) && (position.y <= this.maxHeight && position.y >= 0)
 
     if (!validBoundsReceived && !avoidThrowingException) {
-      let exception = new AppException(
-        'error.cellsGrid.cellAtInvalidPosition.title',
-        'error.cellsGrid.cellAtInvalidPosition.body'
-      )
+      let errorArguments = {invalidPosition: null}
 
       if (position) {
-        exception.arguments = { invalidPosition: { x: position.x, y: position.y } }
+        errorArguments = { invalidPosition: { x: position.x, y: position.y }}
       }
 
-      throw exception
+      throw new AppException(
+        'error.cellsGrid.cellAtInvalidPosition.title',
+        'error.cellsGrid.cellAtInvalidPosition.body',
+        errorArguments
+      )
     }
 
     return validBoundsReceived
@@ -151,7 +152,7 @@ class CellsGrid {
       let nearCellsCount = this.nearbyCellsOfPosition(x, y).length
 
       if (nearCellsCount > 3 || nearCellsCount < 2) {
-        possibleDeadCells.push({ x: x, y: y })
+        possibleDeadCells.push({position: { x: x, y: y }})
       }
     })
 
@@ -196,7 +197,7 @@ class CellsGrid {
       .filter(cellConfig => !this.cells[cellConfig.position.x] || !this.cells[cellConfig.position.x][cellConfig.position.y])
 
     if (validCellsConfig.length === cellsConfig.length) {
-      cellsConfig.forEach(cellConfig => {
+      validCellsConfig.forEach(cellConfig => {
         if (!this.cells[cellConfig.position.x]) {
           this.cells[cellConfig.position.x] = {}
         }
@@ -274,9 +275,9 @@ class CellsGrid {
     let deadCellPositions = this.calculatePossibleDeadCellsPositions()
     console.log(`Cells about to die: ${JSON.stringify(deadCellPositions)}`)
 
-    deadCellPositions.forEach(deadCellPosition => this.removeCell(deadCellPosition))
+    this.removeCells.apply(this, deadCellPositions)
 
-    this.this.doAddCells(newCells)
+    this.doAddCells.apply(this, newCells)
   }
 
   toJSONObject () {
