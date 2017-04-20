@@ -99,6 +99,13 @@ describe('User', function () {
         .to.throw(AppException)
         .and.to.have.property('titleKey')
         .and.to.be.equal('error.user.integrity.authData.title')
+
+      user.password = new Object()
+
+      expect(() => user.checkIntegrity())
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.user.integrity.authData.title')
     })
 
     it('missing or wrong type color attribute', function () {
@@ -110,12 +117,28 @@ describe('User', function () {
         .and.to.have.property('titleKey')
         .and.to.be.equal('error.user.integrity.color.title')
 
-      user.color = 'asdf'
+      user.color = 'easdf'
 
       expect(() => user.checkIntegrity())
         .to.throw(AppException)
         .and.to.have.property('titleKey')
         .and.to.be.equal('error.user.integrity.color.title')
+
+      user.color = new Object()
+
+      expect(() => user.checkIntegrity())
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.to.be.equal('error.user.integrity.color.title')
+    })
+
+    it('validate without exceptions', function () {
+      user.name = 'asdf'
+      user.password = 'asdf'
+      user.color = 'FFFFFF'
+
+      expect(() => user.checkIntegrity())
+        .to.not.throw(AppException)
     })
   })
 })
