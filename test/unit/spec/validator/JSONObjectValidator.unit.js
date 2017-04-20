@@ -125,14 +125,37 @@ describe('JSON Object Validator', function () {
       expect(() => validator.validate()).to.throw(AppException)
     })
 
-    it('should validate with default configuration schema', function () {
+    it('should throw an exception with default configuration schema', function () {
+      validator.validationSchema = {}
+      validator.objectToValidate = {}
+      expect(() => validator.validate())
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.be.equal('Validation Error')
+    })
+
+    it('should throw an exception with non existent attribute on the object', function () {
       validator.validationSchema = { validAttribute: String }
 
       validator.objectToValidate = {}
-      // expect(() => validator.validate()).to.throw(AppException)
+      expect(() => validator.validate())
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.be.equal('Validation Error')
 
       validator.objectToValidate = { attribute: 'value' }
-      // expect(() => validator.validate()).to.throw(AppException).and.to.be.deep.equal({e:null})
+      expect(() => validator.validate())
+        .to.throw(AppException)
+        .and.to.have.property('titleKey')
+        .and.be.equal('Validation Error')
+    })
+
+    it('should validate without throw an exception', function () {
+      validator.validationSchema = { validAttribute: String }
+
+      validator.objectToValidate = { validAttribute: 'value' }
+      expect(() => validator.validate())
+        .to.not.throw(AppException)
     })
   })
 })

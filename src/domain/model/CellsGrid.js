@@ -74,7 +74,7 @@ class CellsGrid {
       let errorArguments = {invalidPosition: null}
 
       if (position) {
-        errorArguments = { invalidPosition: { x: position.x, y: position.y }}
+        errorArguments = { invalidPosition: { x: position.x, y: position.y } }
       }
 
       throw new AppException(
@@ -240,7 +240,7 @@ class CellsGrid {
 
     // getting the cells that are around the already existing cells
     this.forEachCell((cell, x, y) => {
-      let nearPositions = this.nearbyPositions(x, y)
+      this.nearbyPositions(x, y)
         .filter(position => !this.cells[position.x] || !this.cells[position.x][position.y])
         .filter(position => !(position.x === parseInt(x) && position.y === parseInt(y)))
         .forEach(position => {
