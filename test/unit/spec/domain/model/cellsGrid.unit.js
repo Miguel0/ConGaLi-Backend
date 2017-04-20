@@ -1,11 +1,11 @@
 const chai = require('chai')
 const expect = chai.expect
 
-const TestUtils = require('../../helpers/TestUtils')
-const AppException = require('../../../../src/exception/AppException')
-const User = require('../../../../src/domain/model/User')
-const CellsGrid = require('../../../../src/domain/model/CellsGrid')
-const Cell = require('../../../../src/domain/model/ContextUnawareCell')
+const TestUtils = require('../../../helpers/TestUtils')
+const AppException = require('../../../../../src/exception/AppException')
+const User = require('../../../../../src/domain/model/User')
+const CellsGrid = require('../../../../../src/domain/model/CellsGrid')
+const Cell = require('../../../../../src/domain/model/ContextUnawareCell')
 
 describe('CellsGrid', function () {
   let cellsGrid = null
@@ -20,7 +20,7 @@ describe('CellsGrid', function () {
 
   it('should be able to be created', function () {
     expect(() => cellsGrid = new CellsGrid()).to.not.throw(Error)
-    
+
     expect(cellsGrid).to.not.be.null
   })
 
@@ -294,9 +294,9 @@ describe('CellsGrid', function () {
 
     it('should iterate single element cells holder', function () {
       let count = 0
-      
+
       cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}}, {cell: new Cell(), position: {x: 0, y: 1}})
-      
+
       cellsGrid.forEachCell(cell => count++)
       expect(count).to.be.equal(2)
     })
@@ -583,14 +583,14 @@ describe('CellsGrid', function () {
         {x: 10, y: 30})
 
       cellsGrid.stablishCellsNewGeneration()
-      
+
       let count = 0
       cellsGrid.forEachCell(cell => count++)
 
       expect(count).to.be.equal(3)
 
       cellsGrid.stablishCellsNewGeneration()
-      
+
       count = 0
       cellsGrid.forEachCell(cell => count++)
 
@@ -608,7 +608,7 @@ describe('CellsGrid', function () {
         {x: 20, y: 20})
 
       cellsGrid.stablishCellsNewGeneration()
-      
+
       let count = 0
       cellsGrid.forEachCell(cell => count++)
 

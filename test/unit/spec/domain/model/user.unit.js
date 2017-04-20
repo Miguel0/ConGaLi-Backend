@@ -1,14 +1,14 @@
 const chai = require('chai')
 const expect = chai.expect
 
-const User = require('../../../../src/domain/model/User')
+const User = require('../../../../../src/domain/model/User')
 
 describe('User', function () {
   let user = null
 
   it('should be able to be created', function () {
     expect(() => user = new User()).to.not.throw(Error)
-    
+
     expect(user).to.not.be.null
   })
 
@@ -25,7 +25,7 @@ describe('User', function () {
 
     it('should return a proper JSON representation', function () {
       let jsonObject = user.toJSONObject()
-      
+
       expect(jsonObject).to.have.property('id').and.to.be.null
       expect(jsonObject).to.have.property('name').and.to.be.a('string')
       expect(jsonObject).to.have.property('createdOn').and.not.be.null
@@ -46,7 +46,7 @@ describe('User', function () {
     it('should return a proper JSON representation', function () {
       user.createdOn = new Date()
       user.id = 'asdf'
-      
+
       let jsonObject = user.toJSONObject()
 
       expect(jsonObject).to.have.property('name').and.to.be.a('string')

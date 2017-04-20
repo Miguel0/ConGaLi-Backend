@@ -1,14 +1,14 @@
 const chai = require('chai')
 const expect = chai.expect
-const CellsTemplateDefinition = require('../../../../src/domain/model/CellsTemplateDefinition')
-const TemplateGroup = require('../../../../src/domain/model/TemplateGroup')
+const CellsTemplateDefinition = require('../../../../../src/domain/model/CellsTemplateDefinition')
+const TemplateGroup = require('../../../../../src/domain/model/TemplateGroup')
 
 describe('TemplateGroup', function () {
   let templateGroup = null
 
   it('should be able to be created', function () {
     expect(() => templateGroup = new TemplateGroup()).to.not.throw(Error)
-    
+
     expect(templateGroup).to.not.be.null
   })
 
@@ -23,7 +23,7 @@ describe('TemplateGroup', function () {
 
     it('should return a proper JSON representation', function () {
       let jsonObject = templateGroup.toJSONObject()
-      
+
       expect(jsonObject).to.have.property('name').and.to.be.a('string')
       expect(jsonObject).to.have.property('templates').and.to.be.instanceof(Array).and.lengthOf(0)
       expect(Object.keys(jsonObject)).lengthOf(2)

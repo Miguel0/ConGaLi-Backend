@@ -1,14 +1,14 @@
 const chai = require('chai')
 const expect = chai.expect
 
-const CellsTemplateDefinition = require('../../../../src/domain/model/CellsTemplateDefinition')
+const CellsTemplateDefinition = require('../../../../../src/domain/model/CellsTemplateDefinition')
 
 describe('CellsTemplateDefinition', function () {
   let cellsTemplateDefinition = null
 
   it('should be able to be created', function () {
     expect(() => cellsTemplateDefinition = new CellsTemplateDefinition()).to.not.throw(Error)
-    
+
     expect(cellsTemplateDefinition).to.not.be.null
   })
 
@@ -26,7 +26,7 @@ describe('CellsTemplateDefinition', function () {
 
     it('should return a proper JSON representation without details', function () {
       let jsonObject = cellsTemplateDefinition.toJSONObject()
-      
+
       expect(jsonObject).to.have.property('name').and.to.be.equal('')
       expect(jsonObject).to.have.property('imgSrc').and.to.be.equal('')
       expect(jsonObject).to.have.property('attribution').and.to.be.equal('')
@@ -39,7 +39,7 @@ describe('CellsTemplateDefinition', function () {
       cellsTemplateDefinition.details = 'asdf'
 
       let jsonObject = cellsTemplateDefinition.toJSONObject()
-      
+
       expect(jsonObject).to.have.property('name').and.to.be.equal('')
       expect(jsonObject).to.have.property('imgSrc').and.to.be.equal('')
       expect(jsonObject).to.have.property('attribution').and.to.be.equal('')
