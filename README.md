@@ -16,21 +16,25 @@ This particular implementation creates a Multiplayer app version of Game of Life
 - **When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).**
 
 ## TODO list
-- [x] **\(Originally requested)** The game should tick automatically at a predefined interval, at say, 1 step per second.
-- [ ] **\(Originally requested)** This server allows multiple clients to share the same, synchronized world view.
-- [x] **\(Originally requested)** Each client is assigned a random color on initialization.
-- [x] **\(Originally requested)** Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (You can use any mechanism to achieve this, such as polling, comet or WebSocket).
-- [x] **\(Originally requested)** When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).
-- [x] **\(Requirement enhancement)** _Give the creator of the Grid Cell to config the tick interval upon creation._
-- [ ] **\(Requirement enhancement)** _Implement some kind of users authentication._
-- [ ] **\(Requirement enhancement)** _Implement some kind of storage for users data._
-- [ ] **\(Requirement enhancement)** _Implement an acceptable Application Error handling mechanism Across the App._
-- [ ] **\(Requirement enhancement)** _Implement an acceptable logging mechanism across the App._
-- [ ] **\(Requirement enhancement)** _Implement test for Models._
-- [ ] **\(Requirement enhancement)** _Implement test for WebSockets endpoints._
-- [ ] **\(Requirement enhancement)** _Get to a coverage of at least 70%._
-- [ ] **\(Requirement enhancement)** _Add more automates from places like [Eric Weisstein's treasure trove](http://www.ericweisstein.com/encyclopedias/life/)
+### Originally requested
+- [x] The game should tick automatically at a predefined interval, at say, 1 step per second.
+- [x] This server allows multiple clients to share the same, synchronized world view.
+- [x] Each client is assigned a random color on initialization.
+- [x] Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (Using any mechanism to achieve this, such as polling, comet or WebSocket).
+- [x] When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbors (that revive it).
+### Requirement enhancement
+- [x]  _Give the creator of the Grid Cell to config the tick interval upon creation._
+- [x]  _Implement some kind of users authentication._
+- [ ]  _Implement some kind of storage for users data._
+- [ ]  _Implement an acceptable Application Error handling mechanism Across the App._
+- [ ]  _Implement an acceptable logging mechanism across the App._
+- [x]  _Implement unit tests for Models._
+- [ ]  _Implement test for WebSockets endpoints._
+- [ ]  _Get to a coverage of at least 70%._
+- [ ]  _Add more automates from places like [Eric Weisstein's treasure trove](http://www.ericweisstein.com/encyclopedias/life/)__
 
+## Architectural insight
+  
 ## Build Setup
 
 ``` bash
