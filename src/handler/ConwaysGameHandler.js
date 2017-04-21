@@ -5,6 +5,7 @@ const logger = require('log4js').getLogger('Conway\'s Game Handler')
 
 class ConwaysGameHandlerConfigurator {
   constructor (io, businessLogicManagersHolder) {
+    this.createdOn = new Date()
     this.io = io
     this.gameTickHandler = {}
     this.exceptionCatcher = new ExceptionCatcher(this.sendErrorToClient.bind(this))
