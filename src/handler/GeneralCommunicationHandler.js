@@ -1,4 +1,5 @@
 const logger = require('log4js').getLogger('General Communication Handler')
+const ExceptionCatcher = require('../exception/ExceptionCatcher')
 
 class GeneralCommunicationHandlerConfigurator {
   constructor (io, businessLogicManagersHolder) {
@@ -13,9 +14,11 @@ class GeneralCommunicationHandlerConfigurator {
   configureSocketUponConnection (socket) {
     logger.info(`Starting configuration of socket (#${socket.id})...`)
 
+    let exceptionCatcher = new ExceptionCatcher( errorObject => socket.emit('appException', errorObject))
+
     socket.on(
       'getAvailableGames',
-      data => socket.emit('receiveAvailableGames', this.retrieveAvailableGamesDescription(data.user.id)))
+      data => exceptionCatcher.runProtected(() => socket.emit('receiveAvailableGames', this.retrieveAvailableGamesDescription(data.user.id))))
 
     logger.info(`Configuration of socket (#${socket.id}) finished`)
   }

@@ -1,4 +1,5 @@
 const logger = require('log4js').getLogger('Connection Handler')
+const ExceptionCatcher = require('../exception/ExceptionCatcher')
 const config = require('../../config/config.dev')
 
 class ConnectionHandlerConfigurator {
@@ -47,7 +48,10 @@ class ConnectionHandlerConfigurator {
   }
 
   configureSocketUponConnection (socket, io) {
-    socket.on('disconnect', close => this.onDisconnection(socket, close))
+
+    let exceptionCatcher = new ExceptionCatcher( errorObject => socket.emit('appException', errorObject))
+
+    socket.on('disconnect', close => exceptionCatcher.runProtected(() => this.onDisconnection(socket, close)))
 
     let socketConnectionData = this.socketsConnected[this.getSocketConnectionIdentifier(socket)]
     let actualDate = new Date()

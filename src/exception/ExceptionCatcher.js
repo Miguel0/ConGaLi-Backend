@@ -3,7 +3,7 @@ const logger = require('log4js').getLogger('ExceptionCatcher')
 
 class ExceptionCatcher {
   constructor (errorBroadcastFunction) {
-    this.errorBroadcastFunction = errorBroadcastFunction
+    this.broadcastFunction = errorBroadcastFunction
   }
 
   dealWithException (e) {
@@ -20,9 +20,17 @@ class ExceptionCatcher {
       logger.error('Exception captured stacktrace:', e.stack)
     }
 
-    logger.error(JSON.stringify(exception))
+    logger.error('About to be thrown}:', exception)
 
-    this.broadcastFunction.apply(this.broadcastFunction, exception)
+    this.broadcastFunction.call(this.broadcastFunction, exception)
+  }
+
+  runProtected (aFunction) {
+    try {
+      aFunction.apply()
+    } catch (e) {
+      this.dealWithException(e)
+    }
   }
 }
 

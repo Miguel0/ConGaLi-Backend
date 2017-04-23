@@ -33,9 +33,8 @@ describe('User', function () {
       expect(jsonObject).to.have.property('id').and.to.be.null
       expect(jsonObject).to.have.property('name').and.to.be.a('string')
       expect(jsonObject).to.have.property('createdOn').and.not.be.null
-      expect(jsonObject).to.have.property('color').and.be.null
 
-      expect(Object.keys(jsonObject)).lengthOf(4)
+      expect(Object.keys(jsonObject)).lengthOf(3)
     })
   })
 
@@ -108,34 +107,9 @@ describe('User', function () {
         .and.to.be.equal('error.user.integrity.authData.title')
     })
 
-    it('missing or wrong type color attribute', function () {
-      user.name = 'asdf'
-      user.password = 'asdf'
-
-      expect(() => user.checkIntegrity())
-        .to.throw(AppException)
-        .and.to.have.property('titleKey')
-        .and.to.be.equal('error.user.integrity.color.title')
-
-      user.color = 'easdf'
-
-      expect(() => user.checkIntegrity())
-        .to.throw(AppException)
-        .and.to.have.property('titleKey')
-        .and.to.be.equal('error.user.integrity.color.title')
-
-      user.color = new Object()
-
-      expect(() => user.checkIntegrity())
-        .to.throw(AppException)
-        .and.to.have.property('titleKey')
-        .and.to.be.equal('error.user.integrity.color.title')
-    })
-
     it('validate without exceptions', function () {
       user.name = 'asdf'
       user.password = 'asdf'
-      user.color = 'FFFFFF'
 
       expect(() => user.checkIntegrity())
         .to.not.throw(AppException)

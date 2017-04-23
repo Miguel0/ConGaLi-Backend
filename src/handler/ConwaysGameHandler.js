@@ -18,15 +18,19 @@ class ConwaysGameHandlerConfigurator {
   }
 
   configureSocketUponConnection (socket, io) {
+
+    let exceptionCatcher = new ExceptionCatcher( errorObject => socket.emit('appException', errorObject))
+    let self = this
+
     socket
-      .on('createGame', data => this.createGame(socket, data))
-      .on('startGame', data => this.startGame(socket, data))
-      .on('getTemplateCellsOptions', () => this.sendTemplateCellsOptionsToSocket(socket))
-      .on('forceEnd', () => this.forceStopGame(socket))
-      .on('createCell', data => this.createCell(socket, data))
-      .on('createTemplate', data => this.createTemplate(socket, data))
-      .on('killCell', data => this.killCell(socket, data))
-      .on('joinGame', data => this.joinGame(socket, data))
+      .on('createGame', data => exceptionCatcher.runProtected(() => self.createGame(socket, data)))
+      .on('startGame', data => exceptionCatcher.runProtected(() => self.startGame(socket, data)))
+      .on('getTemplateCellsOptions', () => exceptionCatcher.runProtected(() => self.sendTemplateCellsOptionsToSocket(socket)))
+      .on('forceEnd', () => exceptionCatcher.runProtected(() => self.forceStopGame(socket)))
+      .on('createCell', data => exceptionCatcher.runProtected(() => self.createCell(socket, data)))
+      .on('createTemplate', data => exceptionCatcher.runProtected(() => self.createTemplate(socket, data)))
+      .on('killCell', data => exceptionCatcher.runProtected(() => self.killCell(socket, data)))
+      .on('joinGame', data => exceptionCatcher.runProtected(() => self.joinGame(socket, data)))
   }
 
   getGameChannel (game) {

@@ -1,5 +1,6 @@
 const logger = require('log4js').getLogger('User Session Handler Configurator')
 const AppException = require('../exception/AppException')
+const ExceptionCatcher = require('../exception/ExceptionCatcher')
 
 class UserHandlerConfigurator {
   constructor (io, BusinessLogicManagersHolder) {
@@ -15,17 +16,19 @@ class UserHandlerConfigurator {
   configureSocketUponConnection (socket, io) {
     logger.info(`Starting configuration of socket (#${socket.id})...`)
 
+    let exceptionCatcher = new ExceptionCatcher( errorObject => socket.emit('appException', errorObject))
+
     socket.on(
       'signUp',
-      data => this.signUp(data, socket))
+      data => exceptionCatcher.runProtected(() => this.signUp(data, socket)))
 
     socket.on(
       'logIn',
-      data => this.logIn(data, socket))
+      data => exceptionCatcher.runProtected(() => this.logIn(data, socket)))
 
     socket.on(
       'logOut',
-      data => this.logOut(data, socket))
+      data => exceptionCatcher.runProtected(() => this.logOut(data, socket)))
 
     // TODO add a disconnection handler
     logger.info(`Configuration of socket (#${socket.id}) finished`)

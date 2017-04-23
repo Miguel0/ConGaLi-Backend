@@ -12,7 +12,6 @@ class User {
     this.name = ''
     this.email = ''
     this.password = ''
-    this.color = null
   }
 
   checkIntegrity () {
@@ -39,14 +38,6 @@ class User {
         { user: this.toJSONObject() }
       )
     }
-
-    if (!this.color || !(typeof this.color === 'string' || this.color instanceof String) || !this.color.match(/^[a-f\d]{6}$/gi)) {
-      throw new AppException(
-        'error.user.integrity.color.title',
-        'error.user.integrity.color.body',
-        { user: this.toJSONObject() }
-      )
-    }
   }
 
   toJSONObject () {
@@ -55,7 +46,6 @@ class User {
     json.id = this.id
     json.name = this.name
     json.createdOn = this.createdOn
-    json.color = this.color
 
     return json
   }
