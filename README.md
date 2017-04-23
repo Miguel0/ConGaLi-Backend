@@ -12,7 +12,7 @@ This particular implementation creates a Multiplayer app version of Game of Life
 - **The game should tick automatically at a predefined interval, at say, 1 step per second.**
 - **This server allows multiple clients to share the same, synchronized world view.**
 - **Each client is assigned a random color on initialization.**
-- **Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (You can use any mechanism to achieve this, such as polling, comet or WebSocket).**
+- **Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (Using any mechanism to achieve this, such as polling, comet or WebSocket).**
 - **When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).**
 
 ## TODO list
@@ -29,17 +29,21 @@ This particular implementation creates a Multiplayer app version of Game of Life
 - [ ]  _Implement an acceptable Application Error handling mechanism Across the App._
 - [ ]  _Implement an acceptable logging mechanism across the App._
 - [x]  _Implement unit tests for Models._
-- [ ]  _Implement test for WebSockets endpoints._
+- [ ]  _Implement unit test for WebSockets endpoints._
+- [ ]  _Implement integration tests for the whole backend services._
 - [ ]  _Get to a coverage of at least 70%._
 - [ ]  _Add more automates from places like [Eric Weisstein's treasure trove](http://www.ericweisstein.com/encyclopedias/life/)__
 
 ## Architectural insight
-  
+
 ## Build Setup
 
 ``` bash
 # install dependencies
 npm install
+
+# serve at localhost:3000, opens port for debugging process.
+npm run dev|
 
 # serve at localhost:3000
 npm run app
