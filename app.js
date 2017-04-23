@@ -1,7 +1,7 @@
 const server = require('http').createServer()
 const io = require('socket.io')(server)
 const process = require('process')
-const config = require('./config/config.dev.js')
+const config = require('./config/config.dev')
 const logger = require('log4js').getLogger('Main App')
 
 logger.info('Starting App...')
