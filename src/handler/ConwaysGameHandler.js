@@ -25,8 +25,8 @@ class ConwaysGameHandlerConfigurator {
     socket
       .on('createGame', data => exceptionCatcher.runProtected(() => self.createGame(socket, data)))
       .on('startGame', data => exceptionCatcher.runProtected(() => self.startGame(socket, data)))
-      .on('getTemplateCellsOptions', () => exceptionCatcher.runProtected(() => self.sendTemplateCellsOptionsToSocket(socket)))
-      .on('forceEnd', () => exceptionCatcher.runProtected(() => self.forceStopGame(socket)))
+      .on('getTemplateCellsOptions', data => exceptionCatcher.runProtected(() => self.sendTemplateCellsOptionsToSocket(socket, data)))
+      .on('forceEnd', data => exceptionCatcher.runProtected(() => self.forceStopGame(socket, data)))
       .on('createCell', data => exceptionCatcher.runProtected(() => self.createCell(socket, data)))
       .on('createTemplate', data => exceptionCatcher.runProtected(() => self.createTemplate(socket, data)))
       .on('killCell', data => exceptionCatcher.runProtected(() => self.killCell(socket, data)))
@@ -141,10 +141,11 @@ class ConwaysGameHandlerConfigurator {
       .catch(this.exceptionCatcher.dealWithException.bind(this.exceptionCatcher))
   }
 
-  sendTemplateCellsOptionsToSocket (game) {
-    this.getGameChannel(game).emit(
+  sendTemplateCellsOptionsToSocket (socket, data, game) {
+    let gameRetrieved = game || this.conwaysGameBusinessLogicManager.getGameForUserId(data.game.id, data.game.ownerId)
+    socket.emit(
       'setTemplateCellsOptions',
-      game.getPresetConfigurations())
+      gameRetrieved.getPresetConfigurations())
   }
 
   createGame (socket, data) {
@@ -176,7 +177,7 @@ class ConwaysGameHandlerConfigurator {
         clientEventSender.call(this, socket, game)
 
         this.sendGridRefreshToClient(game)
-        this.sendTemplateCellsOptionsToSocket(game)
+        this.sendTemplateCellsOptionsToSocket(socket, null, game)
       }
     )
   }
