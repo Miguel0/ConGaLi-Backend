@@ -21,7 +21,8 @@ This particular implementation creates a Multiplayer app version of Game of Life
 - **Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (Using any mechanism to achieve this, such as polling, comet or WebSocket).**
 - **When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).**
 
-## TODO list
+
+##  &nbsp;<img src="../../wiki/images/todo_list.png" alt="TODO" width="22px"> TODO list
 
 This are the things next on our TODO list:
 
@@ -38,7 +39,7 @@ This are the things next on our TODO list:
 
 **To find out more, please check out the [Website] and the [Wiki].**
 
-## ConGaLi technology 101
+##  &nbsp;<img src="../../wiki/images/training.png" alt="TODO" width="22px"> ConGaLi technology 101
 
 The repository structure follows the conceptual architecture of ConGaLi, which consists of loosely-coupled sub-systems connected:
 
@@ -50,25 +51,19 @@ To briefly explain these sub-systems:
 
 **For more information on the current ConGaLi Architecture, please see the [Technical Architecture Overview]**.
 
-## Quickstart
+## &nbsp;<img src="../../wiki/images/running_rabbit.png" alt="TODO" width="22px"> Quickstart
 
 You have to **[install Git]** and **[install Docker]** if you haven't already:
 
 Follow the steps wrote here: https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 
-## Find out more
+##  &nbsp;<img src="../../wiki/images/search.png" alt="TODO" width="22px"> Find out more
 
 | **[Technical Documentation]**     | **[Setup Guide]**     | **[Roadmap]**           | **[Contributing]**           |
 |-------------------------------------|-------------------------------|-----------------------------------|---------------------------------------------|
 | ![techdocs-image] | ![setup-image] | ![roadmap-image] | ![contributing-image] |
 
-## Contributing
-
-We're committed to a loosely-coupled architecture for ConGaLi and would love to get your contributions within each of the six sub-systems.
-
-If you would like help implementing a new feature, check out our **[Contributing]** page on the wiki!
-
-## Questions or need help?
+##  &nbsp;<img src="../../wiki/images/help.png" alt="TODO" width="22px"> Questions or need help?
 
 Check out the **[Talk to us]** page on our wiki.
 
