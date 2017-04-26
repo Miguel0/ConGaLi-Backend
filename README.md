@@ -1,8 +1,8 @@
-[![Github Releases](https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=flat-square)](https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket)
+[![Github Releases](https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=flat-square)](../..)
 
 # ConGali Backend
 
-ConGaLi is an implementation of Conway's Game of Life [Conway’s Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) is a famous simulation that demonstrates cellular automaton.
+ConGaLi is an implementation of Conway's Game of Life [Conway’s Game of Life] is a famous simulation that demonstrates cellular automaton.
 
 This particular implementation is only the backend for the WebSocket servers that will allow the game to run on it's initial stage (once the system begun to be distributed it will take a group of services to do that).
 
@@ -34,73 +34,64 @@ This are the things next on our TODO list:
 - [ ]  _Implement unit test for WebSockets endpoints._
 - [ ]  _Implement integration tests for the whole backend services._
 - [ ]  _Get to a coverage of at least 70%._
-- [ ]  _Add more automates taken from places like [Eric Weisstein's treasure trove](http://www.ericweisstein.com/encyclopedias/life/)_
+- [ ]  _Add more automates taken from places like [Eric Weisstein's treasure trove]_
 
-**To find out more, please check out the [ConGaLi website] [website] and the [ConGaLi wiki] [wiki].**
+**To find out more, please check out the [Website] and the [Wiki].**
 
 ## ConGaLi technology 101
 
 The repository structure follows the conceptual architecture of ConGaLi, which consists of loosely-coupled sub-systems connected:
 
-![architecture] [architecture-image]
+![architecture-image]
 
 To briefly explain these sub-systems:
 * **UI Web servers** This will serve all the specific implementation for interacting with this backend.
 * **WebSocket backend** This will serve al the actual services that will execute the game's logic. Although, this will change in a not so distant future.
 
-**For more information on the current ConGaLi Architecture, please see the [Technical Architecture Overview] [architecture-doc]**.
+**For more information on the current ConGaLi Architecture, please see the [Technical Architecture Overview]**.
 
 ## Quickstart
 
-Assuming git and **[Docker] [docker-install]** installed:
+You have to **[install Git]** and **[install Docker]** if you haven't already:
 
-See https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+Follow the steps wrote here: https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 
 ## Find out more
 
-| **[Technical Docs] [techdocs]**     | **[Setup Guide] [setup]**     | **[Roadmap] [roadmap]**           | **[Contributing] [contributing]**           |
+| **[Technical Documentation]**     | **[Setup Guide]**     | **[Roadmap]**           | **[Contributing]**           |
 |-------------------------------------|-------------------------------|-----------------------------------|---------------------------------------------|
-| [![i1] [techdocs-image]] [techdocs] | [![i2] [setup-image]] [setup] | [![i3] [roadmap-image]] [roadmap] | [![i4] [contributing-image]] [contributing] |
+| ![techdocs-image] | ![setup-image] | ![roadmap-image] | ![contributing-image] |
 
 ## Contributing
 
 We're committed to a loosely-coupled architecture for ConGaLi and would love to get your contributions within each of the six sub-systems.
 
-If you would like help implementing a new feature, check out our **[Contributing] [contributing]** page on the wiki!
+If you would like help implementing a new feature, check out our **[Contributing]** page on the wiki!
 
 ## Questions or need help?
 
-Check out the **[Talk to us] [talk-to-us]** page on our wiki.
+Check out the **[Talk to us]** page on our wiki.
 
-## Copyright and license
-
-ConGaLi is copyright 2017-2017 ConGaLi Ltd.
-
-Licensed under the **[MIT] [license]** (the "License");
-you may not use this software except in compliance with the License.
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 
 [release-image]: https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=flat-square
-[releases]: https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/releases
+[releases]: ./releases
 
-[license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
-[license]: http://www.apache.org/licenses/LICENSE-2.0
+[Website]: -
+[Wiki]: ./wiki
+[Talk to us]: ./wiki/Talk-to-us
+[Contributing]: ./wiki/Contributing
+[Setup Guide]: ./Setting-up-ConGaLi
+[Technical Architecture Overview]: ./wiki//Technical-Architecture-Overview
+[Technical Documentation]: ./wiki/ConGaLi-Technical-documentation
+[Roadmap]: ./wiki/Product-roadmap
 
-[website]: -
-[wiki]: https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/wiki
-[talk-to-us]: https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/wiki/Talk-to-us
-[contributing]: https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/wiki/Contributing
-[setup]: https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/wiki/Setting-up-ConGaLi
-[techdocs]: https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/wiki/ConGaLi-technical-documentation
-[roadmap]: https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/wiki/Product-roadmap
+[Conway’s Game of Life]: https://en.wikipedia.org/wiki/Conway's_Game_of_Life
+[Eric Weisstein's treasure trove]: http://www.ericweisstein.com/encyclopedias/life/
+[install Git]: https://git-scm.com/downloads
+[install Docker]: https://docs.docker.com/engine/installation/
 
-[techdocs-image]: https://d3i6fms1cm1j0i.cloudfront.net/github/images/techdocs.png
-[setup-image]: https://d3i6fms1cm1j0i.cloudfront.net/github/images/setup.png
-[roadmap-image]: https://d3i6fms1cm1j0i.cloudfront.net/github/images/roadmap.png
-[contributing-image]: https://d3i6fms1cm1j0i.cloudfront.net/github/images/contributing.png
+[techdocs-image]: ../../wiki/images/knowledge_sharing.png
+[setup-image]: ../../wiki/images/support.png
+[roadmap-image]: ../../wiki/images/adventure_map.png
+[contributing-image]: ../../wiki/images/helping_hand.png
 
