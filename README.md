@@ -39,7 +39,7 @@ This are the things next on our TODO list:
 
 **To find out more, please check out the [Website] and the [Wiki].**
 
-##  &nbsp;<img src="../../wiki/images/training.png" alt="TODO" width="22px"> ConGaLi technology 101
+##  &nbsp;<img src="../../wiki/images/training.png" alt="ConGaLi 101" width="22px"> ConGaLi technology 101
 
 The repository structure follows the conceptual architecture of ConGaLi, which consists of loosely-coupled sub-systems connected:
 
@@ -51,19 +51,19 @@ To briefly explain these sub-systems:
 
 **For more information on the current ConGaLi Architecture, please see the [Technical Architecture Overview]**.
 
-## &nbsp;<img src="../../wiki/images/running_rabbit.png" alt="TODO" width="22px"> Quickstart
+## &nbsp;<img src="../../wiki/images/running_rabbit.png" alt="Quickstart" width="22px"> Quickstart
 
 You have to **[install Git]** and **[install Docker]** if you haven't already:
 
 Follow the steps wrote here: https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 
-##  &nbsp;<img src="../../wiki/images/search.png" alt="TODO" width="22px"> Find out more
+##  &nbsp;<img src="../../wiki/images/search.png" alt="Find out more" width="22px"> Find out more
 
 | **[Technical Documentation]**     | **[Setup Guide]**     | **[Roadmap]**           | **[Contributing]**           |
 |-------------------------------------|-------------------------------|-----------------------------------|---------------------------------------------|
 | ![techdocs-image] | ![setup-image] | ![roadmap-image] | ![contributing-image] |
 
-##  &nbsp;<img src="../../wiki/images/help.png" alt="TODO" width="22px"> Questions or need help?
+##  &nbsp;<img src="../../wiki/images/help.png" alt="Questions, help?" width="22px"> Questions or need help?
 
 Check out the **[Talk to us]** page on our wiki.
 
