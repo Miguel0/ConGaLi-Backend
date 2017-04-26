@@ -90,3 +90,5 @@ Check out the **[Talk to us]** page on our wiki.
 [roadmap-image]: ../../wiki/images/adventure_map.png
 [contributing-image]: ../../wiki/images/helping_hand.png
 
+***
+<a href="https://icons8.com">Icon pack by Icons8</a>
