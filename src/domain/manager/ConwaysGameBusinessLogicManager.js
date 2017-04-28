@@ -52,19 +52,19 @@ class ConwaysGameService {
   }
 
   createCell (gameId, userId, cellCreationData) {
-    logger.debug('Receive cell creation data from client: ' + JSON.stringify(cellCreationData))
+    logger.debug(`Receive cell creation data from client: ${JSON.stringify(cellCreationData)}`)
 
     let cellRawData = cellCreationData.eventPosition
 
-    logger.debug('creating cell with data: ' + JSON.stringify(cellRawData))
+    logger.debug(`Creating cell with data: ${JSON.stringify(cellRawData)}`)
 
-    this.game.createCellsByAsync(userId, 0, [cellRawData])
+    this.game.createCellsByAsync(userId, 0, cellRawData)
   }
 
   createTemplate (gameId, userId, templateCreationData) {
     logger.debug('creating template with ' + JSON.stringify(templateCreationData))
 
-    this.game.createCellsOfTemplateByAsync(userId, 0, templateCreationData)
+    this.game.createCellsOfTemplateByAsync(userId, 0, ...templateCreationData)
   }
 
   killCell (gameId, userId, cellAssasinationData) {

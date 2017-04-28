@@ -1,5 +1,6 @@
 const CellsGrid = require('./CellsGrid')
 const AppException = require('../../exception/AppException')
+const logger = require('log4js').getLogger('Conway\'s Game')
 
 class ConwaysGame {
   constructor (user) {
@@ -32,17 +33,19 @@ class ConwaysGame {
   }
 
   createCellsBy (userId, cellsGridId, rawPoints) {
-    this.cellsGrids[cellsGridId].addCellsBy(this.users[userId], rawPoints)
+    logger.debug(`Creating cell with data: ${JSON.stringify(rawPoints)}`)
+    this.cellsGrids[cellsGridId].addCellsBy(this.users[userId], ...rawPoints)
   }
 
   createCellsOfTemplateBy (userId, cellsGridId, templateCreationData) {
-    let templateGroups = this.getPresetsConfiguration()
+    let templateGroups = this.getPresetConfigurations()
     let template
 
     for (let i = 0; i < templateGroups.length; i++) {
       let group = templateGroups[i]
 
-      template = group.cellsTemplates.find(template => template.name === templateCreationData.name)
+      logger.debug(`Template Group retrieved: ${JSON.stringify(group)}`)
+      template = group.templates.find(template => template.name === templateCreationData.name)
 
       if (template) {
         break

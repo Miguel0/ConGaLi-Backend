@@ -1,5 +1,6 @@
 const AppException = require('../../exception/AppException')
 const ContextUnawareCell = require('./ContextUnawareCell')
+const logger = require('log4js').getLogger('CellsGrid')
 
 /**
  * Cells grid provides the basic behavior to add and remove cells inside itself, and is the responsible of checking the consistency
@@ -214,6 +215,7 @@ class CellsGrid {
   }
 
   addCellsBy (user, ...rawPositions) {
+        logger.debug(`Creating cell with data: ${JSON.stringify(rawPositions)}`)
     let validCells = rawPositions
       .map(position => this.normalizeGridPosition(position))
       .map(position => {

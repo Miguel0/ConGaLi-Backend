@@ -43,7 +43,7 @@ class ConwaysGameHandlerConfigurator {
 
   sendGridRefreshToClient (game) {
     let jsonData = game.toJSONObject()
-    logger.debug(`Sending data table to client: ${JSON.stringify(jsonData)}`)
+    logger.trace(`Sending data table to client: ${JSON.stringify(jsonData)}`)
 
     this.getGameChannel(game).emit('refreshCellsGrid', jsonData)
   }
