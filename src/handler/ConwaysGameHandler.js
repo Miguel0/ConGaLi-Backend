@@ -18,8 +18,7 @@ class ConwaysGameHandlerConfigurator {
   }
 
   configureSocketUponConnection (socket, io) {
-
-    let exceptionCatcher = new ExceptionCatcher( errorObject => socket.emit('appException', errorObject))
+    let exceptionCatcher = new ExceptionCatcher(errorObject => socket.emit('appException', errorObject))
     let self = this
 
     socket

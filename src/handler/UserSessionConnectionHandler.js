@@ -16,7 +16,7 @@ class UserHandlerConfigurator {
   configureSocketUponConnection (socket, io) {
     logger.info(`Starting configuration of socket (#${socket.id})...`)
 
-    let exceptionCatcher = new ExceptionCatcher( errorObject => socket.emit('appException', errorObject))
+    let exceptionCatcher = new ExceptionCatcher(errorObject => socket.emit('appException', errorObject))
 
     socket.on(
       'signUp',
