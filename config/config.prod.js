@@ -1,6 +1,6 @@
 module.exports = {
   port: 1996,
-  hostName: 'the.host.uri',
+  hostName: 'localhost',
   handler: {
     connection: {
       deletingSocketDataInterval: 10000,
