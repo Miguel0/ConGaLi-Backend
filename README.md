@@ -1,19 +1,25 @@
 [![Github Releases](https://img.shields.io/github/downloads/atom/atom/latest/total.svg?style=flat-square)](../..)
 
-# ConGali Backend
+# ConGali WebSocket Backend
+
+##  &nbsp;<img src="../../wiki/images/idea.png" alt="TODO" width="22px"> Overview
 
 ConGaLi is an implementation of Conway's Game of Life [Conway’s Game of Life] is a famous simulation that demonstrates cellular automaton.
 
 This particular implementation is only the backend for the WebSocket servers that will allow the game to run on it's initial stage (once the system begun to be distributed it will take a group of services to do that).
 
-It is modeled as a grid with 4 simple rules:
+It begun as a project that I had to present as a code challenge, but I've decided to include it as part of my portfolio. I will make it scale as much as I can and I hope more people will unite and we will design a really interesting and solid system that we can be proud of.
+
+##  &nbsp;<img src="../../wiki/images/law.png" alt="Basic Rules" width="22px"> Basic Rules
+
+This game is modeled as a grid with 4 simple rules:
 
 1. **Any live cell with fewer than two live neighbours dies, as if caused by under-population.**
 2. **Any live cell with two or three live neighbours lives on to the next generation.**
 3. **Any live cell with more than three live neighbours dies, as if by overcrowding.**
 4. **Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.**
 
-This particular implementation creates a Multiplayer app version of Game of Life, with the following instructions as a foundational stone and premises (wich are relevant to backend services):
+This particular implementation creates a Multiplayer app version of Game of Life, with the following instructions as a foundational stone and premises (which are relevant the backend services):
 
 - **The game should tick automatically at a predefined interval, at say, 1 step per second.**
 - **This server allows multiple clients to share the same, synchronized world view.**
@@ -21,21 +27,9 @@ This particular implementation creates a Multiplayer app version of Game of Life
 - **Creating a point on any grid will create a live cell on that grid with the client’s color. This change should be synchronized across all connected clients. (Using any mechanism to achieve this, such as polling, comet or WebSocket).**
 - **When a dead cell revives by rule #4 , it will be given a color that is the average of its neighbours (that revive it).**
 
-
 ##  &nbsp;<img src="../../wiki/images/todo_list.png" alt="TODO" width="22px"> TODO list
 
-This are the things next on our TODO list:
-
-- [x]  _Give the creator of the Grid Cell to config the tick interval upon creation._
-- [x]  _Implement some kind of rudimentary users authentication._
-- [ ]  _Implement some kind of storage for users data._
-- [ ]  _Implement an acceptable Application Error handling mechanism Across the App._
-- [ ]  _Implement an acceptable logging mechanism across the App._
-- [x]  _Implement unit tests for Models._
-- [ ]  _Implement unit test for WebSockets endpoints._
-- [ ]  _Implement integration tests for the whole backend services._
-- [ ]  _Get to a coverage of at least 70%._
-- [ ]  _Add more automates taken from places like [Eric Weisstein's treasure trove]_
+There are lots of improvements and goals to take into account to  build the overall system, and that data will be addressed on our wiki, of course. If interested on reviewing that, just check our [TODO] and [Roadmap] wiki page.
 
 **To find out more, please check out the [Website] and the [Wiki].**
 
@@ -43,9 +37,6 @@ This are the things next on our TODO list:
 
 The repository structure follows the conceptual architecture of ConGaLi, which consists of loosely-coupled sub-systems connected:
 
-![architecture-image]
-
-To briefly explain these sub-systems:
 * **UI Web servers** This will serve all the specific implementation for interacting with this backend.
 * **WebSocket backend** This will serve al the actual services that will execute the game's logic. Although, this will change in a not so distant future.
 
@@ -79,6 +70,7 @@ Check out the **[Talk to us]** page on our wiki.
 [Technical Architecture Overview]: ./wiki//Technical-Architecture-Overview
 [Technical Documentation]: ./wiki/ConGaLi-Technical-documentation
 [Roadmap]: ./wiki/Product-roadmap
+[TODO]: ./wiki/TODO
 
 [Conway’s Game of Life]: https://en.wikipedia.org/wiki/Conway's_Game_of_Life
 [Eric Weisstein's treasure trove]: http://www.ericweisstein.com/encyclopedias/life/
@@ -91,4 +83,4 @@ Check out the **[Talk to us]** page on our wiki.
 [contributing-image]: ../../wiki/images/helping_hand.png
 
 ***
-<a href="https://icons8.com">Icon pack by Icons8</a>
+Icon pack by <a href="https://icons8.com" alt="Icons8"><img src="https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/wiki/images/Icons8.png" width="20px"></a>
