@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "node --inspect app.js",
+    "dev": "node --inspect app.js --environment dev",
     "app": "node app.js",
     "lint_test": "eslint-mocha --eslint-args='--color --ext .js test' --mocha-args='--recursive test'",
     "lint": "eslint --color --ext .js src",
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Miguel0/conwaysGame-Backend.git"
+    "url": "git+https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket.git"
   },
   "keywords": [
     "socket.io",
@@ -36,11 +36,12 @@
     "real-time"
   ],
   "bugs": {
-    "url": "https://github.com/Miguel0/conwaysGame-Backend/issues"
+    "url": "https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket/issues"
   },
-  "homepage": "https://github.com/Miguel0/conwaysGame-Backend#readme",
+  "homepage": "https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
+    "commander": "^2.9.0",
     "log4js": "^1.1.1",
     "socket.io": "^1.7.3"
   },

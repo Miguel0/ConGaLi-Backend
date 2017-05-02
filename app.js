@@ -3,9 +3,16 @@ const io = require('socket.io')(server)
 const process = require('process')
 const logger = require('log4js').getLogger('Main App')
 
+let programArgs = require('commander')
+
+programArgs
+  .version('0.0.1')
+  .option('-e, --environment', 'Environment option ["dev", "prod"]("prod" is the default and fallback configuration)')
+  .parse(process.argv)
+
 let configFileName = ''
 
-switch (process.env.ENVIRONMENT) {
+switch (programArgs.environment) {
   case 'dev':
     configFileName = 'dev'
     logger.info('Building development config...')
