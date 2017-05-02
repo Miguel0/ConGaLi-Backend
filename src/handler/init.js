@@ -5,7 +5,7 @@ const GameHandlerConfigurator = require('./ConwaysGameHandler')
 const businessLogicManagersHolder = require('../domain/manager/businessLogicManagersHolder')
 const logger = require('log4js').getLogger('Socket Event Handler')
 
-module.exports = function (io) {
+module.exports = function (io, config) {
   /* const Promise = require("bluebird")
   Promise.promisifyAll(require("request")); */
   let userHandler = new UserSessionConnectionHandler(io, businessLogicManagersHolder)
@@ -14,7 +14,7 @@ module.exports = function (io) {
   let gCH = new GeneralCommunicationHandler(io, businessLogicManagersHolder)
   logger.info(`General Communication Handler created at ${gCH.createdOn.toISOString()}`)
 
-  let cH = new ConnectionHandler(io, businessLogicManagersHolder)
+  let cH = new ConnectionHandler(io, config, businessLogicManagersHolder)
   logger.info(`Connection Handler created at ${cH.createdOn.toISOString()}`)
 
   let cGH = new GameHandlerConfigurator(io, businessLogicManagersHolder)

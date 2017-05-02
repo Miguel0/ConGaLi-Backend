@@ -1,12 +1,11 @@
 const logger = require('log4js').getLogger('Connection Handler')
 const ExceptionCatcher = require('../exception/ExceptionCatcher')
-const config = require('../../config/config.dev')
 
 class ConnectionHandlerConfigurator {
-  constructor (io, businessLogicManagersHolder) {
+  constructor (io, config, businessLogicManagersHolder) {
     this.createdOn = new Date()
     this.socketsConnected = {}
-
+    this.config = config
     io.on(
       'connection',
       socket => this.configureSocketUponConnection(socket, io))
@@ -17,7 +16,7 @@ class ConnectionHandlerConfigurator {
   }
 
   getSocketConnectionIdentifier (socket) {
-    if (!config.handler.connection.useSocketByIp) {
+    if (!this.config.handler.connection.useSocketByIp) {
       return socket.id
     } else {
       return this.getSocketIp(socket)
@@ -42,14 +41,13 @@ class ConnectionHandlerConfigurator {
           logger.debug(`Socket data #${JSON.stringify(socketData.toString())} removed!!!!`)
         }
       },
-      config.handler.connection.deletingSocketDataInterval)
+      this.config.handler.connection.deletingSocketDataInterval)
 
     logger.debug(`Socket with id #${socket.id} disconnected  @ ${clientIP}!!!!`)
   }
 
   configureSocketUponConnection (socket, io) {
-
-    let exceptionCatcher = new ExceptionCatcher( errorObject => socket.emit('appException', errorObject))
+    let exceptionCatcher = new ExceptionCatcher(errorObject => socket.emit('appException', errorObject))
 
     socket.on('disconnect', close => exceptionCatcher.runProtected(() => this.onDisconnection(socket, close)))
 

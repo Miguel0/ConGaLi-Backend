@@ -1,3 +1,4 @@
+/* eslint no-throw-literal: 1 */
 const AppException = require('../exception/AppException')
 
 /**

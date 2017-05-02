@@ -16,4 +16,4 @@ COPY src /usr/src/app/src
 COPY app.js /usr/src/app/
 
 EXPOSE 1996
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "app" ]

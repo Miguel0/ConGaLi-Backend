@@ -215,7 +215,7 @@ class CellsGrid {
   }
 
   addCellsBy (user, ...rawPositions) {
-        logger.debug(`Creating cell with data: ${JSON.stringify(rawPositions)}`)
+    logger.trace(`Creating cell with data: ${JSON.stringify(rawPositions)}`)
     let validCells = rawPositions
       .map(position => this.normalizeGridPosition(position))
       .map(position => {
