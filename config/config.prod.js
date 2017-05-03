@@ -1,5 +1,5 @@
 module.exports = {
-  port: 1996,
+  port: 3000,
   hostName: 'localhost',
   handler: {
     connection: {
