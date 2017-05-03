@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node --inspect app.js --environment dev",
     "app": "node app.js",
-    "start": "node app.js",
+    "start": "npm run app",
     "lint_test": "eslint-mocha --eslint-args='--color --ext .js test' --mocha-args='--recursive test'",
     "lint": "eslint --color --ext .js src",
     "check-coverage": "istanbul check-coverage ./coverage/coverage.json",
