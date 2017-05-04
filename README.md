@@ -2,13 +2,17 @@
 
 # ConGali WebSocket Backend
 
-##  &nbsp;<img src="../../wiki/images/idea.png" alt="TODO" width="22px"> Overview
+##  &nbsp;<img src="../../wiki/images/idea.png" alt="Overview" width="22px"> Overview
 
 ConGaLi is an implementation of Conway's Game of Life [Conway’s Game of Life] is a famous simulation that demonstrates cellular automaton.
 
+### &nbsp;<img src="../../wiki/images/warning.png" alt="Disclaimer" width="20px"> **Disclaimer!!!!!!**
+
+ConGaLi is still in a proof of concept stage, so we don't advice it usage for other reasons than satisfy your own curiority right now nor we will take any responsibility in any security risk you could be exposed. Nontheless, we are working to get the architecture ready and deployed for be at alpha stage. For more information on this you can take a look at the [roadmap][Roadmap] wiki page, and also it will be useful to take a peek at the [todo list][TODO].
+
 This particular implementation is only the backend for the WebSocket servers that will allow the game to run on it's initial stage (once the system begun to be distributed it will take a group of services to do that).
 
-It begun as a project that I had to present as a code challenge, but I've decided to include it as part of my portfolio. I will make it scale as much as I can and I hope more people will unite and we will design a really interesting and solid system that we can be proud of.
+It begun as a project that I had to present as a code challenge, but I've decided to include it as part of my portfolio. We will make it scale as much as we can and we hope more people will unite and we will design a really interesting and solid system that we can be proud of.
 
 ##  &nbsp;<img src="../../wiki/images/law.png" alt="Basic Rules" width="22px"> Basic Rules
 
