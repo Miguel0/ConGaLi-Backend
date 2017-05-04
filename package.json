@@ -25,6 +25,8 @@
     "eslint-config-standard": "10.2.1",
     "eslint-friendly-formatter": "2.0.7",
     "eslint-mocha": "0.2.2",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-node": "4.2.2",
     "eslint-plugin-promise": "3.5.0",
     "eslint-plugin-standard": "3.0.1",
     "istanbul": "0.4.5",
