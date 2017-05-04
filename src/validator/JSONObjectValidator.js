@@ -91,11 +91,7 @@ class JSONObjectValidator {
   }
 
   extractTypeFromObject (value) {
-    if (value === Object || value instanceof Object || typeof value === 'object') {
-      return 'object'
-    }
-
-    if (value === String || value instanceof String || typeof value === 'string') {
+    if (value === String || typeof value === 'string') {
       return 'string'
     }
 
@@ -109,6 +105,10 @@ class JSONObjectValidator {
 
     if (value === Array || Array.isArray(value)) {
       return 'array'
+    }
+
+    if (value === Object || value instanceof Object || typeof value === 'object') {
+      return 'object'
     }
 
     return Object.prototype.toString.call(value).match(/(\[object\s)(.*)(\])/)[2]
@@ -132,8 +132,6 @@ class JSONObjectValidator {
     checkTypeMap.array = value => Array.isArray(value)
     checkTypeMap[Array] = checkTypeMap.array
 
-    console.log(type)
-    console.log(this.extractTypeFromObject(objectToValidate))
     let calculatedType = this.extractTypeFromObject(objectToValidate)
     return calculatedType ? checkTypeMap[calculatedType].call(this, objectToValidate) : false
   }
@@ -161,7 +159,7 @@ class JSONObjectValidator {
       }
     }
 
-    if (schemaToValidate.strict !== false && domainAttributeKeys.length !== Object.keys(objectToValidate).length) {
+    if (schemaToValidate[`${this.options.customAttributesPrefix}strict`] === true && this.hasValidType(objectToValidate, Object) && this.hasValidType(schemaToValidate, Object) && domainAttributeKeys.length !== Object.keys(objectToValidate).length) {
       throw {
         'titlekey': 'Strict keys length validation failed',
         'bodyKey': `Strict keys length validation failed between schema's keys: ${JSON.stringify(domainAttributeKeys)} and json object's keys: ${JSON.stringify(Object.keys(objectToValidate))}`
@@ -170,7 +168,7 @@ class JSONObjectValidator {
 
     // Starting child validation
 
-    if (this.hasValidType(objectToValidate, 'array')) {
+    if (this.hasValidType(objectToValidate, Array)) {
       let childsDef = schemaToValidate[`${this.options.customAttributesPrefix}childsDef`]
 
       for (let j = 0; j < objectToValidate.length; j++) {
@@ -180,7 +178,7 @@ class JSONObjectValidator {
 
         this.doValidate(objectToValidate[j], childsDef, genericArguments)
       }
-    } else if (this.hasValidType(objectToValidate, 'object')) {
+    } else if (this.hasValidType(objectToValidate, Object)) {
       for (let j = 0; j < domainAttributeKeys.length; j++) {
         genericArguments.parentValidationObject = objectToValidate
         genericArguments.parentValidationSchema = schemaToValidate

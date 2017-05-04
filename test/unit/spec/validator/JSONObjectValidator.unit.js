@@ -105,7 +105,7 @@ describe('JSON Object Validator', function () {
 
     it('should return as valid', function () {
       validator.options.throwsException = false
-      // expect(validator.validate()).to.be.equal(true)
+      expect(validator.validate()).to.be.equal(true)
     })
 
     it('should throw an exception for empty schema', function () {
@@ -135,7 +135,7 @@ describe('JSON Object Validator', function () {
     })
 
     it('should throw an exception with non existent attribute on the object', function () {
-      validator.validationSchema = { validAttribute: String }
+      validator.validationSchema = { validAttribute: String, $strict: true }
 
       validator.objectToValidate = {}
       expect(() => validator.validate())
@@ -143,7 +143,7 @@ describe('JSON Object Validator', function () {
         .and.to.have.property('titleKey')
         .and.be.equal('Validation Error')
 
-      validator.objectToValidate = { attribute: 'value' }
+      validator.objectToValidate = { attribute: 'value', $strict: true}
       expect(() => validator.validate())
         .to.throw(AppException)
         .and.to.have.property('titleKey')
