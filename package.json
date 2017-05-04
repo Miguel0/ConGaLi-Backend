@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "node --inspect app.js --environment dev",
     "app": "node app.js",
+    "start": "node app.js",
     "lint_test": "eslint-mocha --eslint-args='--color --ext .js test' --mocha-args='--recursive test'",
     "lint": "eslint --color --ext .js src",
     "check-coverage": "istanbul check-coverage ./coverage/coverage.json",
@@ -19,15 +20,15 @@
     "unit"
   ],
   "devDependencies": {
-    "chai": "^3.5.0",
-    "eslint": "^3.18.0",
-    "eslint-config-standard": "^7.1.0",
-    "eslint-friendly-formatter": "^2.0.7",
-    "eslint-mocha": "^0.2.2",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^2.1.1",
-    "istanbul": "^0.4.5",
-    "mocha": "^3.2.0",
+    "chai": "3.5.0",
+    "eslint": "3.19.0",
+    "eslint-config-standard": "10.2.1",
+    "eslint-friendly-formatter": "2.0.7",
+    "eslint-mocha": "0.2.2",
+    "eslint-plugin-promise": "3.5.0",
+    "eslint-plugin-standard": "3.0.1",
+    "istanbul": "0.4.5",
+    "mocha": "3.3.0",
     "pre-push": "0.1.1"
   },
   "repository": {
@@ -45,9 +46,9 @@
   },
   "homepage": "https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket#readme",
   "dependencies": {
-    "commander": "^2.9.0",
-    "log4js": "^1.1.1",
-    "socket.io": "^1.7.3"
+    "commander": "2.9.0",
+    "log4js": "1.1.1",
+    "socket.io": "1.7.3"
   },
   "engines": {
     "node": ">= 7.0.0"
