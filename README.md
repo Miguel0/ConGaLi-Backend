@@ -8,7 +8,7 @@ ConGaLi is an implementation of Conway's Game of Life [Conway’s Game of Life] 
 
 ### &nbsp;<img src="../../wiki/images/warning.png" alt="Disclaimer" width="20px"> **Disclaimer!!!!!!**
 
-ConGaLi is still in a proof of concept stage, so we don't advice it usage for other reasons than satisfy your own curiority right now nor we will take any responsibility in any security risk you could be exposed. Nontheless, we are working to get the architecture ready and deployed for be at alpha stage. For more information on this you can take a look at the [roadmap][Roadmap] wiki page, and also it will be useful to take a peek at the [todo list][TODO].
+ConGaLi is still in a proof of concept stage, so we don't advice it usage for other reasons than satisfy your own curiosity right now nor we will take any responsibility in any security risk you could be exposed. Nonetheless, we are working to get the architecture ready and deployed for be at alpha stage. For more information on this you can take a look at the [roadmap][Roadmap] wiki page, and also it will be useful to take a peek at the [todo list][TODO].
 
 This particular implementation is only the backend for the WebSocket servers that will allow the game to run on it's initial stage (once the system begun to be distributed it will take a group of services to do that).
 
@@ -70,8 +70,8 @@ Check out the **[Talk to us]** page on our wiki.
 [Wiki]: ./wiki
 [Talk to us]: ./wiki/Talk-to-us
 [Contributing]: ./wiki/Contributing
-[Setup Guide]: ./Setting-up-ConGaLi
-[Technical Architecture Overview]: ./wiki//Technical-Architecture-Overview
+[Setup Guide]: ./wiki/Setting-up-ConGaLi
+[Technical Architecture Overview]: ./wiki/Technical-Architecture-Overview
 [Technical Documentation]: ./wiki/ConGaLi-Technical-documentation
 [Roadmap]: ./wiki/Product-roadmap
 [TODO]: ./wiki/TODO
