@@ -69,9 +69,11 @@ class StorageDAO {
   }
 
   forEachGame (eachFunction) {
-    for (let userId in Object.keys(this.gamesByUserId)) {
-      for (let i = 0; i < this.gamesByUserId[userId].length; i++) {
-        eachFunction.call(eachFunction, this.gamesByUserId[userId][i])
+    let gamesUsersId = Object.keys(this.gamesByUserId)
+
+    for (let userId in gamesUsersId) {
+      for (let i = 0; i < this.gamesByUserId[gamesUsersId[userId]].length; i++) {
+        eachFunction.call(eachFunction, this.gamesByUserId[gamesUsersId[userId]][i])
       }
     }
   }

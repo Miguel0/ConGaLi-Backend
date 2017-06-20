@@ -48,8 +48,8 @@ class UserHandlerConfigurator {
       socket.emit('signedUp', user.toJSONObject())
     } else {
       let exception = new AppException(
-        'error.signUp.session.alreadyStarted.title',
-        'error.signUp.session.alreadyStarted.body'
+        'error.session.signUp.alreadyStarted.title',
+        'error.session.signUp.alreadyStarted.body'
       )
 
       logger.debug(`Sending exception to client since session was already started ${JSON.stringify(exception)}...`)
@@ -72,8 +72,8 @@ class UserHandlerConfigurator {
         socket.emit('loggedIn', user.toJSONObject())
       } else {
         let exception = new AppException(
-          'error.logIn.session.wrongUserOrPassword.title',
-          'error.logIn.session.wrongUserOrPassword.body',
+          'error.session.logIn.wrongUserOrPassword.title',
+          'error.session.logIn.wrongUserOrPassword.body',
           data
         )
 
@@ -82,8 +82,8 @@ class UserHandlerConfigurator {
       }
     } else {
       let exception = new AppException(
-        'error.logIn.session.alreadyOpen.title',
-        'error.logIn.session.alreadyOpen.body'
+        'error.session.logIn.alreadyOpen.title',
+        'error.session.logIn.alreadyOpen.body'
       )
 
       logger.debug(`Sending exception to client since session was already open ${JSON.stringify(exception)}...`)
