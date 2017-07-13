@@ -50,8 +50,9 @@
   "homepage": "https://github.com/miguel-isasmendi/ConGaLi-Backend-WebSocket#readme",
   "dependencies": {
     "commander": "2.9.0",
-    "log4js": "1.1.1",
     "express": "4.15.3",
+    "helmet": "3.6.1",
+    "log4js": "1.1.1",
     "socket.io": "1.7.3"
   },
   "engines": {

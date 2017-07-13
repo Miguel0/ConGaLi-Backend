@@ -1,5 +1,6 @@
 const app = require('express')()
 const server = require('http').Server(app)
+const helmet = require('helmet')
 
 const io = require('socket.io')(server)
 const process = require('process')
@@ -43,6 +44,9 @@ app.use((req, res, next) => {
 
   next()
 })
+
+// Sets "Referrer-Policy: same-origin".
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
 
 server.listen(
     config.port,
