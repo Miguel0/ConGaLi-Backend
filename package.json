@@ -51,6 +51,7 @@
   "dependencies": {
     "commander": "2.9.0",
     "log4js": "1.1.1",
+    "express": "4.15.3",
     "socket.io": "1.7.3"
   },
   "engines": {

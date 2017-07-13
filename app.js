@@ -1,10 +1,5 @@
-const server = require('http').createServer((req,res) => {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-  res.setHeader('Access-Control-Request-Method', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET')
-})
+const app = require('express')()
+const server = require('http').Server(app)
 
 const io = require('socket.io')(server)
 const process = require('process')
@@ -37,6 +32,17 @@ logger.info(JSON.stringify(config))
 logger.info('Starting App...')
 
 require('./src/handler/init.js')(io, config)
+
+
+app.use((req, res, next) => {
+  // Set CORS headers
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header('Access-Control-Request-Method', '*')
+  res.header('Access-Control-Allow-Methods', '*')
+
+  next()
+})
 
 server.listen(
     config.port,
