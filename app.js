@@ -2,6 +2,19 @@ const app = require('express')()
 const server = require('http').Server(app)
 const helmet = require('helmet')
 
+app.use((req, res, next) => {
+  // Set CORS headers
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header('Access-Control-Request-Method', '*')
+  res.header('Access-Control-Allow-Methods', '*')
+
+  next()
+})
+
+// Sets "Referrer-Policy: same-origin".
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
+
 const io = require('socket.io')(server)
 const process = require('process')
 const logger = require('log4js').getLogger('Main App')
@@ -33,20 +46,6 @@ logger.info(JSON.stringify(config))
 logger.info('Starting App...')
 
 require('./src/handler/init.js')(io, config)
-
-
-app.use((req, res, next) => {
-  // Set CORS headers
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-  res.header('Access-Control-Request-Method', '*')
-  res.header('Access-Control-Allow-Methods', '*')
-
-  next()
-})
-
-// Sets "Referrer-Policy: same-origin".
-app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
 
 server.listen(
     config.port,
