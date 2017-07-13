@@ -1,9 +1,9 @@
 const server = require('http').createServer((req,res) => {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Request-Method', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.setHeader('Access-Control-Request-Method', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET')
 })
 
 const io = require('socket.io')(server)
