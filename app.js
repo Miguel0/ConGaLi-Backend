@@ -1,4 +1,11 @@
-const server = require('http').createServer()
+const server = require('http').createServer((req,res) => {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Request-Method', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+})
+
 const io = require('socket.io')(server)
 const process = require('process')
 const logger = require('log4js').getLogger('Main App')
@@ -21,12 +28,6 @@ switch (programArgs.environment) {
     configFileName = 'prod'
     logger.info('Building production config...')
 }
-
-server.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "X-Requested-With")
-  next()
-})
 
 const config = require(`./config/config.${configFileName}`)
 
