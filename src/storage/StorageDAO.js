@@ -43,8 +43,8 @@ class StorageDAO {
 
     if (this.getGameWithName(game.name, game.ownerId)) {
       throw new AppException(
-        'error.game.alreadyExists.title',
-        'error.user.alreadyExists.body'
+        'error.game.save.alreadyExists.title',
+        'error.game.save.alreadyExists.body'
       )
     }
 

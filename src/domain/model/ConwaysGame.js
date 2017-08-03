@@ -23,8 +23,8 @@ class ConwaysGame {
   addUser (user) {
     if (this.users[user.id]) {
       throw new AppException(
-        'error.game.userAlreadyExists.title',
-        'error.game.userAlreadyExists.body',
+        'error.game.users.userAlreadyExists.title',
+        'error.game.users.userAlreadyExists.body',
         user
       )
     }
@@ -67,8 +67,9 @@ class ConwaysGame {
       return this.createCellsBy(userId, 0, offsettedPoints)
     } else {
       throw new AppException(
-        'error.gridTemplate.wrongCellsTemplate.title',
-        'error.gridTemplate.wrongCellsTemplate.body'
+        'error.game.gridTemplate.wrongCellsTemplate.title',
+        'error.game.gridTemplate.wrongCellsTemplate.body',
+        templateCreationData
       )
     }
   }

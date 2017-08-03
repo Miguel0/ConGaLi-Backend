@@ -32,8 +32,8 @@ class CellsGrid {
       })
     } else {
       throw new AppException(
-        'error.cellsGrid.canNotRemoveCellThatDoesNotExists.title',
-        'error.cellsGrid.canNotRemoveCellThatDoesNotExists.body',
+        'error.game.cellsGrid.canNotRemoveCellThatDoesNotExists.title',
+        'error.game.cellsGrid.canNotRemoveCellThatDoesNotExists.body',
         { cellsConfig: cellsConfig, validCellsConfig: validCellsConfig }
       )
     }
@@ -46,8 +46,9 @@ class CellsGrid {
   normalizeGridPosition (rawPosition) {
     if (!this.resolution || this.resolution < 0) {
       throw new AppException(
-        'error.cellsGrid.wrong.resolution.title',
-        'error.cellsGrid.wrong.resolution.body'
+        'error.game.cellsGrid.invalidResolution.title',
+        'error.game.cellsGrid.invalidResolution.body',
+        {receivedResolution: this.resolution}
       )
     }
 
@@ -79,8 +80,8 @@ class CellsGrid {
       }
 
       throw new AppException(
-        'error.cellsGrid.cellAtInvalidPosition.title',
-        'error.cellsGrid.cellAtInvalidPosition.body',
+        'error.game.cellsGrid.cellAtInvalidPosition.title',
+        'error.game.cellsGrid.cellAtInvalidPosition.body',
         errorArguments
       )
     }
@@ -175,8 +176,8 @@ class CellsGrid {
 
     if (arrayOfHexColours.length !== arrayOfColours.length) {
       throw new AppException(
-        'error.cellsGrid.malformedColor.title',
-        'error.cellsGrid.malformedColor.body',
+        'error.game.cellsGrid.malformedColor.title',
+        'error.game.cellsGrid.malformedColor.body',
         arrayOfColours
       )
     }
@@ -207,8 +208,8 @@ class CellsGrid {
       })
     } else {
       throw new AppException(
-        'error.cellsGrid.cellCantBeOverride.title',
-        'error.cellsGrid.cellCantBeOverride.body',
+        'error.game.cellsGrid.cellCantBeOverride.title',
+        'error.game.cellsGrid.cellCantBeOverride.body',
         { cellsConfig: cellsConfig, validCellsConfig: validCellsConfig }
       )
     }

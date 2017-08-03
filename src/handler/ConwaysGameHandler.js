@@ -50,8 +50,8 @@ class ConwaysGameHandlerConfigurator {
   checkValidRoomForUser (game, userId) {
     if (!game.retrieveUserWithId(userId)) {
       throw new AppException(
-        'error.game.invalidGameForUser.title',
-        'error.game.invalidGameForUser.body',
+        'error.game.user.invalidGameForUser.title',
+        'error.game.user.invalidGameForUser.body',
         userId
       )
     }

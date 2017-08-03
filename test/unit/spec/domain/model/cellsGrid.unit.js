@@ -52,21 +52,21 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.checkValidPosition())
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should throw an AppException if the arguments are empty', function () {
       expect(() => cellsGrid.checkValidPosition(''))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should throw an AppException if the arguments are null', function () {
       expect(() => cellsGrid.checkValidPosition(null))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should return false if the arguments are null', function () {
@@ -89,14 +89,14 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.checkValidPosition({x: (cellsGrid.maxWidth + 1), y: 0}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should throw an AppException if the height is greater than the maxHeight', function () {
       expect(() => cellsGrid.checkValidPosition({x: 0, y: (cellsGrid.maxHeight + 1)}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
   })
 
@@ -193,14 +193,14 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.doAddCells({cell: new Cell()}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should fail if there\'s invalid position', function () {
       expect(() => cellsGrid.doAddCells({cell: new Cell(), position: {x: -1, y: -1}}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should add new cell', function () {
@@ -217,7 +217,7 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.doAddCells({cell: new Cell(), position: {x: 0, y: 0}}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellCantBeOverride.title')
+        .and.to.be.equal('error.game.cellsGrid.cellCantBeOverride.title')
     })
 
     it('should return a proper JSON representation', function () {
@@ -256,7 +256,7 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.addCellsBy(new User(), {x: -1, y: -1}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should add new cell', function () {
@@ -271,7 +271,7 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.addCellsBy(new User(), {x: 0, y: 0}, {x: 0, y: 0}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellCantBeOverride.title')
+        .and.to.be.equal('error.game.cellsGrid.cellCantBeOverride.title')
     })
 
     it('should throw exception upon cell override', function () {
@@ -280,7 +280,7 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.addCellsBy(new User(), {x: 0, y: 0}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellCantBeOverride.title')
+        .and.to.be.equal('error.game.cellsGrid.cellCantBeOverride.title')
     })
   })
 
@@ -312,14 +312,14 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.removeCells({position: null}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should fail if there\'s invalid position', function () {
       expect(() => cellsGrid.removeCells({position: {x: -1, y: -1}}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should remove existent cell', function () {
@@ -338,7 +338,7 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.removeCells({position: {x: 0, y: 0}}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.canNotRemoveCellThatDoesNotExists.title')
+        .and.to.be.equal('error.game.cellsGrid.canNotRemoveCellThatDoesNotExists.title')
     })
   })
 
@@ -357,7 +357,7 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.killCellsBy(new User(), {x: -10, y: -10}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.cellAtInvalidPosition.title')
+        .and.to.be.equal('error.game.cellsGrid.cellAtInvalidPosition.title')
     })
 
     it('should remove existent cell', function () {
@@ -376,7 +376,7 @@ describe('CellsGrid', function () {
       expect(() => cellsGrid.killCellsBy(new User(), {x: 16, y: 16}))
         .to.throw(AppException)
         .and.to.have.property('titleKey')
-        .and.to.be.equal('error.cellsGrid.canNotRemoveCellThatDoesNotExists.title')
+        .and.to.be.equal('error.game.cellsGrid.canNotRemoveCellThatDoesNotExists.title')
     })
   })
 
