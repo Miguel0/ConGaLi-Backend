@@ -3,6 +3,15 @@ const DefaultCellsTemplatesConfig = require('./defaultCellsTemplatesConfiguratio
 
 const logger = require('log4js').getLogger('Storage DAO')
 
+/**
+ * StorageDAO implements the agregated behavior that handle the storage of data
+ * of different objects representing several concepts required for the system
+ * behavior.
+ *
+ * It holds Games, Users and cells templates, but we have to bear in mind that this
+ * behavior will be decoupled across the different microservices impmenentation
+ * that are planed in mid term.
+ */
 class StorageDAO {
   constructor () {
     this.createdOn = new Date()

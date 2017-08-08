@@ -2,6 +2,11 @@
 const AppException = require('../exception/AppException')
 
 /**
+ * This module holds the JSON schemva validator that
+ * will be included into the function chain of every event received.
+ */
+
+/**
 Schema example:
 
 {

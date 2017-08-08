@@ -1,3 +1,14 @@
+/**
+ * ConwaysGameHandlerConfigurator it's a class that implements the behavior needed to handle the
+ * eventualities associated with the behavior of the game itself, by providing the proper WebSocket
+ * interface to clients. All the communication held while playing a game will be received by this handler.
+ *
+ * It colaborates with specific Logic managers (UserBusinessLogicManager and
+ * ConwaysGameBusinessLogicManager) on those mathers related with business logic behavior implementation.
+ *
+ * Other responsibility that this handler has is to cordinate the handlers for grid cells refreshal.
+ */
+
 const ExceptionCatcher = require('../exception/ExceptionCatcher')
 const AppException = require('../exception/AppException')
 

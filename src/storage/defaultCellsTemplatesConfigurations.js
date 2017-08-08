@@ -1,3 +1,8 @@
+/**
+ * This module simulates the database storage that should held the instances of
+ * CellsTemplates.
+ */
+
 const TemplateGroup = require('../domain/model/TemplateGroup')
 const CellsTemplateDefinition = require('../domain/model/CellsTemplateDefinition')
 

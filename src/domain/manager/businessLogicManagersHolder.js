@@ -1,3 +1,7 @@
+/**
+ * This module coordinates the logic manager's instantiation across the system.
+ */
+
 const logger = require('log4js').getLogger('Business Logic Manager')
 const ConwaysGameBusinessLogicManager = require('./ConwaysGameBusinessLogicManager')
 const GeneralCommunicationBusinessLogicManager = require('./GeneralCommunicationBusinessLogicManager')

@@ -1,3 +1,8 @@
+/**
+ * ConwaysGameService it's a class that implements the behavior for the business logic specifically
+ * associated with the instances of the game.
+ */
+
 const logger = require('log4js').getLogger('Business Logic Manager')
 const ConwaysGame = require('../model/ConwaysGame.js')
 

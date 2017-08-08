@@ -1,3 +1,7 @@
+/**
+ * CellsTemplateDefinition is a Class that holds the points that represents
+ * a given cells template, storing the offset of each cell on a x@y axis.
+ */
 class CellsTemplateDefinition {
   constructor () {
     this.createdOn = new Date()

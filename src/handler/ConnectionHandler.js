@@ -1,3 +1,11 @@
+/**
+ * ConnectionHandlerConfigurator it's a class that implements the behavior needed to handle the
+ * eventualities that could arise during the life span of the system.
+ *
+ * It's reponsible of maintaining in sync the data of the sockets connected to the system, and
+ * cleaning up upon client's socket desconnection.
+ */
+
 const logger = require('log4js').getLogger('Connection Handler')
 const ExceptionCatcher = require('../exception/ExceptionCatcher')
 

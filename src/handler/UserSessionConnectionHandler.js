@@ -1,3 +1,15 @@
+/**
+ * GeneralCommunicationHandlerConfigurator it's a class that implements the behavior needed to handle the
+ * eventualities associated with the behavior of the game itself, by providing the proper WebSocket
+ * interface to clients. In particular, it provides events to query the availability of games than the
+ * platform has.
+ *
+ * It colaborates with a specific Logic manager (generalCommunicationBusinessLogicManager) on those mathers
+ * related with business logic behavior implementation.
+ *
+ * THIS HANDLER WILL BE PART OF A REST MICROSERVICE IN THE NEAR FUTURE!!!!!!!!!!!
+ */
+
 const logger = require('log4js').getLogger('User Session Handler Configurator')
 const AppException = require('../exception/AppException')
 const ExceptionCatcher = require('../exception/ExceptionCatcher')

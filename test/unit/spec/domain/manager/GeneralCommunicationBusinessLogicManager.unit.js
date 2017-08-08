@@ -14,8 +14,6 @@ describe('GeneralCommunicationService', function () {
   let storageDAO = new StorageDAO()
 
   beforeEach(function () {
-      // stub out the `hello` method
-      // sandbox.stub(myApi, 'hello')
   });
 
   afterEach(function () {

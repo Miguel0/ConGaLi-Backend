@@ -1,3 +1,8 @@
+/**
+ * ConwaysGame is a Class that represents the game that has an owner, a name
+ * and the cellsGrid array and the users besides preset configurations.
+ */
+
 const CellsGrid = require('./CellsGrid')
 const AppException = require('../../exception/AppException')
 const logger = require('log4js').getLogger('Conway\'s Game')

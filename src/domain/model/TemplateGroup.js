@@ -1,3 +1,7 @@
+/**
+ * TemplateGroup is an object that holds a group of templates.
+ */
+
 class TemplateGroup {
   constructor () {
     this.createdOn = new Date()

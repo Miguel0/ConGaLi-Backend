@@ -1,10 +1,11 @@
-const logger = require('log4js').getLogger('Business Logic Manager')
-
 /**
  * This class defines the behavior for a service that deals with general
  * information retrieval from the system to outer layers, such as the one
  * of the WebSocket handlers.
  */
+
+const logger = require('log4js').getLogger('Business Logic Manager')
+
 class GeneralCommunicationService {
   constructor (storageDAO) {
     this.createdOn = new Date()

@@ -1,10 +1,11 @@
-const logger = require('log4js').getLogger('Business Logic Manager')
-const User = require('../model/User')
-
 /**
  * This class defines the behavior for a service that deals with User operations
  * from the system to outer layers, such as one of the WebSocket handlers.
  */
+
+const logger = require('log4js').getLogger('Business Logic Manager')
+const User = require('../model/User')
+
 class UserService {
   constructor (storageDAO) {
     this.createdOn = new Date()
