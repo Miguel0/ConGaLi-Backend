@@ -67,14 +67,14 @@ Check out the **[Talk to us]** page on our wiki.
 [releases]: ./releases
 
 [Website]: -
-[Wiki]: ./wiki
-[Talk to us]: ./wiki/Talk-to-us
-[Contributing]: ./wiki/Contributing
-[Setup Guide]: ./wiki/Setting-up-ConGaLi
-[Technical Architecture Overview]: ./wiki/Technical-Architecture-Overview
-[Technical Documentation]: ./wiki/ConGaLi-Technical-documentation
-[Roadmap]: ./wiki/Product-roadmap
-[TODO]: ./wiki/TODO
+[Wiki]: ../../wiki
+[Talk to us]: ../../wiki/Talk-to-us
+[Contributing]: ../../wiki/Contributing
+[Setup Guide]: .../../wiki/Setting-up-ConGaLi
+[Technical Architecture Overview]: .../../wiki/Technical-Architecture-Overview
+[Technical Documentation]: .../../wiki/ConGaLi-Technical-documentation
+[Roadmap]: ../../wiki/Product-roadmap
+[TODO]: ../../wiki/TODO
 
 [Conway’s Game of Life]: https://en.wikipedia.org/wiki/Conway's_Game_of_Life
 [Eric Weisstein's treasure trove]: http://www.ericweisstein.com/encyclopedias/life/
