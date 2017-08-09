@@ -70,9 +70,9 @@ Check out the **[Talk to us]** page on our wiki.
 [Wiki]: ../../wiki
 [Talk to us]: ../../wiki/Talk-to-us
 [Contributing]: ../../wiki/Contributing
-[Setup Guide]: .../../wiki/Setting-up-ConGaLi
-[Technical Architecture Overview]: .../../wiki/Technical-Architecture-Overview
-[Technical Documentation]: .../../wiki/ConGaLi-Technical-documentation
+[Setup Guide]: ../../wiki/Setting-up-ConGaLi
+[Technical Architecture Overview]: ../../wiki/Technical-Architecture-Overview
+[Technical Documentation]: ../../wiki/ConGaLi-Technical-documentation
 [Roadmap]: ../../wiki/Product-roadmap
 [TODO]: ../../wiki/TODO
 
