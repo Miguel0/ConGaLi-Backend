@@ -63,15 +63,26 @@ class ConwaysGameService {
 
   removeGamesForUserId (userId) {
     let games = this.getGamesContainingUserId(userId)
+    let gamesAffected = {
+      deleted: [],
+      changedOwnership: []
+    }
 
     for (let i = 0; i < games.length; i++) {
       let game = games[i]
+      let previousOwner = game.ownerId
 
       game.removeUserById(userId)
 
       if (game.hasOwner()) {
         // save the game, this time associated with his new owner
         this.storageDAO.saveGame(game)
+
+        if (previousOwner !== game.ownerId) {
+          gamesAffected.changedOwnership.push(game)
+        }
+      } else {
+        gamesAffected.deleted.push(game)
       }
 
       // this is necessary here just because whe are not using a copy of the game to remove
@@ -79,7 +90,7 @@ class ConwaysGameService {
       this.storageDAO.removeUserGameById(userId, game.id)
     }
 
-    return games.map(game => game.id)
+    return gamesAffected
   }
 
   removeUserByIdFromGame (gameId, userId) {
@@ -87,7 +98,7 @@ class ConwaysGameService {
 
     game.removeUserById(userId)
 
-    if (game.ownerUserId) {
+    if (game.hasOwner()) {
       // save the game, this time associated with his new owner
       this.storageDAO.saveGame(game)
     }

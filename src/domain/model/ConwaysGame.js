@@ -51,7 +51,7 @@ class ConwaysGame {
     if (this.ownerId === userId) {
       if (Object.keys(this.users).length > 0) {
         // Hand the game ownership to another player
-        this.ownerId = this.users[Object.keys(this.users)[0]]
+        this.ownerId = this.users[Object.keys(this.users)[0]].id
       } else {
         this.ownerId = null
       }
@@ -109,7 +109,7 @@ class ConwaysGame {
   }
 
   getRoomId () {
-    return `${this.name}@${this.ownerId}`
+    return `${this.id}`
   }
 
   killCellBy (user, points) {

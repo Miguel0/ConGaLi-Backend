@@ -27,13 +27,19 @@ class StorageDAO {
     delete this.gamesByUserId[userId][gameId]
   }
 
+  removeUserGamesById (userId) {
+    logger.debug(`Removing ALL games for userId ${userId}`)
+
+    this.gamesByUserId[userId] = {}
+  }
+
   saveUser (user) {
     logger.debug(`Checking user: ${JSON.stringify(user)}`)
 
     if (this.getUserByName(user.name)) {
       throw new AppException(
-        'error.user.alreadyExists.title',
-        'error.user.alreadyExists.body'
+        'error.user.save.alreadyExists.title',
+        'error.user.save.alreadyExists.body'
       )
     } else {
       user.id = cuid()
@@ -60,7 +66,7 @@ class StorageDAO {
 
   saveGame (game) {
     logger.debug(`Checking game: ${JSON.stringify(game)}`)
-    game.id = cuid()
+    game.id = game.id || cuid()
 
     if (this.getGameWithName(game.name, game.ownerId)) {
       throw new AppException(

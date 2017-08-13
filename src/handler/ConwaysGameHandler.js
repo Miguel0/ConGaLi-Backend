@@ -77,24 +77,40 @@ class ConwaysGameHandlerConfigurator {
 
     this.gameTickHandler[game.id] = setInterval(
       () => {
-        let game = this.conwaysGameBusinessLogicManager.getGameForUserId(data.game.id, data.game.ownerId)
+        let game = this.conwaysGameBusinessLogicManager.getGameById(data.game.id)
         game.refreshCellsGrids()
 
-        let jsonData = game.toJSONObject()
-        logger.debug(`Sending data table to client: ${JSON.stringify(jsonData)}`)
-
-        this.getGameChannel(game).emit('refreshCellsGrid', jsonData)
+        this.sendGameDataToPlayers(game)
       },
       game.refreshInterval)
 
     logger.debug(`Game #${data.game.id} started`)
   }
 
-  releaseResourcesFor (socket, data) {
-    let removedGameIds = this.conwaysGameBusinessLogicManager.removeGamesForUserId(data.user.id)
+  sendGameDataToPlayers (game) {
+    let jsonData = game.toJSONObject()
+    logger.debug(`Sending data table to client: ${JSON.stringify(jsonData)}`)
 
-    for (let i = 0; i < removedGameIds.length; i++) {
-      this.forceStopGame(socket, {game: {id: removedGameIds[i]}})
+    this.getGameChannel(game).emit('refreshCellsGrid', jsonData)
+  }
+
+  releaseResourcesFor (socket, data) {
+    let gamesAffected = this.conwaysGameBusinessLogicManager.removeGamesForUserId(data.user.id)
+
+    for (let i = 0; i < gamesAffected.deleted.length; i++) {
+      let game = gamesAffected.deleted[i]
+      this.forceStopGame(socket, {game: {id: game.id}})
+      socket.leave(game.getRoomId())
+    }
+
+    for (let i = 0; i < gamesAffected.changedOwnership.length; i++) {
+      let game = gamesAffected.changedOwnership[i]
+      socket.leave(game.getRoomId())
+      logger.debug(`Sending ownership change for game id ${game.id} and ownerId ${game.ownerId}`)
+
+      let gameData = game.getDescriptiveJSONObject()
+      gameData.previousOwnerId = data.user.id
+      this.getGameChannel(game).emit('ownershipChanged', gameData)
     }
   }
 

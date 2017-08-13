@@ -73,44 +73,49 @@ class UserHandlerConfigurator {
   logIn (data, socket) {
     logger.debug(`Starting logIn process with data: ${JSON.stringify(data)}...`)
     let user = this.userBusinessLogicManager.getUserByName(data.user)
+    logger.debug(`User retrieved! ${JSON.stringify(user)}`)
 
-    if (!user && this.getActiveSesion(user.id)) {
-      logger.debug(`Active session not found for userId (#${user.id})`)
-      
-      if (user && user.password === data.password) {
+    if (user && user.password === data.password) {
+      logger.debug(`Existing sessions: ${JSON.stringify(this.openSessions)}`)
+      if (!this.getActiveSesion(user.id)) {
+        logger.debug(`Active session not found for userId (#${user.id})`)
+
         this.openSessions[user.id] = { userId: user.id }
 
         logger.debug(`Sending logIn confirmation signal to client with data: ${JSON.stringify(user.toJSONObject())}...`)
         socket.emit('loggedIn', user.toJSONObject())
       } else {
         let exception = new AppException(
-          'error.session.logIn.wrongUserOrPassword.title',
-          'error.session.logIn.wrongUserOrPassword.body',
-          data
+          'error.session.logIn.alreadyOpen.title',
+          'error.session.logIn.alreadyOpen.body'
         )
 
-        logger.debug(`Sending exception to client since data had wrong user or password ${JSON.stringify(exception)}...`)
+        logger.debug(`Sending exception to client since session was already open ${JSON.stringify(exception)}...`)
         socket.emit('appException', exception)
       }
     } else {
       let exception = new AppException(
-        'error.session.logIn.alreadyOpen.title',
-        'error.session.logIn.alreadyOpen.body'
+        'error.session.logIn.wrongUserOrPassword.title',
+        'error.session.logIn.wrongUserOrPassword.body',
+        data
       )
 
-      logger.debug(`Sending exception to client since session was already open ${JSON.stringify(exception)}...`)
+      logger.debug(`Sending exception to client since data had wrong user or password ${JSON.stringify(exception)}...`)
       socket.emit('appException', exception)
     }
   }
 
   logOut (data, socket) {
+    logger.debug(`Starting logOut process with data: ${JSON.stringify(data)}...`)
     let userSession = this.getActiveSesion(data.user.id)
 
     if (userSession) {
-      delete this.openSessions[userSession.id]
+      logger.debug(`User session retrieved! ${JSON.stringify(userSession)}`)
+      delete this.openSessions[userSession.userId]
 
       this.gameHandlerConfigurator.releaseResourcesFor(socket, data)
 
+      logger.debug(`Sending logged out signal to client...`)
       socket.emit('loggedOut')
     } else {
       socket.emit(
