@@ -1,5 +1,6 @@
 const AppException = require('../exception/AppException')
 const DefaultCellsTemplatesConfig = require('./defaultCellsTemplatesConfigurations')
+const cuid = require('cuid')
 
 const logger = require('log4js').getLogger('Storage DAO')
 
@@ -16,8 +17,14 @@ class StorageDAO {
   constructor () {
     this.createdOn = new Date()
     this.cellsTemplates = DefaultCellsTemplatesConfig
-    this.users = []
+    this.users = {}
     this.gamesByUserId = {}
+  }
+
+  removeUserGameById (userId, gameId) {
+    logger.debug(`Removing game: ${gameId} of userId ${userId}`)
+
+    delete this.gamesByUserId[userId][gameId]
   }
 
   saveUser (user) {
@@ -29,26 +36,31 @@ class StorageDAO {
         'error.user.alreadyExists.body'
       )
     } else {
-      user.id = this.users.length
+      user.id = cuid()
     }
 
     logger.debug(`Saving user: ${JSON.stringify(user)}`)
-    this.users.push(user)
-    this.gamesByUserId[user.id] = []
+    this.users[user.id] = user
+    this.gamesByUserId[user.id] = {}
     return user
   }
 
   getUserByName (name) {
-    return this.users.find(storedUser => storedUser.name === name)
+    for (let userId in this.users) {
+      if (this.users[userId].name === name) {
+        return this.users[userId]
+      }
+    }
+    return null
   }
 
   getUserById (userId) {
-    return this.users.find(storedUser => storedUser.id === userId)
+    return this.users[userId]
   }
 
   saveGame (game) {
     logger.debug(`Checking game: ${JSON.stringify(game)}`)
-    game.id = this.gamesByUserId[game.ownerId].length
+    game.id = cuid()
 
     if (this.getGameWithName(game.name, game.ownerId)) {
       throw new AppException(
@@ -58,38 +70,75 @@ class StorageDAO {
     }
 
     logger.debug(`Saving game: ${JSON.stringify(game)}`)
-    this.gamesByUserId[game.ownerId].push(game)
+    this.gamesByUserId[game.ownerId][game.id] = game
 
     return game
   }
 
   getGameWithName (name, userId) {
-    return this.gamesByUserId[userId].filter(storedGame => storedGame.name === name)[0]
+    let usersGames = this.gamesByUserId[userId]
+    for (let gameId in usersGames) {
+      if (usersGames[gameId].name === name) {
+        return usersGames[gameId]
+      }
+    }
+    return null
+  }
+
+  getGameById (gameId) {
+    logger.debug(`Retrieving game with id: ${gameId}`)
+
+    for (let userId in this.gamesByUserId) {
+      let gameFound = this.gamesByUserId[userId][gameId]
+      if (gameFound) {
+        return gameFound
+      }
+    }
+
+    return null
   }
 
   getGameForUserId (gameId, userId) {
     logger.debug(`Retrieving game with id: ${gameId} for owner: ${userId}`)
-
     return this.gamesByUserId[userId][gameId]
   }
 
   getGamesForUserId (userId) {
-    return this.gamesByUserId[userId].slice(0)
+    let result = []
+    let usersGames = this.gamesByUserId[userId]
+    for (let gameId in usersGames) {
+      result.push(usersGames[gameId])
+    }
+    return result
+  }
+
+  getGamesContainingUserId (userId) {
+    let result = []
+
+    this.forEachGame(game => {
+      if (game.containsUserId(userId)) {
+        result.push(game)
+      }
+    })
+
+    return result
   }
 
   forEachGame (eachFunction) {
     let gamesUsersId = Object.keys(this.gamesByUserId)
 
     for (let userId in gamesUsersId) {
-      for (let i = 0; i < this.gamesByUserId[gamesUsersId[userId]].length; i++) {
-        eachFunction.call(eachFunction, this.gamesByUserId[gamesUsersId[userId]][i])
+      let gamesForUser = this.gamesByUserId[gamesUsersId[userId]]
+      for (let gameId in gamesForUser) {
+        eachFunction.call(eachFunction, gamesForUser[gameId])
       }
     }
   }
 
   forEachGameOfUser (userId, eachFunction) {
-    for (let i = 0; i < this.gamesByUserId[userId].length; i++) {
-      eachFunction.call(eachFunction, this.gamesByUserId[userId][i])
+    let gamesForUser = this.gamesByUserId[userId]
+    for (let gameId in gamesForUser) {
+      eachFunction.call(eachFunction, gamesForUser[gameId])
     }
   }
 

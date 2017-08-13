@@ -10,7 +10,10 @@ const businessLogicManagersHolder = require('../domain/manager/businessLogicMana
 const logger = require('log4js').getLogger('Socket Event Handler')
 
 module.exports = function (io, config) {
-  let userHandler = new UserSessionConnectionHandler(io, businessLogicManagersHolder)
+  let cGH = new GameHandlerConfigurator(io, businessLogicManagersHolder)
+  logger.info(`Game Handler Configurator created at ${cGH.createdOn.toISOString()}`)
+
+  let userHandler = new UserSessionConnectionHandler(io, cGH, businessLogicManagersHolder)
   logger.info(`User Session Connection Handler created at ${userHandler.createdOn.toISOString()}`)
 
   let gCH = new GeneralCommunicationHandler(io, businessLogicManagersHolder)
@@ -18,7 +21,4 @@ module.exports = function (io, config) {
 
   let cH = new ConnectionHandler(io, config, businessLogicManagersHolder)
   logger.info(`Connection Handler created at ${cH.createdOn.toISOString()}`)
-
-  let cGH = new GameHandlerConfigurator(io, businessLogicManagersHolder)
-  logger.info(`Game Handler Configurator created at ${cGH.createdOn.toISOString()}`)
 }

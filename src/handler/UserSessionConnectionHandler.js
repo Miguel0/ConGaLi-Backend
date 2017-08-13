@@ -15,10 +15,11 @@ const AppException = require('../exception/AppException')
 const ExceptionCatcher = require('../exception/ExceptionCatcher')
 
 class UserHandlerConfigurator {
-  constructor (io, BusinessLogicManagersHolder) {
+  constructor (io, gameHandlerConfigurator, BusinessLogicManagersHolder) {
     this.createdOn = new Date()
     this.openSessions = {}
     this.userBusinessLogicManager = BusinessLogicManagersHolder.UserBusinessLogicManager
+    this.gameHandlerConfigurator = gameHandlerConfigurator
 
     io.on(
       'connection',
@@ -48,13 +49,13 @@ class UserHandlerConfigurator {
 
   signUp (data, socket) {
     logger.debug(`Starting signUp process with data: ${JSON.stringify(data)}...`)
-    let userSession = this.getActiveSesion(socket)
+    let userSession = this.getActiveSesion(data.user.id)
 
     if (!userSession) {
-      logger.debug(`Active session not found for socket (#${socket.id})`)
-
       let user = this.userBusinessLogicManager.createUser(data)
-      this.openSessions[socket.id] = { userId: user.id }
+      logger.debug(`Active session not found for userId (#${user.id})`)
+
+      this.openSessions[user.id] = { userId: user.id }
 
       logger.debug(`Sending signUp confirmation signal to client with data: ${JSON.stringify(user.toJSONObject())}...`)
       socket.emit('signedUp', user.toJSONObject())
@@ -71,14 +72,13 @@ class UserHandlerConfigurator {
 
   logIn (data, socket) {
     logger.debug(`Starting logIn process with data: ${JSON.stringify(data)}...`)
-    let userSession = this.getActiveSesion(socket)
+    let user = this.userBusinessLogicManager.getUserByName(data.user)
 
-    if (!userSession) {
-      logger.debug(`Active session not found for socket (#${socket.id})`)
-      let user = this.userBusinessLogicManager.getUserByName(data.user)
-
+    if (!user && this.getActiveSesion(user.id)) {
+      logger.debug(`Active session not found for userId (#${user.id})`)
+      
       if (user && user.password === data.password) {
-        this.openSessions[socket.id] = { userId: user.id }
+        this.openSessions[user.id] = { userId: user.id }
 
         logger.debug(`Sending logIn confirmation signal to client with data: ${JSON.stringify(user.toJSONObject())}...`)
         socket.emit('loggedIn', user.toJSONObject())
@@ -104,10 +104,12 @@ class UserHandlerConfigurator {
   }
 
   logOut (data, socket) {
-    let userSession = this.getActiveSesion(socket)
+    let userSession = this.getActiveSesion(data.user.id)
 
     if (userSession) {
-      delete this.openSessions[socket.id]
+      delete this.openSessions[userSession.id]
+
+      this.gameHandlerConfigurator.releaseResourcesFor(socket, data)
 
       socket.emit('loggedOut')
     } else {
@@ -121,8 +123,8 @@ class UserHandlerConfigurator {
     }
   }
 
-  getActiveSesion (socket) {
-    return this.openSessions[socket.id]
+  getActiveSesion (userId) {
+    return this.openSessions[userId]
   }
 }
 

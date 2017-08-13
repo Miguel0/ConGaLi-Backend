@@ -90,37 +90,41 @@ class ConwaysGameHandlerConfigurator {
     logger.debug(`Game #${data.game.id} started`)
   }
 
-  releaseResourcesFor (userId) {
-    let games = this.conwaysGameBusinessLogicManager.getGamesForUserId(userId)
+  releaseResourcesFor (socket, data) {
+    let removedGameIds = this.conwaysGameBusinessLogicManager.removeGamesForUserId(data.user.id)
 
-    for (let i = 0; i < games.length; i++) {
-      this.forceStopGame(games[i])
+    for (let i = 0; i < removedGameIds.length; i++) {
+      this.forceStopGame(socket, {game: {id: removedGameIds[i]}})
     }
   }
 
-  forceStopGame (game) {
-    clearInterval(this.gameTickHandler[game.id])
+  forceStopGame (socket, data) {
+    clearInterval(this.gameTickHandler[data.game.id])
   }
 
   joinGame (socket, data) {
     logger.debug(`Joining to game with data sent by client: ${JSON.stringify(data)}`)
-    let game = this.conwaysGameBusinessLogicManager.getGameForUserId(data.game.id, data.game.ownerId)
+    let game = this.conwaysGameBusinessLogicManager.getGameById(data.game.id)
     let user = this.userBusinessLogicManager.getUserById(data.user.id)
     game.addUser({id: user.id, name: user.name, color: data.user.color})
 
     this.doJoinRoom(socket, game, (socket, game) => {
-      logger.debug(`Sending the signal for joining a game with data: ${JSON.stringify(data)}`)
-      socket.emit('joinedToGame', data)
+      let gameData = game.getDescriptiveJSONObject()
+      logger.debug(`Sending the signal for joining a game with data: ${JSON.stringify(gameData)}`)
+      socket.emit('joinedToGame', gameData)
     })
   }
 
   removeUser () {
+    logger.warn(`"removeUser" functionality not implemented yet`)
   }
 
   updateUser () {
+    logger.warn(`"updateUser" functionality not implemented yet`)
   }
 
   updateConfiguration () {
+    logger.warn(`"updateConfiguration" functionality not implemented yet`)
   }
 
   createCell (socket, cellCreationData) {

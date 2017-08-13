@@ -47,13 +47,54 @@ class ConwaysGameService {
     return this.storageDAO.getGameForUserId(gameId, ownerUserId)
   }
 
+  getGameById (gameId) {
+    return this.storageDAO.getGameById(gameId)
+  }
+
+  getGamesContainingUserId (gameId) {
+    return this.storageDAO.getGamesContainingUserId(gameId)
+  }
+
   addUserToGame (gameId, ownerUserId, userData) {
     let game = this.storageDAO.getGameForUserId(gameId, ownerUserId)
 
     game.addUser(userData)
   }
 
-  removeUser (gameId, ownerUserId, userData) {
+  removeGamesForUserId (userId) {
+    let games = this.getGamesContainingUserId(userId)
+
+    for (let i = 0; i < games.length; i++) {
+      let game = games[i]
+
+      game.removeUserById(userId)
+
+      if (game.hasOwner()) {
+        // save the game, this time associated with his new owner
+        this.storageDAO.saveGame(game)
+      }
+
+      // this is necessary here just because whe are not using a copy of the game to remove
+      // the user. Else, this should be into the save/update game behavior of the storageDAO.
+      this.storageDAO.removeUserGameById(userId, game.id)
+    }
+
+    return games.map(game => game.id)
+  }
+
+  removeUserByIdFromGame (gameId, userId) {
+    let game = this.storageDAO.getGameById(gameId)
+
+    game.removeUserById(userId)
+
+    if (game.ownerUserId) {
+      // save the game, this time associated with his new owner
+      this.storageDAO.saveGame(game)
+    }
+
+    // this is necessary here just because whe are not using a copy of the game to remove
+    // the user. Else, this should be into the save/update game behavior of the storageDAO.
+    this.storageDAO.removeUserGameById(userId, game.id)
   }
 
   createCell (gameId, userId, cellCreationData) {

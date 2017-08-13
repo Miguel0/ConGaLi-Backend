@@ -10,7 +10,7 @@ const logger = require('log4js').getLogger('Conway\'s Game')
 class ConwaysGame {
   constructor (user) {
     this.createdOn = new Date()
-    this.ownerId = user.id
+    this.ownerId = user.id || null
     this.name = null
     this.refreshInterval = 1000
     this.cellsGrids = []
@@ -26,7 +26,7 @@ class ConwaysGame {
   }
 
   addUser (user) {
-    if (this.users[user.id]) {
+    if (this.containsUserId(user.id)) {
       throw new AppException(
         'error.game.users.userAlreadyExists.title',
         'error.game.users.userAlreadyExists.body',
@@ -35,6 +35,35 @@ class ConwaysGame {
     }
 
     this.users[user.id] = user
+  }
+
+  removeUserById (userId) {
+    if (!this.containsUserId(userId)) {
+      throw new AppException(
+        'error.game.users.userDoesntExists.title',
+        'error.game.users.userDoesntExists.body',
+        userId
+      )
+    }
+
+    delete this.users[userId]
+
+    if (this.ownerId === userId) {
+      if (Object.keys(this.users).length > 0) {
+        // Hand the game ownership to another player
+        this.ownerId = this.users[Object.keys(this.users)[0]]
+      } else {
+        this.ownerId = null
+      }
+    }
+  }
+
+  containsUserId (userId) {
+    return !!this.users[userId]
+  }
+
+  hasOwner () {
+    return this.ownerId !== null
   }
 
   createCellsBy (userId, cellsGridId, rawPoints) {
@@ -113,14 +142,16 @@ class ConwaysGame {
     json.name = this.name
     json.id = this.id
     json.ownerId = this.ownerId
-    json.users = []
+    json.users = {}
 
-    for (let user in this.users) {
-      json.users.push({
+    for (let userId in this.users) {
+      let user = this.users[userId]
+
+      json.users[user.id] = {
         id: user.id,
         name: user.name,
         color: user.color
-      })
+      }
     }
 
     return json
